@@ -1,7 +1,9 @@
 import { Module } from "@nestjs/common";
-import { ThemeService } from "./theme.service";
-import { ThemeController } from "./theme.controller";
+
 import { FirebaseService } from "@root/shared/services/firebase.service";
+
+import { ThemeController } from "./theme.controller";
+import { ThemeService } from "./theme.service";
 
 @Module({
   controllers: [ThemeController],

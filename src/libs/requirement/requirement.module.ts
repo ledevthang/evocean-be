@@ -1,8 +1,10 @@
 import { Global, Inject, Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { readConfigOrExit } from "@root/utils/read-config";
 import { initializeApp } from "firebase/app";
-import { FirebaseStorage, getStorage } from "firebase/storage";
+import type { FirebaseStorage } from "firebase/storage";
+import { getStorage } from "firebase/storage";
+
+import { readConfigOrExit } from "@root/utils/read-config";
 
 export type Secrets = {};
 
