@@ -6,6 +6,8 @@ import { AppModule } from "./modules/app/app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   const config = new DocumentBuilder()
     .setTitle("Evocean API document")
     .setVersion("1.0")
