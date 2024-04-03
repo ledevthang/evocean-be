@@ -13,8 +13,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  address String @id @db.VarChar
+}
+
 model Theme {
-  id Int @id @default(autoincrement())
+  id              Int        @id @default(autoincrement())
+  zip_link        String     @db.VarChar
+  name            String     @db.VarChar
+  overview        String     @db.VarChar
+  author_address  String     @db.VarChar
+  token_mint      String     @db.VarChar
+  owner_addresses String[]   @db.VarChar
+  media           Json
+  Sale            ThemeSale?
 
   @@map("theme")
+}
+
+model ThemeSale {
+  id       Int   @id @default(autoincrement())
+  theme_id Int   @unique
+  price    Int
+  Theme    Theme @relation(fields: [theme_id], references: [id])
+
+  @@map("theme_sale")
 }

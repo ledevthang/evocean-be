@@ -6,7 +6,7 @@ import { getStorage } from "firebase/storage";
 
 import { readConfigOrExit } from "@root/utils/read-config";
 
-export type Secrets = {};
+export type Secrets = 1;
 
 export const SecretsToken: unique symbol = Symbol("SecretsToken");
 
@@ -24,7 +24,7 @@ export const InjectStorage = () => Inject(FirebaseStorageToken);
     {
       provide: SecretsToken,
       useFactory: (configService: ConfigService): Secrets => {
-        return {};
+        return 1;
       },
       inject: [ConfigService]
     },

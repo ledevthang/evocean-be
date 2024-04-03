@@ -5,6 +5,7 @@ import {
   ref,
   uploadBytes
 } from "firebase/storage";
+import { DateTime } from "luxon";
 
 import { InjectStorage } from "@root/libs/requirement/requirement.module";
 
@@ -19,7 +20,7 @@ export class FirebaseService {
 
     const objRef = ref(
       this.storage,
-      `${folder}/${new Date().getTime()}_${objLink}`
+      `${folder}/${DateTime.now().toMillis()}_${objLink}`
     );
 
     const response = await uploadBytes(objRef, file.buffer);
