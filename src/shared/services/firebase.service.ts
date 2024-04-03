@@ -9,19 +9,30 @@ import { DateTime } from "luxon";
 
 import { InjectStorage } from "@root/libs/requirement/requirement.module";
 
-type TargetFolder = "meme";
+type Option = {
+  object_id: string | number;
+  target: "theme_zip" | "theme_preview";
+};
 
 @Injectable()
 export class FirebaseService {
   constructor(@InjectStorage() private storage: FirebaseStorage) {}
 
-  public async upload(file: Express.Multer.File, folder: TargetFolder) {
-    const objLink = file.originalname.replace(/\s+/g, "");
+  public async upload(
+    file: Express.Multer.File,
+    { target, object_id }: Option
+  ) {
+    const filename = file.originalname.replace(/\s+/g, "");
 
-    const objRef = ref(
-      this.storage,
-      `${folder}/${DateTime.now().toMillis()}_${objLink}`
-    );
+    const time = DateTime.now().toMillis();
+
+    let location = `themes/zip/${object_id}/${time}_${filename}`;
+
+    if (target === "theme_preview") {
+      location = `themes/previews/${object_id}/${time}_${filename}`;
+    }
+
+    const objRef = ref(this.storage, location);
 
     const response = await uploadBytes(objRef, file.buffer);
 
