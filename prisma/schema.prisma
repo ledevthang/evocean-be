@@ -15,27 +15,37 @@ datasource db {
 
 model User {
   address String @id @db.VarChar
+
+  @@map("user")
 }
 
 model Theme {
-  id              Int        @id @default(autoincrement())
-  zip_link        String     @db.VarChar
-  name            String     @db.VarChar
-  overview        String     @db.VarChar
+  id              Int           @id @default(autoincrement())
+  zip_link        String        @db.VarChar
+  name            String        @db.VarChar
+  overview        String        @db.VarChar
   media           Json
-  owner_addresses String[]   @db.VarChar
-  token_mint      String?    @db.VarChar
-  author_address  String?    @db.VarChar
+  owner_addresses String[]      @db.VarChar
+  token_mint      String?       @db.VarChar
+  author_address  String?       @db.VarChar
   Sale            ThemeSale?
+  Listing         ThemeListing?
 
   @@map("theme")
 }
 
 model ThemeSale {
-  id       Int   @id @default(autoincrement())
-  theme_id Int   @unique
-  price    Int
-  Theme    Theme @relation(fields: [theme_id], references: [id])
+  theme_id Int     @id @unique
+  price    Decimal
+  Theme    Theme   @relation(fields: [theme_id], references: [id])
 
   @@map("theme_sale")
+}
+
+model ThemeListing {
+  theme_id Int     @id @unique
+  price    Decimal
+  Theme    Theme   @relation(fields: [theme_id], references: [id])
+
+  @@map("theme_listing")
 }
