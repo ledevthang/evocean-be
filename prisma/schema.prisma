@@ -22,10 +22,10 @@ model Theme {
   zip_link        String     @db.VarChar
   name            String     @db.VarChar
   overview        String     @db.VarChar
-  author_address  String     @db.VarChar
-  token_mint      String     @db.VarChar
-  owner_addresses String[]   @db.VarChar
   media           Json
+  owner_addresses String[]   @db.VarChar
+  token_mint      String?    @db.VarChar
+  author_address  String?    @db.VarChar
   Sale            ThemeSale?
 
   @@map("theme")
