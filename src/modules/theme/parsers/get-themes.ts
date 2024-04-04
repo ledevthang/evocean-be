@@ -1,4 +1,4 @@
-import { OptionalProperty, PaginatedQuery } from "@root/shared/parsers";
+import { IsBool, OptionalProperty, PaginatedQuery } from "@root/shared/parsers";
 
 export class GetThemesQuery extends PaginatedQuery {
   @OptionalProperty()
@@ -6,4 +6,8 @@ export class GetThemesQuery extends PaginatedQuery {
 
   @OptionalProperty()
   owner?: string;
+
+  @OptionalProperty()
+  @IsBool
+  listing?: boolean;
 }

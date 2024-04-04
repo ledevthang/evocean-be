@@ -24,11 +24,21 @@ export class ThemeRepository {
     });
   }
 
-  public findPaged({ page, take, author, owner }: GetThemesQuery) {
+  public findPaged({ page, take, author, owner, listing }: GetThemesQuery) {
     const filter: Prisma.ThemeWhereInput = {};
 
     if (author) {
       filter.author_address = author;
+    }
+
+    if (listing) {
+      filter.Listing = {
+        isNot: null
+      };
+
+      filter.Sale = {
+        isNot: null
+      };
     }
 
     if (owner) {
