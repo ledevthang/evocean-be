@@ -35,6 +35,13 @@ export class ThemeService {
     };
   }
 
+  public getTheme(theme_id: number) {
+    return this.themeRepository.findById(theme_id, {
+      withListing: true,
+      withSale: true
+    });
+  }
+
   public async listTheme({
     listing_price,
     sale_price,

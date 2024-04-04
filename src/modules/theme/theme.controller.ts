@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   ParseIntPipe,
   Post,
   Query,
@@ -42,6 +43,11 @@ export class ThemeController {
     });
 
     return new StreamableFile(buffer);
+  }
+
+  @Get(":theme_id")
+  getTheme(@Param("theme_id", ParseIntPipe) theme_id: number) {
+    return this.themeService.getTheme(theme_id);
   }
 
   @Get()

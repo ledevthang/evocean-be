@@ -16,10 +16,20 @@ type CreateListingAndSaleParams = Pick<
 export class ThemeRepository {
   constructor(private prisma: PrismaService) {}
 
-  public findById(id: number) {
+  public findById(
+    id: number,
+    opts?: {
+      withListing?: boolean;
+      withSale?: boolean;
+    }
+  ) {
     return this.prisma.theme.findUnique({
       where: {
         id
+      },
+      include: {
+        Listing: opts?.withListing,
+        Sale: opts?.withSale
       }
     });
   }
