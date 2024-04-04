@@ -41,7 +41,8 @@ export class ThemeRepository {
       this.prisma.theme.findMany({
         where: filter,
         include: {
-          Sale: true
+          Sale: true,
+          Listing: true
         },
         take,
         skip: (page - 1) * take
