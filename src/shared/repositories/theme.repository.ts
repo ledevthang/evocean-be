@@ -113,13 +113,13 @@ export class ThemeRepository {
         id: theme_id
       },
       data: {
-        author_address: buyer,
-        Listing: {
-          delete: true
-        },
-        Sale: {
-          delete: true
-        }
+        author_address: buyer
+        // Listing: {
+        //   delete: true
+        // },
+        // Sale: {
+        //   delete: true
+        // }
       }
     });
   }
