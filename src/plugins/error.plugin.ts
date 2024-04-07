@@ -3,7 +3,7 @@ import Elysia from "elysia";
 import { ForbiddenError } from "@root/errors/ForbiddenError";
 import { UnauthorizedError } from "@root/errors/UnauthorizedError";
 
-export const error = new Elysia({
+export const errorPlugin = new Elysia({
   name: "Plugin.Error"
 })
   .error({
@@ -14,9 +14,11 @@ export const error = new Elysia({
     switch (code) {
       case "UnauthorizedError":
         set.status = 401;
+        break;
 
       case "ForbiddenError":
         set.status = 403;
+        break;
 
       default:
         break;
