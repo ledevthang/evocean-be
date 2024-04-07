@@ -4,7 +4,7 @@ import Elysia, { t } from "elysia";
 import { prismaPlugin } from "@root/plugins/prisma.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { pagedModel } from "@root/shared/model";
-import { END_POINTS } from "@root/shared/constant";
+import { ENDPOINTS } from "@root/shared/constant";
 
 const query = t.Composite([
   pagedModel,
@@ -20,7 +20,7 @@ export const getThemes = new Elysia({
 })
   .use(prismaPlugin)
   .get(
-    END_POINTS.GET_THEMES,
+    ENDPOINTS.GET_THEMES,
     async ({ prisma, query }) => {
       const themeRepository = new ThemeRepository(prisma);
 
