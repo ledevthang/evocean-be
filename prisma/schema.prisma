@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  address String @id @db.VarChar
+
+  @@map("user")
+}
+
+model Theme {
+  id              Int           @id @default(autoincrement())
+  zip_link        String        @db.VarChar
+  name            String        @db.VarChar
+  overview        String        @db.VarChar
+  media           Json
+  owner_addresses String[]      @db.VarChar
+  token_mint      String?       @db.VarChar
+  author_address  String?       @db.VarChar
+  Sale            ThemeSale?
+  Listing         ThemeListing?
+
+  @@map("theme")
+}
+
+model ThemeSale {
+  theme_id Int     @id @unique
+  price    Decimal
+  Theme    Theme   @relation(fields: [theme_id], references: [id])
+
+  @@map("theme_sale")
+}
+
+model ThemeListing {
+  theme_id Int     @id @unique
+  price    Decimal
+  Theme    Theme   @relation(fields: [theme_id], references: [id])
+
+  @@map("theme_listing")
+}
