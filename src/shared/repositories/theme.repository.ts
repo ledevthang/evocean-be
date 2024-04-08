@@ -2,8 +2,6 @@ import { Injectable } from "@nestjs/common";
 import type { Prisma } from "@prisma/client";
 
 import { PrismaService } from "@root/libs/prisma/prisma.service";
-import type { BuyLicensePayload } from "@root/modules/theme/parsers/buy-license";
-import type { BuyThemePayload } from "@root/modules/theme/parsers/buy-theme";
 import type { GetThemesQuery } from "@root/modules/theme/parsers/get-themes";
 import type { ListThemePayload } from "@root/modules/theme/parsers/list-theme";
 
@@ -11,6 +9,15 @@ type CreateListingAndSaleParams = Pick<
   ListThemePayload,
   "listing_price" | "sale_price" | "theme_id"
 >;
+
+type BuyThemeParams = {
+  theme_id: number;
+  buyer: string;
+  seller: string;
+  price: number;
+};
+
+type BuyLicenseParams = BuyThemeParams;
 
 @Injectable()
 export class ThemeRepository {
@@ -21,6 +28,7 @@ export class ThemeRepository {
     opts?: {
       withListing?: boolean;
       withSale?: boolean;
+      withTxs?: boolean;
     }
   ) {
     return this.prisma.theme.findUnique({
@@ -29,7 +37,8 @@ export class ThemeRepository {
       },
       include: {
         Listing: opts?.withListing,
-        Sale: opts?.withSale
+        Sale: opts?.withSale,
+        Transactions: opts?.withTxs
       }
     });
   }
@@ -94,7 +103,7 @@ export class ThemeRepository {
     ]);
   }
 
-  public buy({ buyer, theme_id }: BuyThemePayload) {
+  public async buy({ buyer, theme_id, price, seller }: BuyThemeParams) {
     return this.prisma.theme.update({
       where: {
         id: theme_id
@@ -102,24 +111,34 @@ export class ThemeRepository {
       data: {
         owner_addresses: {
           push: buyer
+        },
+        Transactions: {
+          create: {
+            seller,
+            buyer,
+            kind: "buy",
+            price
+          }
         }
       }
     });
   }
 
-  public buyLicense({ buyer, theme_id }: BuyLicensePayload) {
+  public buyLicense({ buyer, theme_id, price, seller }: BuyLicenseParams) {
     return this.prisma.theme.update({
       where: {
         id: theme_id
       },
       data: {
-        author_address: buyer
-        // Listing: {
-        //   delete: true
-        // },
-        // Sale: {
-        //   delete: true
-        // }
+        author_address: buyer,
+        Transactions: {
+          create: {
+            buyer,
+            price,
+            kind: "buy_owned_ship",
+            seller
+          }
+        }
       }
     });
   }

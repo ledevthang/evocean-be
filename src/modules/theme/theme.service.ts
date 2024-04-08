@@ -38,7 +38,8 @@ export class ThemeService {
   public getTheme(theme_id: number) {
     return this.themeRepository.findById(theme_id, {
       withListing: true,
-      withSale: true
+      withSale: true,
+      withTxs: true
     });
   }
 
@@ -65,12 +66,38 @@ export class ThemeService {
     });
   }
 
-  public buyTheme(payload: BuyThemePayload) {
-    return this.themeRepository.buy(payload);
+  public async buyTheme(payload: BuyThemePayload) {
+    const theme = await this.themeRepository.findById(payload.theme_id, {
+      withSale: true
+    });
+
+    if (!theme?.Sale || !theme.author_address) {
+      throw new InternalServerErrorException("Sale not found");
+    }
+
+    return this.themeRepository.buy({
+      buyer: payload.buyer,
+      theme_id: payload.theme_id,
+      price: theme.Sale.price.toNumber(),
+      seller: theme.author_address
+    });
   }
 
-  public buyLicense(payload: BuyLicensePayload) {
-    return this.themeRepository.buyLicense(payload);
+  public async buyLicense(payload: BuyLicensePayload) {
+    const theme = await this.themeRepository.findById(payload.theme_id, {
+      withListing: true
+    });
+
+    if (!theme?.Listing || !theme.author_address) {
+      throw new InternalServerErrorException("Listing not found");
+    }
+
+    return this.themeRepository.buyLicense({
+      buyer: payload.buyer,
+      theme_id: payload.theme_id,
+      price: theme.Listing.price.toNumber(),
+      seller: theme.author_address
+    });
   }
 
   public async downloadTheme(theme_id: number, user: string) {

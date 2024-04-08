@@ -30,6 +30,7 @@ model Theme {
   author_address  String?       @db.VarChar
   Sale            ThemeSale?
   Listing         ThemeListing?
+  Transactions    Transaction[]
 
   @@map("theme")
 }
@@ -48,4 +49,23 @@ model ThemeListing {
   Theme    Theme   @relation(fields: [theme_id], references: [id])
 
   @@map("theme_listing")
+}
+
+model Transaction {
+  id       Int             @id @default(autoincrement())
+  price    Decimal
+  buyer    String
+  seller   String
+  theme_id Int
+  kind     TransactionKind
+  Theme    Theme           @relation(fields: [theme_id], references: [id])
+
+  @@map("transaction")
+}
+
+enum TransactionKind {
+  buy_owned_ship
+  buy
+
+  @@map("transaction_kind")
 }
