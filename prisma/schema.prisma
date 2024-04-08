@@ -53,6 +53,7 @@ model ThemeListing {
 
 model Transaction {
   id       Int             @id @default(autoincrement())
+  date     DateTime        @db.Timestamptz(3) @default(now())
   price    Decimal
   buyer    String
   seller   String
