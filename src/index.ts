@@ -2,6 +2,7 @@ import swagger from "@elysiajs/swagger";
 import { Elysia } from "elysia";
 
 import { auth, theme } from "@root/apis";
+
 import { errorPlugin } from "./plugins/error.plugin";
 
 const app = new Elysia()

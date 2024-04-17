@@ -1,12 +1,9 @@
-import type { PrismaClient } from "@prisma/client";
-
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
+import { prisma } from "@root/shared/prisma";
 
-export class ThemeRepository {
-  constructor(private prisma: PrismaClient) {}
-
-  public findById(id: number) {
-    return this.prisma.theme.findUnique({
+export abstract class ThemeRepository {
+  static findById(id: number) {
+    return prisma.theme.findUnique({
       where: {
         id
       },
@@ -17,13 +14,13 @@ export class ThemeRepository {
     });
   }
 
-  public findPaged({ limit, page }: GetThemeParams) {
+  static findPaged({ limit, page }: GetThemeParams) {
     return Promise.all([
-      this.prisma.theme.findMany({
+      prisma.theme.findMany({
         take: limit,
         skip: (page - 1) * limit
       }),
-      this.prisma.theme.count()
+      prisma.theme.count()
     ]);
   }
 }

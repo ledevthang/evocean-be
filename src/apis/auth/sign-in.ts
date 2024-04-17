@@ -1,5 +1,6 @@
-import { ENDPOINTS } from "@root/shared/constant";
 import Elysia, { t } from "elysia";
+
+import { ENDPOINTS } from "@root/shared/constant";
 
 export const signIn = new Elysia({
   name: "Handler.SignIn"

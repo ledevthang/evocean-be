@@ -1,10 +1,8 @@
-import type { PrismaClient } from "@prisma/client";
+import { prisma } from "@root/shared/prisma";
 
-export class UserRepository {
-  constructor(private prisma: PrismaClient) {}
-
+export abstract class UserRepository {
   public findByAddress(address: string) {
-    return this.prisma.user.findUnique({
+    return prisma.user.findUnique({
       where: {
         address
       }
