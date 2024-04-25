@@ -6,9 +6,9 @@ import { ENDPOINTS } from "@root/shared/constant";
 
 const listingThemePayload = t.Object({
   seller: t.String(),
-  theme_id: t.Numeric(),
-  listing_price: t.Numeric(),
-  sale_price: t.Numeric()
+  theme_id: t.Number(),
+  listing_price: t.Number(),
+  sale_price: t.Number()
 });
 
 export type ListingThemePayload = Static<typeof listingThemePayload>;

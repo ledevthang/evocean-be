@@ -5,7 +5,7 @@ import { ENDPOINTS } from "@root/shared/constant";
 
 const buyThemePayload = t.Object({
   buyer: t.String(),
-  theme_id: t.Numeric()
+  theme_id: t.Number()
 });
 
 export const buyTheme = new Elysia({
@@ -21,12 +21,14 @@ export const buyTheme = new Elysia({
       throw new InternalServerError("Sale not found");
     }
 
-    return ThemeRepository.buyTheme({
+    await ThemeRepository.buyTheme({
       price: theme.Listing!.price.toNumber(),
       buyer,
       seller: theme.author_address,
       theme_id
     });
+
+    return {};
   },
   {
     body: buyThemePayload

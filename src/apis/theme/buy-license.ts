@@ -5,7 +5,7 @@ import { ENDPOINTS } from "@root/shared/constant";
 
 const buyLicensePayload = t.Object({
   buyer: t.String(),
-  theme_id: t.Numeric()
+  theme_id: t.Number()
 });
 
 export const buyLicense = new Elysia({
@@ -21,12 +21,14 @@ export const buyLicense = new Elysia({
       throw new InternalServerError("License not found");
     }
 
-    return ThemeRepository.buyLicense({
+    await ThemeRepository.buyLicense({
       price: theme.Listing!.price.toNumber(),
       buyer,
       seller: theme.author_address,
       theme_id
     });
+
+    return {};
   },
   {
     body: buyLicensePayload
