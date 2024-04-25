@@ -1,8 +1,12 @@
 import Elysia from "elysia";
 
 import { signIn } from "./auth/sign-in";
+import { buyLicense } from "./theme/buy-license";
+import { buyTheme } from "./theme/buy-theme";
 import { getTheme } from "./theme/get-theme";
 import { getThemes } from "./theme/get-themes";
+import { listTheme } from "./theme/list-theme";
+import { uploadTheme } from "./theme/upload-theme";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -20,4 +24,8 @@ export const theme = new Elysia({
   }
 })
   .use(getTheme)
-  .use(getThemes);
+  .use(getThemes)
+  .use(listTheme)
+  .use(buyTheme)
+  .use(buyLicense)
+  .use(uploadTheme);
