@@ -1,8 +1,7 @@
-import { ENDPOINTS } from "@root/shared/constant";
 import Elysia from "elysia";
+
+import { ENDPOINT } from "@root/shared/constant";
 
 export const uploadTheme = new Elysia({
   name: "Handler.UploadTheme"
-}).post(ENDPOINTS.UPLOAD_THEME, async ({ body }) => {
-    
-});
+}).post(ENDPOINT.THEME.UPLOAD_THEME, async ({}) => {});

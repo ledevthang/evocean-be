@@ -2,7 +2,7 @@ import type { Static } from "elysia";
 import Elysia, { t } from "elysia";
 
 import { ThemeRepository } from "@root/repositories/theme.repository";
-import { ENDPOINTS } from "@root/shared/constant";
+import { ENDPOINT } from "@root/shared/constant";
 import { pagedModel } from "@root/shared/model";
 
 const query = t.Composite([
@@ -17,7 +17,7 @@ export type GetThemeParams = Static<typeof query>;
 export const getThemes = new Elysia({
   name: "Handler.GetThemes"
 }).get(
-  ENDPOINTS.GET_THEMES,
+  ENDPOINT.THEME.GET_THEMES,
   async ({ query }) => {
     const [nodes, total] = await ThemeRepository.findPaged(query);
 

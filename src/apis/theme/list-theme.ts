@@ -1,8 +1,9 @@
 import type { Static } from "elysia";
-import Elysia, { NotFoundError, t } from "elysia";
+import Elysia, { InternalServerError, t } from "elysia";
 
+import { UnauthorizedError } from "@root/errors/UnauthorizedError";
 import { ThemeRepository } from "@root/repositories/theme.repository";
-import { ENDPOINTS } from "@root/shared/constant";
+import { ENDPOINT } from "@root/shared/constant";
 
 const listingThemePayload = t.Object({
   seller: t.String(),
@@ -16,18 +17,18 @@ export type ListingThemePayload = Static<typeof listingThemePayload>;
 export const listTheme = new Elysia({
   name: "Handler.ListTheme"
 }).post(
-  ENDPOINTS.LIST_THEME,
+  ENDPOINT.THEME.LIST_THEME,
   async ({ body }) => {
     const { listing_price, sale_price, seller, theme_id } = body;
 
     const theme = await ThemeRepository.findById(theme_id);
 
     if (!theme) {
-      throw new NotFoundError("Theme not found");
+      throw new InternalServerError("Theme not found");
     }
 
     if (theme.author_address != seller) {
-      throw new Error("Unauthorized");
+      throw new UnauthorizedError();
     }
 
     ThemeRepository.createListingAndSale({

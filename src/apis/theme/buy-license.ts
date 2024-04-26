@@ -1,7 +1,7 @@
 import Elysia, { InternalServerError, t } from "elysia";
 
 import { ThemeRepository } from "@root/repositories/theme.repository";
-import { ENDPOINTS } from "@root/shared/constant";
+import { ENDPOINT } from "@root/shared/constant";
 
 const buyLicensePayload = t.Object({
   buyer: t.String(),
@@ -11,7 +11,7 @@ const buyLicensePayload = t.Object({
 export const buyLicense = new Elysia({
   name: "Handler.BuyLicense"
 }).post(
-  ENDPOINTS.BUY_LICENSE,
+  ENDPOINT.THEME.BUY_LICENSE,
   async ({ body }) => {
     const { buyer, theme_id } = body;
 

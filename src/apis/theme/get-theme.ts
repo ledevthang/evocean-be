@@ -1,12 +1,12 @@
 import Elysia, { t } from "elysia";
 
 import { ThemeRepository } from "@root/repositories/theme.repository";
-import { ENDPOINTS } from "@root/shared/constant";
+import { ENDPOINT } from "@root/shared/constant";
 
 export const getTheme = new Elysia({
   name: "Handler.GetTheme"
 }).get(
-  ENDPOINTS.GET_THEME,
+  ENDPOINT.THEME.GET_THEME,
   async ({ params }) => {
     const theme = await ThemeRepository.findById(params.theme_id);
 

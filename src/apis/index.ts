@@ -1,5 +1,7 @@
 import Elysia from "elysia";
 
+import { ENDPOINT } from "@root/shared/constant";
+
 import { signIn } from "./auth/sign-in";
 import { buyLicense } from "./theme/buy-license";
 import { buyTheme } from "./theme/buy-theme";
@@ -18,9 +20,9 @@ export const auth = new Elysia({
 
 export const theme = new Elysia({
   name: "Controller.Theme",
-  prefix: "themes",
+  prefix: ENDPOINT.THEME.PREFIX,
   detail: {
-    tags: ["Auth"]
+    tags: ["Theme"]
   }
 })
   .use(getTheme)
