@@ -71,4 +71,4 @@ async function mint(author: web3.PublicKey) {
   console.log("mintInfo: ", mintInfo);
 }
 
-mint(new web3.PublicKey("5NoD6kRwHpdf6fbwceWtR1zaq97d8pgUqn9ZdtSJiiyM"));
+await mint(new web3.PublicKey("5NoD6kRwHpdf6fbwceWtR1zaq97d8pgUqn9ZdtSJiiyM"));

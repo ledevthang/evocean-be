@@ -22,7 +22,7 @@ export const buyLicense = new Elysia({
     }
 
     await ThemeRepository.buyLicense({
-      price: theme.Listing!.price.toNumber(),
+      price: theme.Listing.price.toNumber(),
       buyer,
       seller: theme.author_address,
       theme_id

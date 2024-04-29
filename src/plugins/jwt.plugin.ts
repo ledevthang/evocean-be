@@ -1,14 +1,14 @@
 import jwt from "@elysiajs/jwt";
 
-import { readConfigOrDie } from "@root/helpers/read-config";
+import { JWT_ACCESS_SECRET, JWT_RENEW_SECRET } from "@root/shared/env";
 
 export const accessJwt = jwt({
-  secret: readConfigOrDie("JWT_ACCESS_SECRET"),
+  secret: JWT_ACCESS_SECRET,
   exp: "3d"
 });
 
 export const renewJwt = jwt({
-  secret: readConfigOrDie("JWT_RENEW_SECRET"),
+  secret: JWT_RENEW_SECRET,
   exp: "1y",
   name: "renew"
 });
