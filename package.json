@@ -21,6 +21,7 @@
     "cache-manager": "^5.5.1",
     "commander": "^12.0.0",
     "elysia": "latest",
+    "firebase": "^10.11.1",
     "ioredis": "^5.4.1",
     "luxon": "^3.4.4"
   },
