@@ -27,7 +27,7 @@ export const listTheme = new Elysia({
       throw new InternalServerError("Theme not found");
     }
 
-    if (theme.author_address != seller) {
+    if (theme.author_address !== seller) {
       throw new UnauthorizedError();
     }
 

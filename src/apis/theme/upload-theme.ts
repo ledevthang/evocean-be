@@ -1,14 +1,8 @@
-import Elysia, { Static, t } from "elysia";
+import type { Static } from "elysia";
+import Elysia, { t } from "elysia";
 
-import { ENDPOINT } from "@root/shared/constant";
-
-import {
-  FirebaseStorage,
-  getDownloadURL,
-  ref,
-  uploadBytes
-} from "firebase/storage";
 import { uploadFile } from "@root/services/firebase/upload";
+import { ENDPOINT } from "@root/shared/constant";
 
 const payload = t.Object({
   avatar: t.File({

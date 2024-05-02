@@ -1,8 +1,7 @@
-import { readConfigOrDie } from "@root/helpers/read-config";
-import { FileBlob } from "bun";
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
-import { DateTime } from "luxon";
+
+import { readConfigOrDie } from "@root/helpers/read-config";
 
 const apiKey = readConfigOrDie("FIREBASE_API_KEY");
 
