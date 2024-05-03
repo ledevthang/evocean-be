@@ -1,4 +1,3 @@
-import type { Static } from "elysia";
 import Elysia, { t } from "elysia";
 
 import { uploadFile } from "@root/services/firebase/upload";
@@ -14,7 +13,6 @@ const payload = t.Object({
     maxSize: 100_000_000
   })
 });
-export type P = Static<typeof payload>;
 
 export const uploadTheme = new Elysia({
   name: "Handler.UploadTheme"
