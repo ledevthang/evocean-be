@@ -31,7 +31,7 @@ export const listTheme = new Elysia({
       throw new UnauthorizedError();
     }
 
-    ThemeRepository.createListingAndSale({
+    await ThemeRepository.createListingAndSale({
       listing_price,
       theme_id,
       sale_price

@@ -9,6 +9,7 @@ import { getTheme } from "./theme/get-theme";
 import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { uploadTheme } from "./theme/upload-theme";
+import { signInGoogle } from "./auth/sign-in-google";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -16,7 +17,9 @@ export const auth = new Elysia({
   detail: {
     tags: ["Auth"]
   }
-}).use(signIn);
+})
+  .use(signIn)
+  .use(signInGoogle);
 
 export const theme = new Elysia({
   name: "Controller.Theme",

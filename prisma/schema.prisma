@@ -8,7 +8,11 @@ datasource db {
 }
 
 model User {
-  address String @id @db.VarChar
+  id          Int      @id @default(autoincrement())
+  createdDate DateTime @default(now()) @map("created_date") @db.Timestamp(6)
+  address     String?  @unique @db.VarChar
+  googleId    String?  @unique @map("google_id")
+  email       String   @unique @db.VarChar
 
   @@map("user")
 }

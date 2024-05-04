@@ -1,9 +1,10 @@
+import { ENDPOINT } from "@root/shared/constant";
 import Elysia, { t } from "elysia";
 
 export const signIn = new Elysia({
   name: "Handler.SignIn"
 }).post(
-  "/sign-in",
+  ENDPOINT.AUTH.SIGN_IN,
   ({ body }) => {
     return {
       address: body.address
