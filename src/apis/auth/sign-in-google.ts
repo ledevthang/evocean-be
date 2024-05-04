@@ -2,8 +2,7 @@ import { ENDPOINT } from "@root/shared/constant";
 import Elysia, { InternalServerError, t } from "elysia";
 import axios from "axios";
 import { UserRepository } from "@root/repositories/user.repository";
-import { jwt } from "@elysiajs/jwt";
-// import { accessJwt } from "@root/plugins/jwt.plugin";
+import { accessJwt } from "@root/plugins/jwt.plugin";
 
 type UserData = {
   sub: string; // google id
@@ -13,13 +12,7 @@ type UserData = {
 export const signInGoogle = new Elysia({
   name: "Handler.SignInGoogle"
 })
-  .use(
-    jwt({
-      secret: process.env.JWT_SECRET!,
-      exp: "3d",
-      name: "accessJwt"
-    })
-  )
+  .use(accessJwt)
   .post(
     ENDPOINT.AUTH.SIGN_IN_GOOGLE,
     async ({ body, accessJwt }) => {
