@@ -19,6 +19,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# lint
+.eslintcache
+
 /.env
 /.env.local
 /.env.development

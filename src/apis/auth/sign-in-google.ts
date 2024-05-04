@@ -1,8 +1,9 @@
-import { ENDPOINT } from "@root/shared/constant";
-import Elysia, { InternalServerError, t } from "elysia";
 import axios from "axios";
-import { UserRepository } from "@root/repositories/user.repository";
+import Elysia, { InternalServerError, t } from "elysia";
+
 import { accessJwt } from "@root/plugins/jwt.plugin";
+import { UserRepository } from "@root/repositories/user.repository";
+import { ENDPOINT } from "@root/shared/constant";
 
 type UserData = {
   sub: string; // google id
@@ -36,7 +37,7 @@ export const signInGoogle = new Elysia({
       });
 
       // create the JWT and send the response to client
-      return await accessJwt.sign({
+      return accessJwt.sign({
         googleId: userData.sub
       });
     },
