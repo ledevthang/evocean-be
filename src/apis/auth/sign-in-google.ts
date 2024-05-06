@@ -1,8 +1,8 @@
-import axios from "axios";
-import Elysia, { InternalServerError, t } from "elysia";
+import Elysia, { t } from "elysia";
 
-import { accessJwt } from "@root/plugins/jwt.plugin";
+import { accessJwt, renewJwt } from "@root/plugins/jwt.plugin";
 import { UserRepository } from "@root/repositories/user.repository";
+import { getGoogleUserInfo } from "@root/services/http/get-google-user-info.ts";
 import { ENDPOINT } from "@root/shared/constant";
 
 type UserData = {
@@ -14,32 +14,41 @@ export const signInGoogle = new Elysia({
   name: "Handler.SignInGoogle"
 })
   .use(accessJwt)
+  .use(renewJwt)
   .post(
     ENDPOINT.AUTH.SIGN_IN_GOOGLE,
-    async ({ body, accessJwt }) => {
-      const resData = await axios.get(
-        `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${body.accessToken}`
-      );
+    async ({ body, access, renew }) => {
+      let accessToken = "";
+      let refreshToken = "";
 
-      const userData: UserData = resData.data;
+      const userData: UserData = await getGoogleUserInfo(body.accessToken);
 
       // check if the user is existed
-      const user = await UserRepository.findByGoogleId(userData.sub);
+      let user = await UserRepository.findByGoogleId(userData.sub);
 
-      if (user) {
-        throw new InternalServerError("User is exsited");
+      if (!user) {
+        // store the new user into database
+        user = await UserRepository.create({
+          googleId: userData.sub,
+          email: userData.email
+        });
       }
 
-      // store into database
-      await UserRepository.createUser({
-        googleId: userData.sub,
-        email: userData.email
+      accessToken = await access.sign({
+        id: user.id,
+        address: user.address !== null ? user.address : "",
+        googleId: user.google_id !== null ? user.google_id : "",
+        email: user.email !== null ? user.email : ""
       });
 
-      // create the JWT and send the response to client
-      return accessJwt.sign({
-        googleId: userData.sub
+      refreshToken = await renew.sign({
+        sub: user.id.toString()
       });
+
+      return {
+        accessToken,
+        refreshToken
+      };
     },
     {
       body: t.Object({

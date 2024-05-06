@@ -1,6 +1,6 @@
 import { prisma } from "@root/shared/prisma";
 
-type UserGoogleParams = {
+type CreateUserParams = {
   googleId: string;
   email: string;
 };
@@ -13,18 +13,18 @@ export abstract class UserRepository {
     });
   }
 
-  static findByGoogleId(googleId: string) {
+  static findByGoogleId(google_id: string) {
     return prisma.user.findUnique({
       where: {
-        googleId
+        google_id: google_id
       }
     });
   }
 
-  static createUser({ googleId, email }: UserGoogleParams) {
+  static create({ googleId: google_id, email }: CreateUserParams) {
     return prisma.user.create({
       data: {
-        googleId: googleId,
+        google_id: google_id,
         email: email
       }
     });

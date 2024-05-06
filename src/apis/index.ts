@@ -13,7 +13,7 @@ import { uploadTheme } from "./theme/upload-theme";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
-  prefix: "auth",
+  prefix: ENDPOINT.AUTH.PREFIX,
   detail: {
     tags: ["Auth"]
   }
