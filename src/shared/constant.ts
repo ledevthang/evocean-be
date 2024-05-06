@@ -1,4 +1,9 @@
 export const ENDPOINT = {
+  AUTH: {
+    PREFIX: "auth",
+    SIGN_IN_GOOGLE: "/sign-in-google",
+    SIGN_IN: "/sign-in"
+  },
   THEME: {
     PREFIX: "themes",
     GET_THEMES: "/",

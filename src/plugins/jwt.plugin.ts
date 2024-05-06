@@ -4,7 +4,8 @@ import { JWT_ACCESS_SECRET, JWT_RENEW_SECRET } from "@root/shared/env";
 
 export const accessJwt = jwt({
   secret: JWT_ACCESS_SECRET,
-  exp: "3d"
+  exp: "3d",
+  name: "access"
 });
 
 export const renewJwt = jwt({
