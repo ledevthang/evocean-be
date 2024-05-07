@@ -4,8 +4,8 @@ import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 const buyThemePayload = t.Object({
-  buyer: t.String(),
-  theme_id: t.Number()
+  buyer: t.String({ minLength: 1 }),
+  theme_id: t.Number({ minimum: 1 })
 });
 
 export const buyTheme = new Elysia({
@@ -21,7 +21,7 @@ export const buyTheme = new Elysia({
       throw new InternalServerError("Sale not found");
     }
 
-    await ThemeRepository.buyTheme({
+    await ThemeRepository.buy({
       price: theme.listing!.price.toNumber(),
       buyer,
       seller: theme.author_address,

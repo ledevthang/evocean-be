@@ -4,7 +4,7 @@ export const pagedModel = t.Object({
   page: t.Numeric({
     minimum: 1
   }),
-  limit: t.Numeric({
+  take: t.Numeric({
     maximum: 300
   })
 });

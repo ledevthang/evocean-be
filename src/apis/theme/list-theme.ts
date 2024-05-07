@@ -1,15 +1,15 @@
 import type { Static } from "elysia";
 import Elysia, { InternalServerError, t } from "elysia";
 
-import { UnauthorizedError } from "@root/errors/UnauthorizedError";
+import { ForbiddenError } from "@root/errors/ForbiddenError";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 const listingThemePayload = t.Object({
-  seller: t.String(),
-  theme_id: t.Number(),
-  listing_price: t.Number(),
-  sale_price: t.Number()
+  seller: t.String({ minLength: 1 }),
+  theme_id: t.Number({ minimum: 1 }),
+  listing_price: t.Number({ minimum: 1 }),
+  sale_price: t.Number({ minimum: 1 })
 });
 
 export type ListingThemePayload = Static<typeof listingThemePayload>;
@@ -28,7 +28,7 @@ export const listTheme = new Elysia({
     }
 
     if (theme.author_address !== seller) {
-      throw new UnauthorizedError();
+      throw new ForbiddenError("You are not author");
     }
 
     await ThemeRepository.createListingAndSale({
@@ -36,6 +36,8 @@ export const listTheme = new Elysia({
       theme_id,
       sale_price
     });
+
+    return {};
   },
   {
     body: listingThemePayload

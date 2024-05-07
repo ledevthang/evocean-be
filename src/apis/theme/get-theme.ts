@@ -7,12 +7,12 @@ export const getTheme = new Elysia({
   name: "Handler.GetTheme"
 }).get(
   ENDPOINT.THEME.GET_THEME,
-  async ({ params }) => {
-    const theme = await ThemeRepository.findById(params.theme_id);
-
-    return {
-      theme
-    };
+  ({ params }) => {
+    return ThemeRepository.findById(params.theme_id, {
+      withListing: true,
+      withSale: true,
+      withTxs: true
+    });
   },
   {
     params: t.Object({

@@ -1,5 +1,6 @@
-import { ENDPOINT } from "@root/shared/constant";
 import Elysia from "elysia";
+
+import { ENDPOINT } from "@root/shared/constant";
 
 export const createTheme = new Elysia({
   name: "Handler.CreateTheme"

@@ -1,21 +1,13 @@
+import type { Prisma } from "@prisma/client";
+
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
 import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
 
 type CreateListingAndSaleParams = Pick<
   ListingThemePayload,
-  "listing_price" | "theme_id" | "sale_price"
+  "listing_price" | "sale_price" | "theme_id"
 >;
-
-type CreateThemeParams = {
-  zip_link: string;
-  name: string;
-  overview: string;
-  media: string;
-  owner_addresses: string[];
-  token_mint?: string;
-  author_address?: string;
-};
 
 type BuyThemeParams = {
   theme_id: number;
@@ -27,25 +19,62 @@ type BuyThemeParams = {
 type BuyLicenseParams = BuyThemeParams;
 
 export abstract class ThemeRepository {
-  static findById(id: number) {
+  static findById(
+    id: number,
+    opts?: {
+      withListing?: boolean;
+      withSale?: boolean;
+      withTxs?: boolean;
+    }
+  ) {
     return prisma.theme.findUnique({
       where: {
         id
       },
       include: {
-        listing: true,
-        sale: true
+        listing: opts?.withListing,
+        sale: opts?.withSale,
+        transactions: opts?.withTxs
       }
     });
   }
 
-  static findPaged({ limit, page }: GetThemeParams) {
+  static findPaged({ page, take, author, owner, listing }: GetThemeParams) {
+    const filter: Prisma.ThemeWhereInput = {};
+
+    if (author) {
+      filter.author_address = author;
+    }
+
+    if (listing) {
+      filter.listing = {
+        isNot: null
+      };
+
+      filter.sale = {
+        isNot: null
+      };
+    }
+
+    if (owner) {
+      filter.owner_addresses = {
+        has: owner
+      };
+    }
+
     return Promise.all([
       prisma.theme.findMany({
-        take: limit,
-        skip: (page - 1) * limit
+        where: filter,
+        include: {
+          sale: true,
+          listing: true
+        },
+        take,
+        skip: (page - 1) * take
       }),
-      prisma.theme.count()
+      prisma.theme.count({
+        where: filter
+      })
     ]);
   }
 
@@ -70,29 +99,7 @@ export abstract class ThemeRepository {
     ]);
   }
 
-  static createTheme({
-    zip_link,
-    name,
-    overview,
-    media,
-    owner_addresses,
-    token_mint,
-    author_address
-  }: CreateThemeParams) {
-    return prisma.theme.create({
-      data: {
-        zip_link,
-        name,
-        overview,
-        media,
-        owner_addresses,
-        token_mint,
-        author_address
-      }
-    });
-  }
-
-  static buyTheme({ buyer, theme_id, price, seller }: BuyThemeParams) {
+  static buy({ buyer, theme_id, price, seller }: BuyThemeParams) {
     return prisma.theme.update({
       where: {
         id: theme_id
@@ -103,10 +110,10 @@ export abstract class ThemeRepository {
         },
         transactions: {
           create: {
-            price,
-            buyer,
             seller,
-            kind: "buy"
+            buyer,
+            kind: "buy",
+            price
           }
         }
       }
@@ -122,10 +129,10 @@ export abstract class ThemeRepository {
         author_address: buyer,
         transactions: {
           create: {
-            price,
             buyer,
-            seller,
-            kind: "buy_owned_ship"
+            price,
+            kind: "buy_owned_ship",
+            seller
           }
         }
       }

@@ -12,6 +12,7 @@ export const ENDPOINT = {
     LIST_THEME: "/listing",
     BUY_THEME: "/buying",
     BUY_LICENSE: "/license-buying",
-    UPLOAD_THEME: "/upload"
+    UPLOAD_THEME: "/upload",
+    DOWNLOAD: "/download"
   }
 } as const;
