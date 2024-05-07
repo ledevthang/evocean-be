@@ -8,7 +8,9 @@ import { pagedModel } from "@root/shared/model";
 const query = t.Composite([
   pagedModel,
   t.Object({
-    address: t.Optional(t.String({ minLength: 1 }))
+    author: t.Optional(t.String({ minLength: 1 })),
+    owner: t.Optional(t.String({ minLength: 1 })),
+    listing: t.Optional(t.BooleanString())
   })
 ]);
 
@@ -19,12 +21,12 @@ export const getThemes = new Elysia({
 }).get(
   ENDPOINT.THEME.GET_THEMES,
   async ({ query }) => {
-    const [nodes, total] = await ThemeRepository.findPaged(query);
+    const [themes, total] = await ThemeRepository.findPaged(query);
 
     return {
       total,
       page: query.page,
-      data: nodes
+      data: themes
     };
   },
   {

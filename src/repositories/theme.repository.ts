@@ -1,10 +1,12 @@
+import type { Prisma } from "@prisma/client";
+
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
 import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
 
 type CreateListingAndSaleParams = Pick<
   ListingThemePayload,
-  "listing_price" | "theme_id" | "sale_price"
+  "listing_price" | "sale_price" | "theme_id"
 >;
 
 type BuyThemeParams = {
@@ -17,25 +19,62 @@ type BuyThemeParams = {
 type BuyLicenseParams = BuyThemeParams;
 
 export abstract class ThemeRepository {
-  static findById(id: number) {
+  static findById(
+    id: number,
+    opts?: {
+      withListing?: boolean;
+      withSale?: boolean;
+      withTxs?: boolean;
+    }
+  ) {
     return prisma.theme.findUnique({
       where: {
         id
       },
       include: {
-        Listing: true,
-        Sale: true
+        listing: opts?.withListing,
+        sale: opts?.withSale,
+        transactions: opts?.withTxs
       }
     });
   }
 
-  static findPaged({ limit, page }: GetThemeParams) {
+  static findPaged({ page, take, author, owner, listing }: GetThemeParams) {
+    const filter: Prisma.ThemeWhereInput = {};
+
+    if (author) {
+      filter.author_address = author;
+    }
+
+    if (listing) {
+      filter.listing = {
+        isNot: null
+      };
+
+      filter.sale = {
+        isNot: null
+      };
+    }
+
+    if (owner) {
+      filter.owner_addresses = {
+        has: owner
+      };
+    }
+
     return Promise.all([
       prisma.theme.findMany({
-        take: limit,
-        skip: (page - 1) * limit
+        where: filter,
+        include: {
+          sale: true,
+          listing: true
+        },
+        take,
+        skip: (page - 1) * take
       }),
-      prisma.theme.count()
+      prisma.theme.count({
+        where: filter
+      })
     ]);
   }
 
@@ -60,7 +99,7 @@ export abstract class ThemeRepository {
     ]);
   }
 
-  static buyTheme({ buyer, theme_id, price, seller }: BuyThemeParams) {
+  static buy({ buyer, theme_id, price, seller }: BuyThemeParams) {
     return prisma.theme.update({
       where: {
         id: theme_id
@@ -69,12 +108,12 @@ export abstract class ThemeRepository {
         owner_addresses: {
           push: buyer
         },
-        Transaction: {
+        transactions: {
           create: {
-            price,
-            buyer,
             seller,
-            kind: "buy"
+            buyer,
+            kind: "buy",
+            price
           }
         }
       }
@@ -88,12 +127,12 @@ export abstract class ThemeRepository {
       },
       data: {
         author_address: buyer,
-        Transaction: {
+        transactions: {
           create: {
-            price,
             buyer,
-            seller,
-            kind: "buy_owned_ship"
+            price,
+            kind: "buy_owned_ship",
+            seller
           }
         }
       }

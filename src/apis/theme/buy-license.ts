@@ -4,8 +4,8 @@ import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 const buyLicensePayload = t.Object({
-  buyer: t.String(),
-  theme_id: t.Number()
+  buyer: t.String({ minLength: 1 }),
+  theme_id: t.Number({ minimum: 1 })
 });
 
 export const buyLicense = new Elysia({
@@ -15,17 +15,19 @@ export const buyLicense = new Elysia({
   async ({ body }) => {
     const { buyer, theme_id } = body;
 
-    const theme = await ThemeRepository.findById(theme_id);
+    const theme = await ThemeRepository.findById(theme_id, {
+      withListing: true
+    });
 
-    if (!theme?.Listing || !theme.author_address) {
-      throw new InternalServerError("License not found");
+    if (!theme?.listing || !theme.author_address) {
+      throw new InternalServerError("Listing not found");
     }
 
     await ThemeRepository.buyLicense({
-      price: theme.Listing.price.toNumber(),
       buyer,
-      seller: theme.author_address,
-      theme_id
+      theme_id,
+      price: theme.listing.price.toNumber(),
+      seller: theme.author_address
     });
 
     return {};

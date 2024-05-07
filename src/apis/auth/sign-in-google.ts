@@ -2,7 +2,7 @@ import Elysia, { t } from "elysia";
 
 import { accessJwt, renewJwt } from "@root/plugins/jwt.plugin";
 import { UserRepository } from "@root/repositories/user.repository";
-import { getGoogleUserInfo } from "@root/services/http/get-google-user-info.ts";
+import { getGoogleUserInfo } from "@root/services/http/get-google-user-info";
 import { ENDPOINT } from "@root/shared/constant";
 
 export const signInGoogle = new Elysia({
@@ -26,13 +26,18 @@ export const signInGoogle = new Elysia({
         });
       }
 
-      const accessToken = await access.sign({
-        id: user.id,
-        address: user.address,
-        googleId: user.google_id,
-        email: user.email
-      });
+      // create a payload for sign
+      const payload: Record<string, string | number> = {
+        id: user.id
+      };
 
+      if (user.address) payload.address = user.address;
+      if (user.email) payload.email = user.email;
+      if (user.google_id) payload.google_id = user.google_id;
+      if (user.email) payload.email = user.email;
+
+      // sign
+      const accessToken = await access.sign(payload);
       const refreshToken = await renew.sign({
         id: user.id
       });
