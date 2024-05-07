@@ -8,6 +8,7 @@ export const ENDPOINT = {
     PREFIX: "themes",
     GET_THEMES: "/",
     GET_THEME: "/:theme_id",
+    CREATE_THEME: "/creating",
     LIST_THEME: "/listing",
     BUY_THEME: "/buying",
     BUY_LICENSE: "/license-buying",

@@ -17,12 +17,12 @@ export const buyTheme = new Elysia({
 
     const theme = await ThemeRepository.findById(theme_id);
 
-    if (!theme?.Sale || !theme.author_address) {
+    if (!theme?.sale || !theme.author_address) {
       throw new InternalServerError("Sale not found");
     }
 
     await ThemeRepository.buyTheme({
-      price: theme.Listing!.price.toNumber(),
+      price: theme.listing!.price.toNumber(),
       buyer,
       seller: theme.author_address,
       theme_id

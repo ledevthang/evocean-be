@@ -25,9 +25,9 @@ model Theme {
   owner_addresses String[]      @db.VarChar
   token_mint      String?       @db.VarChar
   author_address  String?       @db.VarChar
-  Sale            ThemeSale?
-  Listing         ThemeListing?
-  Transaction     Transaction[]
+  sale            ThemeSale?
+  listing         ThemeListing?
+  transactions     Transaction[]
 
   @@map("theme")
 }
@@ -35,7 +35,7 @@ model Theme {
 model ThemeSale {
   theme_id Int     @id @unique
   price    Decimal
-  Theme    Theme   @relation(fields: [theme_id], references: [id])
+  theme    Theme   @relation(fields: [theme_id], references: [id])
 
   @@map("theme_sale")
 }
@@ -43,7 +43,7 @@ model ThemeSale {
 model ThemeListing {
   theme_id Int     @id @unique
   price    Decimal
-  Theme    Theme   @relation(fields: [theme_id], references: [id])
+  theme    Theme   @relation(fields: [theme_id], references: [id])
 
   @@map("theme_listing")
 }
@@ -56,7 +56,7 @@ model Transaction {
   seller   String
   theme_id Int
   kind     TransactionKind
-  Theme    Theme           @relation(fields: [theme_id], references: [id])
+  theme    Theme           @relation(fields: [theme_id], references: [id])
 
   @@map("transaction")
 }

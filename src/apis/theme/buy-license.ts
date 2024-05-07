@@ -17,12 +17,12 @@ export const buyLicense = new Elysia({
 
     const theme = await ThemeRepository.findById(theme_id);
 
-    if (!theme?.Listing || !theme.author_address) {
+    if (!theme?.listing || !theme.author_address) {
       throw new InternalServerError("License not found");
     }
 
     await ThemeRepository.buyLicense({
-      price: theme.Listing.price.toNumber(),
+      price: theme.listing.price.toNumber(),
       buyer,
       seller: theme.author_address,
       theme_id

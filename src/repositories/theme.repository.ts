@@ -7,6 +7,16 @@ type CreateListingAndSaleParams = Pick<
   "listing_price" | "theme_id" | "sale_price"
 >;
 
+type CreateThemeParams = {
+  zip_link: string;
+  name: string;
+  overview: string;
+  media: string;
+  owner_addresses: string[];
+  token_mint?: string;
+  author_address?: string;
+};
+
 type BuyThemeParams = {
   theme_id: number;
   buyer: string;
@@ -23,8 +33,8 @@ export abstract class ThemeRepository {
         id
       },
       include: {
-        Listing: true,
-        Sale: true
+        listing: true,
+        sale: true
       }
     });
   }
@@ -60,6 +70,28 @@ export abstract class ThemeRepository {
     ]);
   }
 
+  static createTheme({
+    zip_link,
+    name,
+    overview,
+    media,
+    owner_addresses,
+    token_mint,
+    author_address
+  }: CreateThemeParams) {
+    return prisma.theme.create({
+      data: {
+        zip_link,
+        name,
+        overview,
+        media,
+        owner_addresses,
+        token_mint,
+        author_address
+      }
+    });
+  }
+
   static buyTheme({ buyer, theme_id, price, seller }: BuyThemeParams) {
     return prisma.theme.update({
       where: {
@@ -69,7 +101,7 @@ export abstract class ThemeRepository {
         owner_addresses: {
           push: buyer
         },
-        Transaction: {
+        transactions: {
           create: {
             price,
             buyer,
@@ -88,7 +120,7 @@ export abstract class ThemeRepository {
       },
       data: {
         author_address: buyer,
-        Transaction: {
+        transactions: {
           create: {
             price,
             buyer,
