@@ -26,6 +26,7 @@ module.exports = {
     "require-await": ["error"],
     "no-return-await": ["error"],
     "no-loss-of-precision": "off",
+    eqeqeq: 2,
     "@typescript-eslint/await-thenable": ["error"],
     "@typescript-eslint/switch-exhaustiveness-check": "error",
     "@typescript-eslint/interface-name-prefix": "off",

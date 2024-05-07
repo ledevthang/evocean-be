@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,7 +8,10 @@ datasource db {
 }
 
 model User {
-  address String @id @db.VarChar
+  id          Int      @id @default(autoincrement())
+  address     String?  @unique @db.VarChar
+  google_id    String?  @unique 
+  email       String?   @unique @db.VarChar
 
   @@map("user")
 }
@@ -28,9 +25,9 @@ model Theme {
   owner_addresses String[]      @db.VarChar
   token_mint      String?       @db.VarChar
   author_address  String?       @db.VarChar
-  Sale            ThemeSale?
-  Listing         ThemeListing?
-  Transactions    Transaction[]
+  sale            ThemeSale?
+  listing         ThemeListing?
+  transactions     Transaction[]
 
   @@map("theme")
 }
@@ -38,7 +35,7 @@ model Theme {
 model ThemeSale {
   theme_id Int     @id @unique
   price    Decimal
-  Theme    Theme   @relation(fields: [theme_id], references: [id])
+  theme    Theme   @relation(fields: [theme_id], references: [id])
 
   @@map("theme_sale")
 }
@@ -46,20 +43,20 @@ model ThemeSale {
 model ThemeListing {
   theme_id Int     @id @unique
   price    Decimal
-  Theme    Theme   @relation(fields: [theme_id], references: [id])
+  theme    Theme   @relation(fields: [theme_id], references: [id])
 
   @@map("theme_listing")
 }
 
 model Transaction {
   id       Int             @id @default(autoincrement())
-  date     DateTime        @db.Timestamptz(3) @default(now())
+  date     DateTime        @default(now()) @db.Timestamptz(3)
   price    Decimal
   buyer    String
   seller   String
   theme_id Int
   kind     TransactionKind
-  Theme    Theme           @relation(fields: [theme_id], references: [id])
+  theme    Theme           @relation(fields: [theme_id], references: [id])
 
   @@map("transaction")
 }
