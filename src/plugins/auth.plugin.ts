@@ -11,7 +11,7 @@ export const authPlugin = new Elysia({
 })
   .use(bearer())
   .use(accessJwt)
-  .derive(async ({ bearer, access }) => {
+  .derive({ as: "scoped" }, async ({ bearer, access }) => {
     const claims = (await access.verify(bearer)) as Claims | false;
 
     if (!claims) {

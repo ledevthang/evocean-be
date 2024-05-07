@@ -5,7 +5,7 @@ import { ThemeRepository } from "@root/repositories/theme.repository";
 import { getBlobFromLink } from "@root/services/http/get-blob-from-link";
 import { ENDPOINT } from "@root/shared/constant";
 
-export const downloadTheme = new Elysia().get(
+export const downloadTheme = new Elysia({ name: "Handler.DownloadTheme" }).get(
   ENDPOINT.THEME.DOWNLOAD,
   async ({ query, set }) => {
     const { theme_id, user } = query;

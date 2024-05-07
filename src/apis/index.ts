@@ -6,10 +6,12 @@ import { signIn } from "./auth/sign-in";
 import { signInGoogle } from "./auth/sign-in-google";
 import { buyLicense } from "./theme/buy-license";
 import { buyTheme } from "./theme/buy-theme";
+import { downloadTheme } from "./theme/download-theme";
 import { getTheme } from "./theme/get-theme";
 import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { uploadTheme } from "./theme/upload-theme";
+import { me } from "./user/me";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -20,6 +22,14 @@ export const auth = new Elysia({
 })
   .use(signIn)
   .use(signInGoogle);
+
+export const user = new Elysia({
+  name: "Controller.User",
+  prefix: ENDPOINT.USER.PREFIX,
+  detail: {
+    tags: ["User"]
+  }
+}).use(me);
 
 export const theme = new Elysia({
   name: "Controller.Theme",
@@ -33,4 +43,5 @@ export const theme = new Elysia({
   .use(listTheme)
   .use(buyTheme)
   .use(buyLicense)
-  .use(uploadTheme);
+  .use(uploadTheme)
+  .use(downloadTheme);

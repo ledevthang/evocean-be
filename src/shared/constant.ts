@@ -4,6 +4,10 @@ export const ENDPOINT = {
     SIGN_IN_GOOGLE: "/sign-in-google",
     SIGN_IN: "/sign-in"
   },
+  USER: {
+    PREFIX: "users",
+    ME: "/me"
+  },
   THEME: {
     PREFIX: "themes",
     GET_THEMES: "/",
