@@ -12,6 +12,8 @@ import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
+import { webhookMoonPay } from "./moonpay/webhook-moonpay";
+import { createTheme } from "./theme/create-theme";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -38,6 +40,7 @@ export const theme = new Elysia({
     tags: ["Theme"]
   }
 })
+  .use(createTheme)
   .use(getTheme)
   .use(getThemes)
   .use(listTheme)
@@ -45,3 +48,11 @@ export const theme = new Elysia({
   .use(buyLicense)
   .use(uploadTheme)
   .use(downloadTheme);
+
+export const moonpay = new Elysia({
+  name: "Controller.Moonpay",
+  prefix: ENDPOINT.MOONPAY.PREFIX,
+  detail: {
+    tags: ["Moonpay"]
+  }
+}).use(webhookMoonPay);
