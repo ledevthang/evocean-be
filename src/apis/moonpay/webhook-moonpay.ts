@@ -1,6 +1,7 @@
+import Elysia, { InternalServerError, t } from "elysia";
+
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import Elysia, { InternalServerError, t } from "elysia";
 
 const webhookPayload = t.Object({
   data: t.Object({
@@ -23,7 +24,7 @@ export const webhookMoonPay = new Elysia({
     const { data, type, externalCustomerId } = body;
 
     if (type === "transaction_failed") {
-        throw new InternalServerError("Transaction Failed!");
+      throw new InternalServerError("Transaction Failed!");
     }
 
     if (type === "transaction_updated") {
