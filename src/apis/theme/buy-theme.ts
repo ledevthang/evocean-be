@@ -3,7 +3,7 @@ import Elysia, { InternalServerError, t } from "elysia";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
-export const buyThemePayload = t.Object({
+const buyThemePayload = t.Object({
   buyer: t.String({ minLength: 1 }),
   theme_id: t.Number({ minimum: 1 })
 });
