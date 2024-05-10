@@ -1,10 +1,10 @@
 import type { Static } from "elysia";
 import Elysia, { t } from "elysia";
 
-import { ThemeRepository } from "@root/repositories/theme.repository";
-import { ENDPOINT } from "@root/shared/constant";
-import { uploadFile } from "@root/services/firebase/upload";
 import { authPlugin } from "@root/plugins/auth.plugin";
+import { ThemeRepository } from "@root/repositories/theme.repository";
+import { uploadFile } from "@root/services/firebase/upload";
+import { ENDPOINT } from "@root/shared/constant";
 
 const createThemePayload = t.Object({
   zip_link: t.String(),
@@ -37,7 +37,7 @@ export const createTheme = new Elysia({
     async ({ body, claims }) => {
       const { media_images, features_template, features_figma } = body;
 
-      var imageLinks: string[] = [];
+      const imageLinks: string[] = [];
       for (const image of media_images) {
         const link = await uploadFile(image);
         console.log("=> ", link);

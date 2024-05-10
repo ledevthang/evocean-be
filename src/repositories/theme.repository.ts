@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
-import { CreateThemePayload } from "@root/apis/theme/create-theme";
 
+import type { CreateThemePayload } from "@root/apis/theme/create-theme";
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
 import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
