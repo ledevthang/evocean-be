@@ -1,4 +1,5 @@
 import type { Prisma } from "@prisma/client";
+import { CreateThemePayload } from "@root/apis/theme/create-theme";
 
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
 import type { ListingThemePayload } from "@root/apis/theme/list-theme";
@@ -9,7 +10,16 @@ type CreateListingAndSaleParams = Pick<
   "listing_price" | "sale_price" | "theme_id"
 >;
 
+type CreateThemeParams = Omit<CreateThemePayload, "media"> & {
+  media: { images: string[] };
+  features: {
+    template: string[];
+    figma: string[];
+  };
+};
+
 type BuyThemeParams = {
+  tx_id: string;
   theme_id: number;
   buyer: string;
   seller: string;
@@ -99,7 +109,7 @@ export abstract class ThemeRepository {
     ]);
   }
 
-  static buy({ buyer, theme_id, price, seller }: BuyThemeParams) {
+  static buy({ tx_id, buyer, theme_id, price, seller }: BuyThemeParams) {
     return prisma.theme.update({
       where: {
         id: theme_id
@@ -113,14 +123,21 @@ export abstract class ThemeRepository {
             seller,
             buyer,
             kind: "buy",
-            price
+            price,
+            tx_id
           }
         }
       }
     });
   }
 
-  static buyLicense({ buyer, theme_id, price, seller }: BuyLicenseParams) {
+  static buyLicense({
+    tx_id,
+    buyer,
+    theme_id,
+    price,
+    seller
+  }: BuyLicenseParams) {
     return prisma.theme.update({
       where: {
         id: theme_id
@@ -132,9 +149,42 @@ export abstract class ThemeRepository {
             buyer,
             price,
             kind: "buy_owned_ship",
-            seller
+            seller,
+            tx_id
           }
         }
+      }
+    });
+  }
+
+  static create({
+    zip_link,
+    name,
+    overview,
+    media,
+    owner_addresses,
+    token_mint,
+    author_address,
+    pages,
+    highlight,
+    format,
+    features,
+    support
+  }: CreateThemeParams) {
+    return prisma.theme.create({
+      data: {
+        zip_link,
+        name,
+        overview,
+        media,
+        owner_addresses,
+        token_mint,
+        author_address,
+        pages,
+        highlight,
+        format,
+        features,
+        support
       }
     });
   }

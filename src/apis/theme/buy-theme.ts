@@ -28,7 +28,8 @@ export const buyTheme = new Elysia({
       price: theme.listing!.price.toNumber(),
       buyer,
       seller: theme.author_address,
-      theme_id
+      theme_id,
+      tx_id: "0x0"
     });
 
     return {};
