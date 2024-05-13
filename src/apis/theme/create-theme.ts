@@ -7,11 +7,14 @@ import { uploadFile } from "@root/services/firebase/upload";
 import { ENDPOINT } from "@root/shared/constant";
 
 const createThemePayload = t.Object({
-  zip_link: t.String(),
+  theme: t.File({
+    type: ["application/zip"],
+    maxSize: 100_000_000
+  }),
   name: t.String(),
   overview: t.String(),
   media_images: t.Files({
-    type: ["image/png", "image/jpeg"],
+    type: ["image/jpeg", "image/png"],
     maxSize: 100_000_000
   }),
   owner_addresses: t.Array(t.String()),
@@ -35,17 +38,23 @@ export const createTheme = new Elysia({
   .post(
     ENDPOINT.THEME.CREATE_THEME,
     async ({ body, claims }) => {
-      const { media_images, features_template, features_figma } = body;
+      const { theme, media_images, features_template, features_figma } = body;
+      // console.log(body);
 
+      // upload theme
+      const zip_link = await uploadFile(theme);
+
+      // upload media (images)
       const imageLinks: string[] = [];
       for (const image of media_images) {
         const link = await uploadFile(image);
-        console.log("=> ", link);
         imageLinks.push(link);
       }
 
+      // create theme
       await ThemeRepository.create({
         ...body,
+        zip_link: zip_link,
         media: {
           images: imageLinks
         },

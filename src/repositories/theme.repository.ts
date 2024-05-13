@@ -10,7 +10,8 @@ type CreateListingAndSaleParams = Pick<
   "listing_price" | "sale_price" | "theme_id"
 >;
 
-type CreateThemeParams = Omit<CreateThemePayload, "media"> & {
+type CreateThemeParams = Omit<CreateThemePayload, "media" | "zip_file"> & {
+  zip_link: string;
   media: { images: string[] };
   features: {
     template: string[];
