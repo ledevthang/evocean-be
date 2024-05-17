@@ -1,5 +1,6 @@
 import swagger from "@elysiajs/swagger";
 import { Elysia } from "elysia";
+import { cors } from "@elysiajs/cors";
 
 import { auth, theme, user } from "@root/apis";
 
@@ -20,6 +21,7 @@ const app = new Elysia()
       }
     })
   )
+  .use(cors())
   .use(auth)
   .use(user)
   .use(theme)
