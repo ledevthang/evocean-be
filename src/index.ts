@@ -24,7 +24,7 @@ const app = new Elysia()
   .use(user)
   .use(theme)
   .use(errorPlugin)
-  .listen(8080);
+  .listen(8000);
 
 console.log(
   `🦊 Moonkit is running at ${app.server?.hostname}:${app.server?.port}`
