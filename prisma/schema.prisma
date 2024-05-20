@@ -8,10 +8,10 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  address     String?  @unique @db.VarChar
-  google_id    String?  @unique 
-  email       String?   @unique @db.VarChar
+  id        Int     @id @default(autoincrement())
+  address   String? @unique @db.VarChar
+  google_id String? @unique
+  email     String? @unique @db.VarChar
 
   @@map("user")
 }
@@ -25,9 +25,14 @@ model Theme {
   owner_addresses String[]      @db.VarChar
   token_mint      String?       @db.VarChar
   author_address  String?       @db.VarChar
+  pages           String[]      @db.VarChar
+  highlight       String[]      @db.VarChar
+  format          String[]      @db.VarChar
+  features        Json
+  support         String[]      @db.VarChar
   sale            ThemeSale?
   listing         ThemeListing?
-  transactions     Transaction[]
+  transactions    Transaction[]
 
   @@map("theme")
 }
@@ -50,6 +55,7 @@ model ThemeListing {
 
 model Transaction {
   id       Int             @id @default(autoincrement())
+  tx_id    String
   date     DateTime        @default(now()) @db.Timestamptz(3)
   price    Decimal
   buyer    String

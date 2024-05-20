@@ -4,8 +4,10 @@ import { ENDPOINT } from "@root/shared/constant";
 
 import { signIn } from "./auth/sign-in";
 import { signInGoogle } from "./auth/sign-in-google";
+import { webhookMoonPay } from "./moonpay/webhook-moonpay";
 import { buyLicense } from "./theme/buy-license";
 import { buyTheme } from "./theme/buy-theme";
+import { createTheme } from "./theme/create-theme";
 import { downloadTheme } from "./theme/download-theme";
 import { getTheme } from "./theme/get-theme";
 import { getThemes } from "./theme/get-themes";
@@ -38,6 +40,7 @@ export const theme = new Elysia({
     tags: ["Theme"]
   }
 })
+  .use(createTheme)
   .use(getTheme)
   .use(getThemes)
   .use(listTheme)
@@ -45,3 +48,11 @@ export const theme = new Elysia({
   .use(buyLicense)
   .use(uploadTheme)
   .use(downloadTheme);
+
+export const moonpay = new Elysia({
+  name: "Controller.Moonpay",
+  prefix: ENDPOINT.MOONPAY.PREFIX,
+  detail: {
+    tags: ["Moonpay"]
+  }
+}).use(webhookMoonPay);

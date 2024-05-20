@@ -15,7 +15,10 @@ export const buyTheme = new Elysia({
   async ({ body }) => {
     const { buyer, theme_id } = body;
 
-    const theme = await ThemeRepository.findById(theme_id);
+    const theme = await ThemeRepository.findById(theme_id, {
+      withListing: true,
+      withSale: true
+    });
 
     if (!theme?.sale || !theme.author_address) {
       throw new InternalServerError("Sale not found");
@@ -25,7 +28,8 @@ export const buyTheme = new Elysia({
       price: theme.listing!.price.toNumber(),
       buyer,
       seller: theme.author_address,
-      theme_id
+      theme_id,
+      tx_id: "0x0"
     });
 
     return {};

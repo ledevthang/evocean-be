@@ -18,5 +18,9 @@ export const ENDPOINT = {
     BUY_LICENSE: "/license-buying",
     UPLOAD_THEME: "/upload",
     DOWNLOAD: "/download"
+  },
+  MOONPAY: {
+    PREFIX: "moonpay",
+    WEBHOOK: "/webhook"
   }
 } as const;

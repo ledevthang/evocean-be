@@ -32,7 +32,6 @@ export const signInGoogle = new Elysia({
       if (user.address) payload.address = user.address;
       if (user.email) payload.email = user.email;
       if (user.google_id) payload.google_id = user.google_id;
-      if (user.email) payload.email = user.email;
 
       const [accessToken, refreshToken] = await Promise.all([
         access.sign(payload),
@@ -43,7 +42,8 @@ export const signInGoogle = new Elysia({
 
       return {
         accessToken,
-        refreshToken
+        refreshToken,
+        userId: user.id
       };
     },
     {
