@@ -1,4 +1,4 @@
 module.exports = {
   name: "monkit-server",
-  script: "bun src/index.ts"
+  script: "bun --env-file .env.development src/index.ts"
 };

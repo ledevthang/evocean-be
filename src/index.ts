@@ -1,5 +1,6 @@
 import swagger from "@elysiajs/swagger";
 import { Elysia } from "elysia";
+import { cors } from "@elysiajs/cors";
 
 import { auth, dashboard, moonpay, theme, user } from "@root/apis";
 
@@ -20,13 +21,14 @@ const app = new Elysia()
       }
     })
   )
+  .use(cors())
   .use(auth)
   .use(user)
   .use(theme)
   .use(moonpay)
   .use(dashboard)
   .use(errorPlugin)
-  .listen(8080);
+  .listen(8000);
 
 console.log(
   `🦊 Moonkit is running at ${app.server?.hostname}:${app.server?.port}`
