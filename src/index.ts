@@ -1,7 +1,7 @@
 import swagger from "@elysiajs/swagger";
 import { Elysia } from "elysia";
 
-import { auth, moonpay, theme, user } from "@root/apis";
+import { auth, dashboard, moonpay, theme, user } from "@root/apis";
 
 import { errorPlugin } from "./plugins/error.plugin";
 
@@ -24,6 +24,7 @@ const app = new Elysia()
   .use(user)
   .use(theme)
   .use(moonpay)
+  .use(dashboard)
   .use(errorPlugin)
   .listen(8080);
 

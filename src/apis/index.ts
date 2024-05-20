@@ -14,6 +14,7 @@ import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
+import { overview } from "./dashboard/overview";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -56,3 +57,11 @@ export const moonpay = new Elysia({
     tags: ["Moonpay"]
   }
 }).use(webhookMoonPay);
+
+export const dashboard = new Elysia({
+  name: "Controller.Dashboard",
+  prefix: ENDPOINT.DASHBOARD.PREFIX,
+  detail: {
+    tags: ["Dashboard"]
+  }
+}).use(overview);
