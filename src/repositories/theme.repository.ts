@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
-import { CreateThemePayload } from "@root/apis/theme/create-theme";
 
+import type { CreateThemePayload } from "@root/apis/theme/create-theme";
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
 import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
@@ -10,7 +10,8 @@ type CreateListingAndSaleParams = Pick<
   "listing_price" | "sale_price" | "theme_id"
 >;
 
-type CreateThemeParams = Omit<CreateThemePayload, "media"> & {
+type CreateThemeParams = Omit<CreateThemePayload, "media" | "zip_file"> & {
+  zip_link: string;
   media: { images: string[] };
   features: {
     template: string[];
