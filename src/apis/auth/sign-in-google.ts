@@ -43,7 +43,7 @@ export const signInGoogle = new Elysia({
       return {
         accessToken,
         refreshToken,
-        userId: user.id
+        user
       };
     },
     {
