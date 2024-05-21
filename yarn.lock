@@ -888,6 +888,11 @@
   resolved "https://registry.yarnpkg.com/@ioredis/commands/-/commands-1.2.0.tgz#6d61b3097470af1fdbbe622795b8921d42018e11"
   integrity sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==
 
+"@moonpay/moonpay-node@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@moonpay/moonpay-node/-/moonpay-node-0.2.5.tgz#e5450eb10b041b6f9094f7f9a6671c788aeebfb1"
+  integrity sha512-GZUBovahXfhMftaKfbKOLzbpvZ/z7qa/t2QWWw2oEbxMPjndb517b5OLQTlQ9HIINWnjZqTuprFM0HHaIH4XGQ==
+
 "@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.2":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@msgpackr-extract/msgpackr-extract-darwin-arm64/-/msgpackr-extract-darwin-arm64-3.0.2.tgz#44d752c1a2dc113f15f781b7cc4f53a307e3fa38"

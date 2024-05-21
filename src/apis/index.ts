@@ -14,6 +14,7 @@ import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
+import { payment } from "./theme/payment";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -47,7 +48,8 @@ export const theme = new Elysia({
   .use(buyTheme)
   .use(buyLicense)
   .use(uploadTheme)
-  .use(downloadTheme);
+  .use(downloadTheme)
+  .use(payment);
 
 export const moonpay = new Elysia({
   name: "Controller.Moonpay",
