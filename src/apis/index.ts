@@ -17,6 +17,8 @@ import { me } from "./user/me";
 import { getOverview } from "./dashboard/get-overview";
 import { getProducts } from "./dashboard/get-products";
 import { getSales } from "./dashboard/get-sales";
+import { fetchPrices } from "./crypto-price/fetch-prices";
+import { getPrice } from "./crypto-price/get-price";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -70,3 +72,13 @@ export const dashboard = new Elysia({
   .use(getOverview)
   .use(getProducts)
   .use(getSales);
+
+export const cryptoPrice = new Elysia({
+  name: "Controller.CryptoPrice",
+  prefix: ENDPOINT.CRYPTO_PRICE.PREFIX,
+  detail: {
+    tags: ["CryptoPrice"]
+  }
+})
+  .use(fetchPrices)
+  .use(getPrice);
