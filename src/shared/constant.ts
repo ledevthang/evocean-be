@@ -17,7 +17,8 @@ export const ENDPOINT = {
     BUY_THEME: "/buying",
     BUY_LICENSE: "/license-buying",
     UPLOAD_THEME: "/upload",
-    DOWNLOAD: "/download"
+    DOWNLOAD: "/download",
+    PAYMENT: "/payment",
   },
   MOONPAY: {
     PREFIX: "moonpay",

@@ -14,6 +14,7 @@ import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
+import { payment } from "./theme/payment";
 import { getOverview } from "./dashboard/get-overview";
 import { getProducts } from "./dashboard/get-products";
 import { getSales } from "./dashboard/get-sales";
@@ -52,7 +53,8 @@ export const theme = new Elysia({
   .use(buyTheme)
   .use(buyLicense)
   .use(uploadTheme)
-  .use(downloadTheme);
+  .use(downloadTheme)
+  .use(payment);
 
 export const moonpay = new Elysia({
   name: "Controller.Moonpay",
