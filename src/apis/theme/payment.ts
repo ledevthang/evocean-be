@@ -14,12 +14,9 @@ export const payment = new Elysia({
     const signature = moonPay.url.generateSignature(
       `${query.url}`,
     );
-    console.log('signature:', signature)
     const isSignatureValid = moonPay.url.isSignatureValid(
       `${query.url}&signature=${signature}`,
     );
-    console.log(`${query.url}&signature=${signature}`)
-    console.log('isSignatureValid', isSignatureValid)
     return {
       signature
     };

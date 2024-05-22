@@ -40,7 +40,7 @@ export abstract class ThemeRepository {
   ) {
     return prisma.theme.findUnique({
       where: {
-        id
+        id: +id
       },
       include: {
         listing: opts?.withListing,

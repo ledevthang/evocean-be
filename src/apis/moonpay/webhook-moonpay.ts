@@ -25,6 +25,8 @@ export const webhookMoonPay = new Elysia({
 
     const themePayload: ThemePayload = JSON.parse(data.externalTransactionId);
 
+    console.log('themePayload', themePayload)
+
     const theme = await ThemeRepository.findById(themePayload.theme_id, {
       withListing: true,
       withSale: true
@@ -49,7 +51,7 @@ export const webhookMoonPay = new Elysia({
         price: theme.listing!.price.toNumber(),
         buyer: externalCustomerId,
         seller: theme.author_address,
-        theme_id: themePayload.theme_id,
+        theme_id: +themePayload.theme_id,
         tx_id: data.id
       });
     }
