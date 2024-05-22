@@ -19,6 +19,7 @@ export const listTheme = new Elysia({
 }).post(
   ENDPOINT.THEME.LIST_THEME,
   async ({ body }) => {
+    console.log('hreer')
     const { listing_price, sale_price, seller, theme_id } = body;
 
     const theme = await ThemeRepository.findById(theme_id);

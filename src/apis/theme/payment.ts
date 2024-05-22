@@ -12,8 +12,16 @@ export const payment = new Elysia({
     const secretKey = readConfigOrDie("SECRET_KEY_MOONPAY")
     const moonPay = new MoonPay(secretKey);
     const signature = moonPay.url.generateSignature(
-      `https://buy.moonpay.com/?apiKey=${query.url}`,
+      `${query.url}`,
     );
-    return signature;
+    console.log('signature:', signature)
+    const isSignatureValid = moonPay.url.isSignatureValid(
+      `${query.url}&signature=${signature}`,
+    );
+    console.log(`${query.url}&signature=${signature}`)
+    console.log('isSignatureValid', isSignatureValid)
+    return {
+      signature
+    };
   },
 );
