@@ -25,6 +25,8 @@ export const ENDPOINT = {
   },
   DASHBOARD: {
     PREFIX: "dashboard",
-    GET_OVERVIEW: "/overview"
+    GET_OVERVIEW: "/overview",
+    GET_PRODUCTS: "/products",
+    GET_SALES: "/sales",
   }
 } as const;

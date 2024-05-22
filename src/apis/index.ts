@@ -14,7 +14,9 @@ import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
-import { overview } from "./dashboard/overview";
+import { getOverview } from "./dashboard/get-overview";
+import { getProducts } from "./dashboard/get-products";
+import { getSales } from "./dashboard/get-sales";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -64,4 +66,7 @@ export const dashboard = new Elysia({
   detail: {
     tags: ["Dashboard"]
   }
-}).use(overview);
+})
+  .use(getOverview)
+  .use(getProducts)
+  .use(getSales);
