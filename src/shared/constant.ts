@@ -23,5 +23,15 @@ export const ENDPOINT = {
   MOONPAY: {
     PREFIX: "moonpay",
     WEBHOOK: "/webhook"
+  },
+  DASHBOARD: {
+    PREFIX: "dashboard",
+    GET_OVERVIEW: "/overview",
+    GET_PRODUCTS: "/products",
+    GET_SALES: "/sales"
+  },
+  CRYPTO_PRICE: {
+    PREFIX: "crypto-price",
+    GET_PRICE: "/:token_id"
   }
 } as const;

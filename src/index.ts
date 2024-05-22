@@ -2,7 +2,7 @@ import swagger from "@elysiajs/swagger";
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 
-import { auth, moonpay, theme, user } from "@root/apis";
+import { auth, cryptoPrice, dashboard, moonpay, theme, user } from "@root/apis";
 
 import { errorPlugin } from "./plugins/error.plugin";
 
@@ -26,6 +26,8 @@ const app = new Elysia()
   .use(user)
   .use(theme)
   .use(moonpay)
+  .use(dashboard)
+  .use(cryptoPrice)
   .use(errorPlugin)
   .listen(8000);
 
