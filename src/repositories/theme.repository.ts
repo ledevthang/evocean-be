@@ -189,4 +189,28 @@ export abstract class ThemeRepository {
       }
     });
   }
+
+  static findProductsByUserId(author_address: string) {
+    return prisma.theme.findMany({
+      where: {
+        author_address: author_address,
+        listing: {
+          isNot: null
+        }
+      },
+      include: {
+        listing: {
+          select: {
+            price: true
+          }
+        },
+        _count: {
+          select: {
+            transactions: true
+          }
+        }
+      }
+    });
+  }
+
 }

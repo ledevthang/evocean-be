@@ -27,7 +27,8 @@ export const buyLicense = new Elysia({
       buyer,
       theme_id,
       price: theme.listing.price.toNumber(),
-      seller: theme.author_address
+      seller: theme.author_address,
+      tx_id: "0x0"
     });
 
     return {};
