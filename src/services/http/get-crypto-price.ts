@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { readConfigOrDie } from "@root/helpers/read-config";
+import { COINGEKO_API_KEY, COINGEKO_URL } from "@root/shared/env";
 
 type GetCryptoPrice = {
   token_id: string;
@@ -13,9 +13,9 @@ export const getCryptoPrice = async (
   token_id: string
 ): Promise<GetCryptoPrice> => {
   const headers = {
-    x_cg_api_key: readConfigOrDie("COINGEKO_API_KEY")
+    x_cg_api_key: COINGEKO_API_KEY
   };
-  const url = readConfigOrDie("COINGEKO_URL") + "/coins/" + token_id;
+  const url = COINGEKO_URL + "/coins/" + token_id;
 
   const response = await axios.get(url, { headers });
 

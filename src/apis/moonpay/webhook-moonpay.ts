@@ -4,9 +4,9 @@ import { Type } from "@sinclair/typebox";
 import { Value } from "@sinclair/typebox/value";
 import Elysia, { InternalServerError, t } from "elysia";
 
+import { BadRequestError } from "@root/errors/BadRequestError";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import { BadRequestError } from "@root/errors/BadRequestError";
 
 const webhookPayload = t.Object({
   data: t.Object({
