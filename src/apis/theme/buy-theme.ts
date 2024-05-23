@@ -2,10 +2,12 @@ import Elysia, { InternalServerError, t } from "elysia";
 
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
+import { Currency } from "@prisma/client";
 
 const buyThemePayload = t.Object({
   buyer: t.String({ minLength: 1 }),
-  theme_id: t.Number({ minimum: 1 })
+  theme_id: t.Number({ minimum: 1 }),
+  currency: t.Enum(Currency)
 });
 
 export const buyTheme = new Elysia({
@@ -13,7 +15,7 @@ export const buyTheme = new Elysia({
 }).post(
   ENDPOINT.THEME.BUY_THEME,
   async ({ body }) => {
-    const { buyer, theme_id } = body;
+    const { buyer, theme_id, currency } = body;
 
     const theme = await ThemeRepository.findById(theme_id, {
       withListing: true,
@@ -29,7 +31,8 @@ export const buyTheme = new Elysia({
       buyer,
       seller: theme.author_address,
       theme_id,
-      tx_id: "0x0"
+      tx_id: "0x0",
+      currency
     });
 
     return {};

@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import type { Currency, Prisma } from "@prisma/client";
 
 import type { CreateThemePayload } from "@root/apis/theme/create-theme";
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
@@ -25,6 +25,7 @@ type BuyThemeParams = {
   buyer: string;
   seller: string;
   price: number;
+  currency: Currency;
 };
 
 type BuyLicenseParams = BuyThemeParams;
@@ -110,7 +111,7 @@ export abstract class ThemeRepository {
     ]);
   }
 
-  static buy({ tx_id, buyer, theme_id, price, seller }: BuyThemeParams) {
+  static buy({ tx_id, buyer, theme_id, price, seller, currency }: BuyThemeParams) {
     return prisma.theme.update({
       where: {
         id: theme_id
@@ -125,7 +126,8 @@ export abstract class ThemeRepository {
             buyer,
             kind: "buy",
             price,
-            tx_id
+            tx_id,
+            currency
           }
         }
       }
@@ -137,7 +139,8 @@ export abstract class ThemeRepository {
     buyer,
     theme_id,
     price,
-    seller
+    seller,
+    currency
   }: BuyLicenseParams) {
     return prisma.theme.update({
       where: {
@@ -151,7 +154,8 @@ export abstract class ThemeRepository {
             price,
             kind: "buy_owned_ship",
             seller,
-            tx_id
+            tx_id,
+            currency
           }
         }
       }

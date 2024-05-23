@@ -2,11 +2,13 @@ import Elysia, { InternalServerError, t } from "elysia";
 
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
+import { Currency } from "@prisma/client";
 
 const webhookPayload = t.Object({
   data: t.Object({
     id: t.String(),
-    externalTransactionId: t.String() // theme data
+    externalTransactionId: t.String(), // theme data,
+    currency: t.Enum(Currency)
   }),
   type: t.String(),
   externalCustomerId: t.String()
@@ -24,8 +26,6 @@ export const webhookMoonPay = new Elysia({
     const { data, type, externalCustomerId } = body;
 
     const themePayload: ThemePayload = JSON.parse(data.externalTransactionId);
-
-    console.log('themePayload', themePayload)
 
     const theme = await ThemeRepository.findById(themePayload.theme_id, {
       withListing: true,
@@ -52,7 +52,8 @@ export const webhookMoonPay = new Elysia({
         buyer: externalCustomerId,
         seller: theme.author_address,
         theme_id: +themePayload.theme_id,
-        tx_id: data.id
+        tx_id: data.id,
+        currency: data.currency
       });
     }
 

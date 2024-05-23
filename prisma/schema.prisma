@@ -73,6 +73,7 @@ model Transaction {
   theme_id Int
   kind     TransactionKind
   theme    Theme           @relation(fields: [theme_id], references: [id])
+  currency Currency
 
   @@map("transaction")
 }
@@ -82,4 +83,11 @@ enum TransactionKind {
   buy
 
   @@map("transaction_kind")
+}
+
+enum Currency {
+  sol
+  usd
+
+  @@map("currency")
 }
