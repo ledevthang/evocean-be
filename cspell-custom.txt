@@ -1,3 +1,5 @@
 elysia
 moonkit
 millis
+coingeko
+solana

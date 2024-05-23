@@ -1,7 +1,8 @@
 import Elysia from "elysia";
 
 import { ForbiddenError } from "@root/errors/ForbiddenError";
-import { BadRequestError, UnauthorizedError } from "@root/errors/UnauthorizedError";
+import { UnauthorizedError } from "@root/errors/UnauthorizedError";
+import { BadRequestError } from "@root/errors/BadRequestError";
 
 export const errorPlugin = new Elysia({
   name: "Plugin.Error"

@@ -111,7 +111,14 @@ export abstract class ThemeRepository {
     ]);
   }
 
-  static buy({ tx_id, buyer, theme_id, price, seller, currency }: BuyThemeParams) {
+  static buy({
+    tx_id,
+    buyer,
+    theme_id,
+    price,
+    seller,
+    currency
+  }: BuyThemeParams) {
     return prisma.theme.update({
       where: {
         id: theme_id
@@ -216,5 +223,4 @@ export abstract class ThemeRepository {
       }
     });
   }
-
 }

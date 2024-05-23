@@ -1,8 +1,8 @@
-import { Decimal } from "@prisma/client/runtime/library";
+import Elysia, { t } from "elysia";
+
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { TransactionRepository } from "@root/repositories/transaction.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import Elysia, { t } from "elysia";
 
 type GetProductParams = {
   id: number;
@@ -24,7 +24,7 @@ export const getProducts = new Elysia({
     );
 
     for (const p of products) {
-      let sellingTotal = await TransactionRepository.getSellingTotalByThemeId(
+      const sellingTotal = await TransactionRepository.getSellingTotalByThemeId(
         p.id
       );
 

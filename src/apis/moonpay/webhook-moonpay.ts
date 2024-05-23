@@ -1,18 +1,17 @@
+import { Currency } from "@prisma/client";
+import type { Static } from "@sinclair/typebox";
+import { Type } from "@sinclair/typebox";
+import { Value } from "@sinclair/typebox/value";
 import Elysia, { InternalServerError, t } from "elysia";
-import {Value} from "@sinclair/typebox/value"
 
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import { Currency } from "@prisma/client";
-import { Static, Type } from "@sinclair/typebox";
-import { BadRequestError } from "@root/errors/UnauthorizedError";
-
-
+import { BadRequestError } from "@root/errors/BadRequestError";
 
 const webhookPayload = t.Object({
   data: t.Object({
     id: t.String(),
-    externalTransactionId: t.String(), // theme data
+    externalTransactionId: t.String() // theme data
   }),
   type: t.String(),
   externalCustomerId: t.String()
@@ -20,8 +19,8 @@ const webhookPayload = t.Object({
 
 const themePayloadSchema = Type.Object({
   theme_id: Type.Number(),
-  currency: Type.Enum(Currency),
-}); 
+  currency: Type.Enum(Currency)
+});
 
 export const webhookMoonPay = new Elysia({
   name: "Handler.MoonpayWebhook"
@@ -30,17 +29,20 @@ export const webhookMoonPay = new Elysia({
   async ({ body }) => {
     const { data, type, externalCustomerId } = body;
 
-    let themePayload: Static<typeof themePayloadSchema> = JSON.parse(data.externalTransactionId);
+    const themePayload: Static<typeof themePayloadSchema> = JSON.parse(
+      data.externalTransactionId
+    );
 
-    if(!Value.Check(themePayloadSchema,themePayload)) {
-      throw new BadRequestError('Invalid theme payload')
+    if (!Value.Check(themePayloadSchema, themePayload)) {
+      throw new BadRequestError("Invalid theme payload");
     }
-
 
     const theme = await ThemeRepository.findById(themePayload.theme_id, {
       withListing: true,
       withSale: true
     });
+
+    const { currency, theme_id } = themePayload;
 
     // check if the theme has been listed or not
     if (!theme?.sale || !theme.author_address) {
@@ -62,8 +64,8 @@ export const webhookMoonPay = new Elysia({
         buyer: externalCustomerId,
         seller: theme.author_address,
         tx_id: data.id,
-        theme_id: themePayload.theme_id,
-        currency: themePayload.currency,
+        theme_id,
+        currency
       });
     }
 

@@ -1,7 +1,8 @@
 import cron, { Patterns } from "@elysiajs/cron";
+import Elysia from "elysia";
+
 import { CryptoPricesRepository } from "@root/repositories/cryptoPrices.repository";
 import { getCryptoPrice } from "@root/services/http/get-crypto-price";
-import Elysia from "elysia";
 
 export const fetchPrices = new Elysia({
   name: "Handler.FetchPrices"

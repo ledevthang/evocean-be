@@ -1,8 +1,8 @@
+import { Currency } from "@prisma/client";
 import Elysia, { InternalServerError, t } from "elysia";
 
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import { Currency } from "@prisma/client";
 
 const buyThemePayload = t.Object({
   buyer: t.String({ minLength: 1 }),
