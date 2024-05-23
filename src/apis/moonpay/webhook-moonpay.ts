@@ -45,7 +45,7 @@ export const webhookMoonPay = new Elysia({
         price: theme.listing!.price.toNumber(),
         buyer: externalCustomerId,
         seller: theme.author_address,
-        theme_id: themePayload.theme_id,
+        theme_id: themeId,
         tx_id: data.id
       });
     }

@@ -1,7 +1,7 @@
 import { readConfigOrDie } from "@root/helpers/read-config";
 import axios from "axios";
 
-type GetCryptoPrice {
+type GetCryptoPrice = {
     token_id: string;
     token_symbol: string;
     price_usd: number;
