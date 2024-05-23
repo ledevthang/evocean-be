@@ -1,22 +1,27 @@
 import Elysia, { InternalServerError, t } from "elysia";
+import {Value} from "@sinclair/typebox/value"
 
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 import { Currency } from "@prisma/client";
+import { Static, Type } from "@sinclair/typebox";
+import { BadRequestError } from "@root/errors/UnauthorizedError";
+
+
 
 const webhookPayload = t.Object({
   data: t.Object({
     id: t.String(),
-    externalTransactionId: t.String(), // theme data,
-    currency: t.Enum(Currency)
+    externalTransactionId: t.String(), // theme data
   }),
   type: t.String(),
   externalCustomerId: t.String()
 });
 
-type ThemePayload = {
-  theme_id: number;
-};
+const themePayloadSchema = Type.Object({
+  theme_id: Type.Number(),
+  currency: Type.Enum(Currency),
+}); 
 
 export const webhookMoonPay = new Elysia({
   name: "Handler.MoonpayWebhook"
@@ -25,7 +30,12 @@ export const webhookMoonPay = new Elysia({
   async ({ body }) => {
     const { data, type, externalCustomerId } = body;
 
-    const themePayload: ThemePayload = JSON.parse(data.externalTransactionId);
+    let themePayload: Static<typeof themePayloadSchema> = JSON.parse(data.externalTransactionId);
+
+    if(!Value.Check(themePayloadSchema,themePayload)) {
+      throw new BadRequestError('Invalid theme payload')
+    }
+
 
     const theme = await ThemeRepository.findById(themePayload.theme_id, {
       withListing: true,
@@ -51,9 +61,9 @@ export const webhookMoonPay = new Elysia({
         price: theme.listing!.price.toNumber(),
         buyer: externalCustomerId,
         seller: theme.author_address,
-        theme_id: +themePayload.theme_id,
         tx_id: data.id,
-        currency: data.currency
+        theme_id: themePayload.theme_id,
+        currency: themePayload.currency,
       });
     }
 

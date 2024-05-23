@@ -1,14 +1,15 @@
 import Elysia from "elysia";
 
 import { ForbiddenError } from "@root/errors/ForbiddenError";
-import { UnauthorizedError } from "@root/errors/UnauthorizedError";
+import { BadRequestError, UnauthorizedError } from "@root/errors/UnauthorizedError";
 
 export const errorPlugin = new Elysia({
   name: "Plugin.Error"
 })
   .error({
     UnauthorizedError: UnauthorizedError,
-    ForbiddenError: ForbiddenError
+    ForbiddenError: ForbiddenError,
+    BadRequestError: BadRequestError
   })
   .onError(({ code, set, error }) => {
     switch (code) {
@@ -18,6 +19,10 @@ export const errorPlugin = new Elysia({
 
       case "ForbiddenError":
         set.status = 403;
+        break;
+
+      case "BadRequestError":
+        set.status = 400;
         break;
 
       default:

@@ -20,6 +20,7 @@
     "@elysiajs/swagger": "^1.0.5",
     "@moonpay/moonpay-node": "^0.2.5",
     "@prisma/client": "5.13.0",
+    "@sinclair/typebox": "^0.32.30",
     "@solana/spl-token": "^0.4.6",
     "axios": "^1.6.8",
     "bull": "^4.12.2",
