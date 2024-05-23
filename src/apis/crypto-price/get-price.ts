@@ -1,6 +1,7 @@
+import Elysia, { t } from "elysia";
+
 import { CryptoPricesRepository } from "@root/repositories/cryptoPrices.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import Elysia, { t } from "elysia";
 
 export const getPrice = new Elysia({
   name: "Handler.GetPrice"

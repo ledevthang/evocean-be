@@ -1,6 +1,7 @@
+import Elysia, { t } from "elysia";
+
 import { TransactionRepository } from "@root/repositories/transaction.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import Elysia, { t } from "elysia";
 
 type GetSalesParams = {
   id: number;
@@ -23,7 +24,7 @@ export const getSales = new Elysia({}).get(
         id: tx.id,
         product: tx.theme.name,
         price: tx.price.toNumber(),
-        earn: tx.price.toNumber() * 0.8, // Example: fee = 20%
+        earn: tx.price.toNumber() * 0.8 // Example: fee = 20%
       });
     }
 

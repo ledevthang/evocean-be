@@ -2,8 +2,13 @@ import Elysia from "elysia";
 
 import { ENDPOINT } from "@root/shared/constant";
 
+import { fetchPrices } from "../plugins/fetch-solana-price.plugin";
 import { signIn } from "./auth/sign-in";
 import { signInGoogle } from "./auth/sign-in-google";
+import { getPrice } from "./crypto-price/get-price";
+import { getOverview } from "./dashboard/get-overview";
+import { getProducts } from "./dashboard/get-products";
+import { getSales } from "./dashboard/get-sales";
 import { webhookMoonPay } from "./moonpay/webhook-moonpay";
 import { buyLicense } from "./theme/buy-license";
 import { buyTheme } from "./theme/buy-theme";
@@ -12,14 +17,9 @@ import { downloadTheme } from "./theme/download-theme";
 import { getTheme } from "./theme/get-theme";
 import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
+import { payment } from "./theme/payment";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
-import { payment } from "./theme/payment";
-import { getOverview } from "./dashboard/get-overview";
-import { getProducts } from "./dashboard/get-products";
-import { getSales } from "./dashboard/get-sales";
-import { fetchPrices } from "../plugins/fetch-solana-price.plugin";
-import { getPrice } from "./crypto-price/get-price";
 
 export const auth = new Elysia({
   name: "Controller.Auth",

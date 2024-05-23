@@ -1,6 +1,6 @@
+import { cors } from "@elysiajs/cors";
 import swagger from "@elysiajs/swagger";
 import { Elysia } from "elysia";
-import { cors } from "@elysiajs/cors";
 
 import { auth, cryptoPrice, dashboard, moonpay, theme, user } from "@root/apis";
 
