@@ -18,7 +18,7 @@ import { payment } from "./theme/payment";
 import { getOverview } from "./dashboard/get-overview";
 import { getProducts } from "./dashboard/get-products";
 import { getSales } from "./dashboard/get-sales";
-import { fetchPrices } from "./crypto-price/fetch-prices";
+import { fetchPrices } from "../plugins/fetch-solana-price.plugin";
 import { getPrice } from "./crypto-price/get-price";
 
 export const auth = new Elysia({

@@ -6,15 +6,11 @@ import { ENDPOINT } from "@root/shared/constant";
 const webhookPayload = t.Object({
   data: t.Object({
     id: t.String(),
-    externalTransactionId: t.String() // theme data
+    externalTransactionId: t.Number() // theme data
   }),
   type: t.String(),
   externalCustomerId: t.String()
 });
-
-type ThemePayload = {
-  theme_id: number;
-};
 
 export const webhookMoonPay = new Elysia({
   name: "Handler.MoonpayWebhook"
@@ -23,9 +19,9 @@ export const webhookMoonPay = new Elysia({
   async ({ body }) => {
     const { data, type, externalCustomerId } = body;
 
-    const themePayload: ThemePayload = JSON.parse(data.externalTransactionId);
+    const themeId = data.externalTransactionId;
 
-    const theme = await ThemeRepository.findById(themePayload.theme_id, {
+    const theme = await ThemeRepository.findById(themeId, {
       withListing: true,
       withSale: true
     });
