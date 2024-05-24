@@ -39,7 +39,6 @@ export const createTheme = new Elysia({
     ENDPOINT.THEME.CREATE_THEME,
     async ({ body, claims }) => {
       const { theme, media_images, features_template, features_figma } = body;
-      // console.log(body);
 
       // upload theme
       const zip_link = await uploadFile(theme);

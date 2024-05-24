@@ -2,20 +2,23 @@ import Elysia, { t } from "elysia";
 
 import { TransactionRepository } from "@root/repositories/transaction.repository";
 import { ENDPOINT } from "@root/shared/constant";
+import { authPlugin } from "@root/plugins/auth.plugin";
 
 export const getOverview = new Elysia({
   name: "Handler.Overview"
-}).get(
+})
+.use(authPlugin)
+.get(
   ENDPOINT.DASHBOARD.GET_OVERVIEW,
-  async ({ query }) => {
+  async ({ claims }) => {
     const sellingTotal = await TransactionRepository.getSellingTotalById(
-      query.user_id.toString()
+      claims.id.toString()
     );
     const sellingOwnerTotal = await TransactionRepository.getSellingOwnerById(
-      query.user_id.toString()
+      claims.id.toString()
     );
     const totalPayout = await TransactionRepository.getTotalPayoutById(
-      query.user_id.toString()
+      claims.id.toString()
     );
 
     return {
@@ -23,12 +26,5 @@ export const getOverview = new Elysia({
       sellingOwnerTotal: sellingOwnerTotal._sum.price,
       totalPayout: totalPayout._sum.price
     };
-  },
-  {
-    query: t.Object({
-      user_id: t.Numeric({
-        minimum: 0
-      })
-    })
-  }
+  }  
 );

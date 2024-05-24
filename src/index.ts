@@ -5,8 +5,11 @@ import { Elysia } from "elysia";
 import { auth, cryptoPrice, dashboard, moonpay, theme, user } from "@root/apis";
 
 import { errorPlugin } from "./plugins/error.plugin";
+import { loggerPlugin } from "./plugins/logger.plugin";
 
 const app = new Elysia()
+  .use(loggerPlugin)
+  .use(errorPlugin)
   .use(
     swagger({
       documentation: {
@@ -28,7 +31,6 @@ const app = new Elysia()
   .use(moonpay)
   .use(dashboard)
   .use(cryptoPrice)
-  .use(errorPlugin)
   .listen(8000);
 
 console.log(
