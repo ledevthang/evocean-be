@@ -12,7 +12,7 @@ export const errorPlugin = new Elysia({
     ForbiddenError: ForbiddenError,
     BadRequestError: BadRequestError
   })
-  .onError(({ code, set, error }) => {
+  .onError({as: 'global'}, ({ code, set, error }) => {
     switch (code) {
       case "UnauthorizedError":
         set.status = 401;
@@ -29,7 +29,7 @@ export const errorPlugin = new Elysia({
       default:
         break;
     }
-
+    console.log(error)
     return {
       message: error.message,
       cause: error.cause,

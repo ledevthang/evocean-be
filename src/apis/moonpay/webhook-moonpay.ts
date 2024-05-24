@@ -46,12 +46,11 @@ export const webhookMoonPay = new Elysia({
 
     // check if the theme has been listed or not
     if (!theme?.sale || !theme.author_address) {
-      console.log("sale not found");
       throw new InternalServerError("Sale not found");
     }
-
     // check if the buyer has been added to the owner_address array
     if (theme.owner_addresses.includes(externalCustomerId)) {
+      return;
       console.log("You have already bought this theme");
       throw new InternalServerError("You have already bought this theme");
     }
