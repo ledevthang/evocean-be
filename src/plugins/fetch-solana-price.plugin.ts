@@ -10,16 +10,17 @@ export const fetchPrices = new Elysia({
   cron({
     name: "Cron.FetchPrices",
     pattern: Patterns.everyMinutes(5),
+    // pattern: Patterns.everySenconds(10),
     async run() {
       // fetch price
       const priceData = await getCryptoPrice("solana");
 
       // save to the DB
       await CryptoPricesRepository.upsertCryptoPrice({
-        token_id: priceData.token_id,
-        token_symbol: priceData.token_symbol,
+        token_id: priceData.id,
+        token_symbol: priceData.symbol,
         price_usd: priceData.price_usd,
-        lasted_updated: new Date(priceData.lasted_updated)
+        last_updated: new Date(priceData.last_updated)
       });
     }
   })
