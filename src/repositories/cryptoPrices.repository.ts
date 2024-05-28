@@ -4,7 +4,7 @@ type PriceParams = {
   token_id: string;
   token_symbol: string;
   price_usd: number;
-  lasted_updated: Date;
+  last_updated: Date;
 };
 
 export abstract class CryptoPricesRepository {
@@ -12,7 +12,7 @@ export abstract class CryptoPricesRepository {
     token_id,
     token_symbol,
     price_usd,
-    lasted_updated
+    last_updated
   }: PriceParams) {
     return prisma.cryptoPrices.upsert({
       where: {
@@ -22,11 +22,11 @@ export abstract class CryptoPricesRepository {
         token_id,
         token_symbol,
         price_usd,
-        lasted_updated
+        last_updated
       },
       update: {
         price_usd,
-        lasted_updated
+        last_updated
       }
     });
   }
