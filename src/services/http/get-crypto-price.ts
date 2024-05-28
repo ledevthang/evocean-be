@@ -3,10 +3,10 @@ import axios from "axios";
 import { COINGEKO_API_KEY, COINGEKO_URL } from "@root/shared/env";
 
 type GetCryptoPrice = {
-  id: string;
-  symbol: string;
+  token_id: string;
+  token_symbol: string;
   price_usd: number;
-  last_updated: Date;
+  lasted_updated: Date;
 };
 
 export const getCryptoPrice = async (
@@ -19,10 +19,5 @@ export const getCryptoPrice = async (
 
   const response = await axios.get(url, { headers });
 
-  return {
-    id: response.data.id,
-    symbol: response.data.symbol,
-    price_usd: response.data.market_data.current_price.usd,
-    last_updated: new Date(response.data.last_updated)
-  };
+  return response.data;
 };

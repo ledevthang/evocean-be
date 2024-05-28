@@ -25,6 +25,11 @@ model Theme {
   owner_addresses String[]      @db.VarChar
   token_mint      String?       @db.VarChar
   author_address  String?       @db.VarChar
+  pages           String[]      @db.VarChar
+  highlight       String[]      @db.VarChar
+  format          String[]      @db.VarChar
+  features        Json
+  support         String[]      @db.VarChar
   sale            ThemeSale?
   listing         ThemeListing?
   transactions    Transaction[]
@@ -49,11 +54,11 @@ model ThemeListing {
 }
 
 model CryptoPrices {
-  id           Int      @id @default(autoincrement())
-  token_id     String   @unique
-  token_symbol String   @unique
-  price_usd    Decimal
-  last_updated DateTime
+  id             Int      @id @default(autoincrement())
+  token_id       String   @unique
+  token_symbol   String   @unique
+  price_usd      Decimal
+  lasted_updated DateTime
 
   @@map("crypto_prices")
 }
