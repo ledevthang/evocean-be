@@ -16,7 +16,7 @@ export const authPlugin = new Elysia({
     if (!claims) {
       throw new UnauthorizedError('Unauthorized access');
     }
-
+    console.log('claims', claims);
     return {
       claims
     };
