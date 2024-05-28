@@ -13,20 +13,21 @@ const createThemePayload = t.Object({
   }),
   name: t.String(),
   overview: t.String(),
-  media_images: t.Files({
-    type: ["image/jpeg", "image/png"],
-    maxSize: 100_000_000
-  }),
   owner_addresses: t.Array(t.String()),
   token_mint: t.Optional(t.String()),
   author_address: t.Optional(t.String()),
-  // new
-  pages: t.Array(t.String()),
-  highlight: t.Array(t.String()),
-  format: t.Array(t.String()),
-  features_template: t.Array(t.String()),
-  features_figma: t.Array(t.String()),
-  support: t.Array(t.String())
+  // MEDIA
+  pages: t.Optional(t.Array(t.String())),
+  format: t.Optional(t.Array(t.String())),
+  previews: t.Files({
+    type: ["image/jpeg", "image/png"],
+    maxSize: 100_000_000
+  }),
+  categories: t.Optional(t.Array(t.String())),
+  highlight: t.Optional(t.Array(t.String())),
+  live_preview: t.Optional(t.String()),
+  template_features: t.Optional(t.Array(t.String())),
+  figma_features: t.Optional(t.Array(t.String()))
 });
 
 export type CreateThemePayload = Static<typeof createThemePayload>;
@@ -37,31 +38,53 @@ export const createTheme = new Elysia({
   .use(authPlugin)
   .post(
     ENDPOINT.THEME.CREATE_THEME,
-    async ({ body, claims }) => {
-      const { theme, media_images, features_template, features_figma } = body;
+    async ({ body }) => {
+      const {
+        theme,
+        pages,
+        format,
+        previews,
+        categories,
+        highlight,
+        live_preview,
+        template_features,
+        figma_features
+      } = body;
+
+      console.log(body);
 
       // upload theme
       const zip_link = await uploadFile(theme);
 
       // upload media (images)
       const imageLinks: string[] = [];
-      for (const image of media_images) {
+      for (const image of previews) {
         const link = await uploadFile(image);
         imageLinks.push(link);
       }
 
+      const media = {
+        pages,
+        format,
+        previews: imageLinks,
+        categories,
+        highlight,
+        live_preview,
+        figma_features,
+        template_features
+      };
+
+      // console.log("=> ", {
+      //   ...body,
+      //   zip_link,
+      //   media
+      // });
+
       // create theme
       await ThemeRepository.create({
         ...body,
-        zip_link: zip_link,
-        media: {
-          images: imageLinks
-        },
-        features: {
-          template: features_template,
-          figma: features_figma
-        },
-        author_address: claims.id.toString()
+        zip_link,
+        media
       });
 
       return {};
