@@ -12,10 +12,15 @@ type CreateListingAndSaleParams = Pick<
 
 type CreateThemeParams = Omit<CreateThemePayload, "media" | "zip_file"> & {
   zip_link: string;
-  media: { images: string[] };
-  features: {
-    template: string[];
-    figma: string[];
+  media: {
+    pages?: string[];
+    format?: string[];
+    previews: string[];
+    categories?: string[];
+    highlight?: string[];
+    live_preview?: string;
+    template_features?: string[];
+    figma_features?: string[];
   };
 };
 
@@ -176,12 +181,7 @@ export abstract class ThemeRepository {
     media,
     owner_addresses,
     token_mint,
-    author_address,
-    pages,
-    highlight,
-    format,
-    features,
-    support
+    author_address
   }: CreateThemeParams) {
     return prisma.theme.create({
       data: {
@@ -191,12 +191,7 @@ export abstract class ThemeRepository {
         media,
         owner_addresses,
         token_mint,
-        author_address,
-        pages,
-        highlight,
-        format,
-        features,
-        support
+        author_address
       }
     });
   }
