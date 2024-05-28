@@ -14,17 +14,32 @@ export const getOverview = new Elysia({
     const sellingTotal = await TransactionRepository.getSellingTotalById(
       claims.id.toString()
     );
+    const sellingNumber = await TransactionRepository.getSellingNumberById(
+      claims.id.toString()
+    );
     const sellingOwnerTotal = await TransactionRepository.getSellingOwnerById(
+      claims.id.toString()
+    );
+    const sellingOwnerProductNumber = await TransactionRepository.getSellingOwnerProductById(
+      claims.id.toString()
+    );
+    const sellingOwnerProduct = await TransactionRepository.getSellingOwnerProduct(
       claims.id.toString()
     );
     const totalPayout = await TransactionRepository.getTotalPayoutById(
       claims.id.toString()
     );
-
+    const getSellingByYear = await TransactionRepository.getSellingTotalByYear(claims.id.toString(), 'buy');
+    const getOwnedByYear = await TransactionRepository.getSellingTotalByYear(claims.id.toString(), 'buy');
     return {
       sellingTotal: sellingTotal._sum.price,
+      sellingNumber,
       sellingOwnerTotal: sellingOwnerTotal._sum.price,
-      totalPayout: totalPayout._sum.price
+      sellingOwnerProductNumber,
+      sellingOwnerProduct,
+      totalPayout: totalPayout._sum.price,
+      getSellingByYear,
+      getOwnedByYear
     };
   }  
 );
