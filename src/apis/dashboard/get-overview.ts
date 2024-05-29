@@ -3,43 +3,66 @@ import Elysia, { t } from "elysia";
 import { TransactionRepository } from "@root/repositories/transaction.repository";
 import { ENDPOINT } from "@root/shared/constant";
 import { authPlugin } from "@root/plugins/auth.plugin";
+import { CryptoPricesRepository } from "@root/repositories/crypto-prices.repository";
 
 export const getOverview = new Elysia({
   name: "Handler.Overview"
 })
-.use(authPlugin)
-.get(
-  ENDPOINT.DASHBOARD.GET_OVERVIEW,
-  async ({ claims }) => {
-    const sellingTotal = await TransactionRepository.getSellingTotalById(
+  .use(authPlugin)
+  .get(ENDPOINT.DASHBOARD.GET_OVERVIEW, async ({ claims }) => {
+    const solPrice =
+      await CryptoPricesRepository.getCryptoPriceByTokenId("solana");
+
+    // CARD 1
+    const totalSellingProductEarned =
+      await TransactionRepository.getTotalSellingProductEarned(
+        claims.id.toString()
+      );
+    // tx
+    const totalSoldItems = await TransactionRepository.getTotalSoldItems(
       claims.id.toString()
     );
-    const sellingNumber = await TransactionRepository.getSellingNumberById(
+
+    // CARD 2
+    const totalOwnedProductEarned =
+      await TransactionRepository.getTotalOwnedProductEarned(
+        claims.id.toString()
+      );
+    // tx
+    const totalOwnedSholdItems =
+      await TransactionRepository.getTotalOwnedSholdItems(claims.id.toString());
+    // const sellingOwnerProduct =
+    //   await TransactionRepository.getSellingOwnerProduct(claims.id.toString());
+
+    // CARD 3
+    const totalPayout = await TransactionRepository.getTotalPayout(
       claims.id.toString()
     );
-    const sellingOwnerTotal = await TransactionRepository.getSellingOwnerById(
-      claims.id.toString()
-    );
-    const sellingOwnerProductNumber = await TransactionRepository.getSellingOwnerProductById(
-      claims.id.toString()
-    );
-    const sellingOwnerProduct = await TransactionRepository.getSellingOwnerProduct(
-      claims.id.toString()
-    );
-    const totalPayout = await TransactionRepository.getTotalPayoutById(
-      claims.id.toString()
-    );
-    const getSellingByYear = await TransactionRepository.getSellingTotalByYear(claims.id.toString(), 'buy');
-    const getOwnedByYear = await TransactionRepository.getSellingTotalByYear(claims.id.toString(), 'buy');
+
+    // CHART
+    const totalSellingProductEarnedByYear =
+      await TransactionRepository.getSellingTotalByYear(
+        claims.id.toString(),
+        "buy"
+      );
+    const totalOwnedProductEarnedByYear =
+      await TransactionRepository.getSellingTotalByYear(
+        claims.id.toString(),
+        "buy_owned_ship"
+      );
+
     return {
-      sellingTotal: sellingTotal._sum.price,
-      sellingNumber,
-      sellingOwnerTotal: sellingOwnerTotal._sum.price,
-      sellingOwnerProductNumber,
-      sellingOwnerProduct,
+      // CARD 1
+      sellingTotal: totalSellingProductEarned._sum.price,
+      sellingNumber: totalSoldItems,
+      // CARD 2
+      sellingOwnerTotal: totalOwnedProductEarned._sum.price,
+      sellingOwnerProductNumber: totalOwnedSholdItems,
+      // sellingOwnerProduct,
+      // CARD 3
       totalPayout: totalPayout._sum.price,
-      getSellingByYear,
-      getOwnedByYear
+      // CHART
+      getSellingByYear: totalSellingProductEarnedByYear,
+      getOwnedByYear: totalOwnedProductEarnedByYear
     };
-  }  
-);
+  });
