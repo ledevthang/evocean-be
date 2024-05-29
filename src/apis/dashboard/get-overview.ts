@@ -4,6 +4,7 @@ import { TransactionRepository } from "@root/repositories/transaction.repository
 import { ENDPOINT } from "@root/shared/constant";
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { CryptoPricesRepository } from "@root/repositories/crypto-prices.repository";
+import { TransactionKind } from "@prisma/client";
 
 export const getOverview = new Elysia({
   name: "Handler.Overview"
@@ -43,12 +44,12 @@ export const getOverview = new Elysia({
     const totalSellingProductEarnedByYear =
       await TransactionRepository.getSellingTotalByYear(
         claims.id.toString(),
-        "buy"
+        TransactionKind.buy
       );
     const totalOwnedProductEarnedByYear =
       await TransactionRepository.getSellingTotalByYear(
         claims.id.toString(),
-        "buy_owned_ship"
+        TransactionKind.buy_owned_ship
       );
 
     return {

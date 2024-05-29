@@ -73,10 +73,10 @@ export abstract class TransactionRepository {
   }
 
   // CHART
-  static getSellingTotalByYear(seller: string, kind: TransactionKind) {
+  static getSellingTotalByYear(seller: string, tx_kind: TransactionKind) {
     const currentYear = new Date().getFullYear();
-    const startTime = currentYear + "-01-01";
-    const endTime = currentYear + "-12-01";
+    const startTime = `${currentYear}-01-01`;
+    const endTime = `${currentYear}-12-01`;
     return prisma.$queryRaw<OverviewChartParams[]>`
       WITH months AS (
         SELECT generate_series(
@@ -93,7 +93,7 @@ export abstract class TransactionRepository {
       LEFT JOIN 
         "transaction" t
       ON 
-        DATE_TRUNC('month', t."date") = months.month AND t.seller = ${seller} AND t.kind = 'buy'
+        DATE_TRUNC('month', t."date") = months.month AND t.seller = ${seller} AND t.kind = ${tx_kind}::transaction_kind
       GROUP BY 
         months.month
       ORDER BY 
