@@ -141,10 +141,25 @@ export abstract class TransactionRepository {
     });
   }
 
-  static getSalesByUserId(user_id: string) {
+  static getTxBySeller(user_id: string) {
     return prisma.transaction.findMany({
       where: {
         seller: user_id
+      },
+      include: {
+        theme: {
+          include: {
+            listing: true
+          }
+        }
+      }
+    });
+  }
+
+  static getTxByBuyer(user_id: string) {
+    return prisma.transaction.findMany({
+      where: {
+        buyer: user_id
       },
       include: {
         theme: {

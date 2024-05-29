@@ -51,8 +51,6 @@ export const createTheme = new Elysia({
         figma_features
       } = body;
 
-      console.log(body);
-
       // upload theme
       const zip_link = await uploadFile(theme);
 
@@ -73,12 +71,6 @@ export const createTheme = new Elysia({
         figma_features,
         template_features
       };
-
-      // console.log("=> ", {
-      //   ...body,
-      //   zip_link,
-      //   media
-      // });
 
       // create theme
       await ThemeRepository.create({

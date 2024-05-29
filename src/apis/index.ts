@@ -20,6 +20,7 @@ import { listTheme } from "./theme/list-theme";
 import { payment } from "./theme/payment";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
+import { getPayout } from "./dashboard/get-payout";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -73,7 +74,8 @@ export const dashboard = new Elysia({
 })
   .use(getOverview)
   .use(getProducts)
-  .use(getSales);
+  .use(getSales)
+  .use(getPayout);
 
 export const cryptoPrice = new Elysia({
   name: "Controller.CryptoPrice",
