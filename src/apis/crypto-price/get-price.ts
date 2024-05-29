@@ -1,6 +1,6 @@
 import Elysia, { t } from "elysia";
 
-import { CryptoPricesRepository } from "@root/repositories/cryptoPrices.repository";
+import { CryptoPricesRepository } from "@root/repositories/crypto-prices.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 export const getPrice = new Elysia({

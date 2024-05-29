@@ -16,10 +16,10 @@ export const getPayout = new Elysia({
   name: "Handler.GetPayout"
 })
   .use(authPlugin)
-  .get(ENDPOINT.DASHBOARD.GET_PAYOUT, async ({ query, claims }) => {
+  .get(ENDPOINT.DASHBOARD.GET_PAYOUT, async ({ claims }) => {
     const response: GetPayoutParams[] = [];
 
-    const txs = await TransactionRepository.getTxByBuyer(claims.id.toString());
+    const txs = await TransactionRepository.getTxsByBuyer(claims.id.toString());
 
     for (const tx of txs) {
       response.push({

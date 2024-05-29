@@ -14,10 +14,12 @@ type GetSalesParams = {
 
 export const getSales = new Elysia({})
   .use(authPlugin)
-  .get(ENDPOINT.DASHBOARD.GET_SALES, async ({ query, claims }) => {
+  .get(ENDPOINT.DASHBOARD.GET_SALES, async ({ claims }) => {
     const response: GetSalesParams[] = [];
 
-    const txs = await TransactionRepository.getTxBySeller(claims.id.toString());
+    const txs = await TransactionRepository.getTxsBySeller(
+      claims.id.toString()
+    );
 
     for (const tx of txs) {
       response.push({
