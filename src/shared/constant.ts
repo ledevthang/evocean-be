@@ -28,7 +28,8 @@ export const ENDPOINT = {
     PREFIX: "dashboard",
     GET_OVERVIEW: "/overview",
     GET_PRODUCTS: "/products",
-    GET_SALES: "/sales"
+    GET_SALES: "/sales",
+    GET_PAYOUT: "/payout"
   },
   CRYPTO_PRICE: {
     PREFIX: "crypto-price",
