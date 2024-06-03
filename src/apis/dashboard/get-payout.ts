@@ -25,7 +25,7 @@ export const getPayout = new Elysia({
       response.push({
         date: tx.date,
         status: "Paid",
-        method: tx.currency === "sol" ? "Wallet" : "Moonkit",
+        method: tx.currency === "sol" ? "Wallet" : "Moonpay",
         product_name: tx.theme.name,
         note: tx.theme_id.toString(),
         amount: tx.theme.listing!.price.toNumber()
