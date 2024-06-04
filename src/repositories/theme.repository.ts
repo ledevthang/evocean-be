@@ -218,4 +218,14 @@ export abstract class ThemeRepository {
       }
     });
   }
+
+  static findPurchasedByUserId(user_id: string) {
+    return prisma.theme.findMany({
+      where: {
+        owner_addresses: {
+          has: user_id
+        }
+      }
+    });
+  }
 }
