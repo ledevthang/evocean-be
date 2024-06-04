@@ -13,6 +13,8 @@ model User {
   google_id String? @unique
   email     String? @unique @db.VarChar
 
+  themes Theme[]
+
   @@map("user")
 }
 
@@ -28,6 +30,8 @@ model Theme {
   sale            ThemeSale?
   listing         ThemeListing?
   transactions    Transaction[]
+  user            User?         @relation(fields: [user_id], references: [id])
+  user_id         Int?
 
   @@map("theme")
 }
