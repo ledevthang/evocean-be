@@ -21,7 +21,6 @@ import { payment } from "./theme/payment";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
 import { getPayout } from "./dashboard/get-payout";
-import { updateOwnerAddress } from "./auth/updateOnweraddress";
 import { getPurchasedTheme } from "./theme/get-purchased-themes";
 
 export const auth = new Elysia({
