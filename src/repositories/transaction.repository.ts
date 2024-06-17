@@ -1,4 +1,5 @@
-import type { TransactionKind } from "@prisma/client";
+import type { Prisma, TransactionKind } from "@prisma/client";
+import { GetTxByBuyerParams } from "@root/apis/dashboard/get-payout";
 
 import { prisma } from "@root/shared/prisma";
 
@@ -133,35 +134,53 @@ export abstract class TransactionRepository {
   // SALES API & PAYOUT API
   // GET tx by
   // SELLER
-  static getTxsBySeller(user_id: string) {
-    return prisma.transaction.findMany({
-      where: {
-        seller: user_id
-      },
-      include: {
-        theme: {
-          include: {
-            listing: true
+  static getTxsBySeller({ page, take, user_id }: GetTxByBuyerParams) {
+    const filter: Prisma.TransactionWhereInput = {};
+
+    if (user_id) {
+      filter.seller = user_id.toString();
+    }
+
+    return Promise.all([
+      prisma.transaction.findMany({
+        where: filter,
+        include: {
+          theme: {
+            include: {
+              listing: true
+            }
           }
-        }
-      }
-    });
+        },
+        take,
+        skip: (page - 1) * take
+      }),
+      prisma.transaction.count({ where: filter })
+    ]);
   }
 
   // BUYER
-  static getTxsByBuyer(user_id: string) {
-    return prisma.transaction.findMany({
-      where: {
-        buyer: user_id
-      },
-      include: {
-        theme: {
-          include: {
-            listing: true
+  static getTxsByBuyer({ page, take, user_id }: GetTxByBuyerParams) {
+    const filter: Prisma.TransactionWhereInput = {};
+
+    if (user_id) {
+      filter.buyer = user_id.toString();
+    }
+
+    return Promise.all([
+      prisma.transaction.findMany({
+        where: filter,
+        include: {
+          theme: {
+            include: {
+              listing: true
+            }
           }
-        }
-      }
-    });
+        },
+        take,
+        skip: (page - 1) * take
+      }),
+      prisma.transaction.count({ where: filter })
+    ]);
   }
 
   // !=
