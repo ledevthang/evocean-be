@@ -14,9 +14,9 @@ export const authPlugin = new Elysia({
   .derive({ as: "scoped" }, async ({ bearer, access }) => {
     const claims = (await access.verify(bearer)) as Claims | false;
     if (!claims) {
-      throw new UnauthorizedError('Unauthorized access');
+      throw new UnauthorizedError("Unauthorized access");
     }
-    console.log('claims', claims);
+    console.log("claims", claims);
     return {
       claims
     };

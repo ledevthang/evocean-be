@@ -1,7 +1,8 @@
+import Elysia from "elysia";
+
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { TransactionRepository } from "@root/repositories/transaction.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import Elysia, { t } from "elysia";
 
 type GetPayoutParams = {
   date: Date;

@@ -1,8 +1,8 @@
-import Elysia, { t } from "elysia";
+import Elysia from "elysia";
 
+import { authPlugin } from "@root/plugins/auth.plugin";
 import { TransactionRepository } from "@root/repositories/transaction.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import { authPlugin } from "@root/plugins/auth.plugin";
 
 type GetSalesParams = {
   date: Date;
