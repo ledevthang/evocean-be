@@ -7,6 +7,7 @@ import { signIn } from "./auth/sign-in";
 import { signInGoogle } from "./auth/sign-in-google";
 import { getPrice } from "./crypto-price/get-price";
 import { getOverview } from "./dashboard/get-overview";
+import { getPayout } from "./dashboard/get-payout";
 import { getProducts } from "./dashboard/get-products";
 import { getSales } from "./dashboard/get-sales";
 import { webhookMoonPay } from "./moonpay/webhook-moonpay";
@@ -14,14 +15,13 @@ import { buyLicense } from "./theme/buy-license";
 import { buyTheme } from "./theme/buy-theme";
 import { createTheme } from "./theme/create-theme";
 import { downloadTheme } from "./theme/download-theme";
+import { getPurchasedTheme } from "./theme/get-purchased-themes";
 import { getTheme } from "./theme/get-theme";
 import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { payment } from "./theme/payment";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
-import { getPayout } from "./dashboard/get-payout";
-import { getPurchasedTheme } from "./theme/get-purchased-themes";
 
 export const auth = new Elysia({
   name: "Controller.Auth",

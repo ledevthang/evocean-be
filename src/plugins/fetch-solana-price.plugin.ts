@@ -10,7 +10,7 @@ export const fetchPrices = new Elysia({
   cron({
     name: "Cron.FetchPrices",
     pattern: Patterns.everyMinutes(5),
-    // pattern: Patterns.everySenconds(10),
+    // pattern: Patterns.everySeconds(10),
     async run() {
       // fetch price
       const priceData = await getCryptoPrice("solana");

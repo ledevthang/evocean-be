@@ -23,7 +23,7 @@ type CreateThemeParams = Omit<CreateThemePayload, "media" | "zip_file"> & {
     figma_features?: string[];
   };
   token_mint?: string;
-  owner_addresses: string[],
+  owner_addresses: string[];
   author_address: string;
   user_id: number;
 };

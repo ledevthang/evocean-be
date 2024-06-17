@@ -1,4 +1,5 @@
-import { TransactionKind } from "@prisma/client";
+import type { TransactionKind } from "@prisma/client";
+
 import { prisma } from "@root/shared/prisma";
 
 type OverviewChartParams = {
@@ -43,7 +44,7 @@ export abstract class TransactionRepository {
     });
   }
 
-  static getTotalOwnedSholdItems(seller: string) {
+  static getTotalOwnedSoldItems(seller: string) {
     return prisma.transaction.count({
       where: {
         seller,
