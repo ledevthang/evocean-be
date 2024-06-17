@@ -1,8 +1,10 @@
-import Elysia from "elysia";
+import type { Static } from "elysia";
+import Elysia, { t } from "elysia";
 
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { TransactionRepository } from "@root/repositories/transaction.repository";
 import { ENDPOINT } from "@root/shared/constant";
+import { pagedModel } from "@root/shared/model";
 
 type GetSalesParams = {
   date: Date;
@@ -12,14 +14,28 @@ type GetSalesParams = {
   earn: number; // rate 6.25%
 };
 
-export const getSales = new Elysia({})
-  .use(authPlugin)
-  .get(ENDPOINT.DASHBOARD.GET_SALES, async ({ claims }) => {
+const getTxBySellerParams = t.Composite([
+  pagedModel,
+  t.Object({
+    user_id: t.Numeric()
+  })
+]);
+
+export type GetTxBySellerParams = Static<typeof getTxBySellerParams>;
+
+export const getSales = new Elysia({}).use(authPlugin).get(
+  ENDPOINT.DASHBOARD.GET_SALES,
+  async ({ query, claims }) => {
+    const { page, take } = query;
+    const { id } = claims;
+
     const response: GetSalesParams[] = [];
 
-    const txs = await TransactionRepository.getTxsBySeller(
-      claims.id.toString()
-    );
+    const [txs, total] = await TransactionRepository.getTxsBySeller({
+      page,
+      take,
+      user_id: id
+    });
 
     for (const tx of txs) {
       response.push({
@@ -31,5 +47,13 @@ export const getSales = new Elysia({})
       });
     }
 
-    return response;
-  });
+    return {
+      total,
+      page,
+      data: response
+    };
+  },
+  {
+    query: pagedModel
+  }
+);
