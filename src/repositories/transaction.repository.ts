@@ -1,6 +1,6 @@
 import type { Prisma, TransactionKind } from "@prisma/client";
-import { GetTxByBuyerParams } from "@root/apis/dashboard/get-payout";
 
+import type { GetTxByBuyerParams } from "@root/apis/dashboard/get-payout";
 import { prisma } from "@root/shared/prisma";
 
 type OverviewChartParams = {

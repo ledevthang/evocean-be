@@ -1,4 +1,5 @@
-import Elysia, { Static, t } from "elysia";
+import type { Static } from "elysia";
+import Elysia, { t } from "elysia";
 
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { TransactionRepository } from "@root/repositories/transaction.repository";
