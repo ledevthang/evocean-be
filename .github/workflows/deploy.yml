@@ -3,7 +3,7 @@ on:
   push:
     branches: main
 jobs:
-  Build:
+  Checking:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +25,8 @@ jobs:
       - name: Lint check
         run: bun lint
 
-  Deploy:
-    needs: Build
+  Deploying:
+    needs: Checking
     runs-on: ubuntu-latest
     steps:
       - name: Connect to server and restart PM2
@@ -36,5 +36,4 @@ jobs:
           username: ${{ secrets.INSTANCE_USER }}
           key: ${{ secrets.KEY }}
           script: |
-            source ~/.bashrc 
             ~/moonkit_deploy_script.sh
