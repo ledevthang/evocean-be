@@ -14,7 +14,7 @@ export const signInGoogle = new Elysia({
   .post(
     ENDPOINT.AUTH.SIGN_IN_GOOGLE,
     async ({ body, access, renew }) => {
-      const userData = await getGoogleUserInfo(body.accessToken);
+      const userData = await getGoogleUserInfo(body.access_token);
 
       let user = await UserRepository.findByGoogleId(userData.sub);
 
@@ -48,7 +48,7 @@ export const signInGoogle = new Elysia({
     },
     {
       body: t.Object({
-        accessToken: t.String({
+        access_token: t.String({
           minLength: 1
         })
       })
