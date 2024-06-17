@@ -1,0 +1,39 @@
+name: deploy
+on:
+  push:
+    branches: main
+jobs:
+  Checking:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate Prisma client
+        run: bunx prisma generate
+
+      - name: Types check
+        run: bun type-check
+
+      - name: Lint check
+        run: bun lint
+
+  Deploying:
+    needs: Checking
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to server and restart PM2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.INSTANCE_HOST }}
+          username: ${{ secrets.INSTANCE_USER }}
+          key: ${{ secrets.KEY }}
+          script: |
+            ~/moonkit_deploy_script.sh

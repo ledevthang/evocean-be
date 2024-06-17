@@ -102,7 +102,7 @@ export abstract class TransactionRepository {
     `;
   }
 
-  static getOwnedTotalByYear(seller: string, kind: TransactionKind) {
+  static getOwnedTotalByYear(seller: string) {
     const currentYear = new Date().getFullYear();
     const startTime = currentYear + "-01-01";
     const endTime = currentYear + "-12-01";

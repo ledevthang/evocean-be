@@ -10,9 +10,6 @@ export const getOverview = new Elysia({
 })
   .use(authPlugin)
   .get(ENDPOINT.DASHBOARD.GET_OVERVIEW, async ({ claims }) => {
-    // const solPrice =
-    //   await CryptoPricesRepository.getCryptoPriceByTokenId("solana");
-
     // CARD 1
     const totalSellingProductEarned =
       await TransactionRepository.getTotalSellingProductEarned(
