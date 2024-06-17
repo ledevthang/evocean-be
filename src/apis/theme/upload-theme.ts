@@ -1,6 +1,6 @@
 import Elysia, { t } from "elysia";
 
-import { uploadFile } from "@root/services/firebase/upload";
+import { StorageType, uploadFile } from "@root/services/firebase/upload";
 import { ENDPOINT } from "@root/shared/constant";
 
 const payload = t.Object({
@@ -19,7 +19,7 @@ export const uploadTheme = new Elysia({
 }).post(
   ENDPOINT.THEME.UPLOAD_THEME,
   async ({ body }) => {
-    await uploadFile(body.avatar);
+    await uploadFile(body.avatar, StorageType.AVATAR);
 
     return {};
   },
