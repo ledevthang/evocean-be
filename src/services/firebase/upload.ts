@@ -3,12 +3,32 @@ import { DateTime } from "luxon";
 
 import { firebaseStorage } from "./config";
 
-export const uploadFile = async (file: File) => {
+export enum StorageType {
+  ZIP,
+  IMAGE,
+  AVATAR
+}
+
+export const uploadFile = async (file: File, storageType: StorageType) => {
   const filename = file.name.replace(/\s+/g, "");
 
   const time = DateTime.now().toMillis();
+  let location;
 
-  const location = `themes/zip/${time}_${filename}`;
+  switch (storageType) {
+    case StorageType.ZIP:
+      location = `themes/zip/${time}_${filename}`;
+      break;
+    case StorageType.IMAGE:
+      location = `themes/preview-images/${time}_${filename}`;
+      break;
+    case StorageType.AVATAR:
+      location = `themes/avatar/${time}_${filename}`;
+      break;
+
+    default:
+      break;
+  }
 
   const objRef = FirebaseStorage.ref(firebaseStorage, location);
 

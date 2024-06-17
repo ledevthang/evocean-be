@@ -22,6 +22,10 @@ type CreateThemeParams = Omit<CreateThemePayload, "media" | "zip_file"> & {
     template_features?: string[];
     figma_features?: string[];
   };
+  token_mint?: string;
+  owner_addresses: string[];
+  author_address: string;
+  user_id: number;
 };
 
 type BuyThemeParams = {
@@ -181,7 +185,8 @@ export abstract class ThemeRepository {
     media,
     owner_addresses,
     token_mint,
-    author_address
+    author_address,
+    user_id
   }: CreateThemeParams) {
     return prisma.theme.create({
       data: {
@@ -191,7 +196,8 @@ export abstract class ThemeRepository {
         media,
         owner_addresses,
         token_mint,
-        author_address
+        author_address,
+        user_id
       }
     });
   }
