@@ -1,9 +1,11 @@
 import type { Currency, Prisma } from "@prisma/client";
 
+import type { GetProductsByUserIdParams } from "@root/apis/dashboard/get-products";
 import type { CreateThemePayload } from "@root/apis/theme/create-theme";
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
 import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
+import type { ThemeMedia } from "@root/types/Themes";
 
 type CreateListingAndSaleParams = Pick<
   ListingThemePayload,
@@ -12,16 +14,7 @@ type CreateListingAndSaleParams = Pick<
 
 type CreateThemeParams = Omit<CreateThemePayload, "media" | "zip_file"> & {
   zip_link: string;
-  media: {
-    pages?: string[];
-    format?: string[];
-    previews: string[];
-    categories?: string[];
-    highlight?: string[];
-    live_preview?: string;
-    template_features?: string[];
-    figma_features?: string[];
-  };
+  media: ThemeMedia;
   token_mint?: string;
   owner_addresses: string[];
   author_address: string;
@@ -91,7 +84,10 @@ export abstract class ThemeRepository {
           listing: true
         },
         take,
-        skip: (page - 1) * take
+        skip: (page - 1) * take,
+        orderBy: {
+          id: "desc"
+        }
       }),
       prisma.theme.count({
         where: filter
@@ -202,14 +198,22 @@ export abstract class ThemeRepository {
     });
   }
 
-  static findProductsByUserId(author_address: string) {
+  static findProductsByUserId({
+    page,
+    take,
+    user_id
+  }: GetProductsByUserIdParams) {
+    const filter: Prisma.ThemeWhereInput = {};
+
+    if (user_id) {
+      filter.user_id = user_id;
+    }
+    filter.listing = {
+      isNot: null
+    };
+
     return prisma.theme.findMany({
-      where: {
-        author_address: author_address,
-        listing: {
-          isNot: null
-        }
-      },
+      where: filter,
       include: {
         listing: {
           select: {
@@ -221,6 +225,11 @@ export abstract class ThemeRepository {
             transactions: true
           }
         }
+      },
+      take,
+      skip: (page - 1) * take,
+      orderBy: {
+        id: "desc"
       }
     });
   }

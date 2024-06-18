@@ -184,13 +184,14 @@ export abstract class TransactionRepository {
   }
 
   // !=
-  static getSellingTotalByThemeId(theme_id: number) {
+  static getSellingTotalByThemeId(theme_id: number, user_id: number) {
     return prisma.transaction.aggregate({
       _sum: {
         price: true
       },
       where: {
-        theme_id
+        theme_id,
+        seller: user_id.toString()
       }
     });
   }
