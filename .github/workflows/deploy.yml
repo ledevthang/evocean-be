@@ -36,4 +36,6 @@ jobs:
           username: ${{ secrets.INSTANCE_USER }}
           key: ${{ secrets.KEY }}
           script: |
+            export BUN_INSTALL="~/.bun"
+            export PATH="$BUN_INSTALL/bin:$PATH"
             ~/moonkit_deploy_script.sh
