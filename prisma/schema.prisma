@@ -32,10 +32,19 @@ model Theme {
   transactions    Transaction[]
   user            User?         @relation(fields: [user_id], references: [id])
   user_id         Int?
+  status          ThemeStatus
+  selling_price   Decimal
+  owner_price     Decimal
+  owned_at        DateTime?
+  created_at      DateTime      @default(now())
+  updated_at      DateTime?
+  Collection      Collection?   @relation(fields: [collection_id], references: [id])
+  collection_id   Int?
 
   @@map("theme")
 }
 
+// buy for download 
 model ThemeSale {
   theme_id Int     @id @unique
   price    Decimal
@@ -44,6 +53,7 @@ model ThemeSale {
   @@map("theme_sale")
 }
 
+// buy the ownership
 model ThemeListing {
   theme_id Int     @id @unique
   price    Decimal
@@ -77,6 +87,14 @@ model Transaction {
   @@map("transaction")
 }
 
+model Collection {
+  id     Int     @id @default(autoincrement())
+  name   String  @db.VarChar
+  themes Theme[]
+
+  @@map("collection")
+}
+
 enum TransactionKind {
   buy_owned_ship
   buy
@@ -89,4 +107,12 @@ enum Currency {
   usd
 
   @@map("currency")
+}
+
+enum ThemeStatus {
+  DRAFT
+  PENDING
+  APPROVED
+
+  @@map("theme_status")
 }

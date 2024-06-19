@@ -14,15 +14,6 @@ type GetSalesParams = {
   earn: number; // rate 6.25%
 };
 
-const getTxBySellerParams = t.Composite([
-  pagedModel,
-  t.Object({
-    user_id: t.Numeric()
-  })
-]);
-
-export type GetTxBySellerParams = Static<typeof getTxBySellerParams>;
-
 export const getSales = new Elysia({}).use(authPlugin).get(
   ENDPOINT.DASHBOARD.GET_SALES,
   async ({ query, claims }) => {

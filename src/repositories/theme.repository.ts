@@ -1,16 +1,21 @@
-import type { Currency, Prisma } from "@prisma/client";
+import { TransactionKind, type Currency, type Prisma } from "@prisma/client";
 
-import type { GetProductsByUserIdParams } from "@root/apis/dashboard/get-products";
 import type { CreateThemePayload } from "@root/apis/theme/create-theme";
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
 import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
 import type { ThemeMedia } from "@root/types/Themes";
 
-type CreateListingAndSaleParams = Pick<
-  ListingThemePayload,
-  "listing_price" | "sale_price" | "theme_id"
->;
+// type CreateListingAndSaleParams = Pick<
+//   ListingThemePayload,
+//   "listing_price" | "sale_price" | "theme_id"
+// >;
+
+type CreateListingAndSaleParams = {
+  theme_id: number;
+  listing_price: number;
+  sale_price: number;
+};
 
 type CreateThemeParams = Omit<CreateThemePayload, "media" | "zip_file"> & {
   zip_link: string;
@@ -160,14 +165,15 @@ export abstract class ThemeRepository {
       },
       data: {
         author_address: buyer,
+        owned_at: new Date(),
         transactions: {
           create: {
             buyer,
             price,
-            kind: "buy_owned_ship",
+            kind: TransactionKind.buy_owned_ship,
             seller,
             tx_id,
-            currency
+            currency,
           }
         }
       }
@@ -182,7 +188,10 @@ export abstract class ThemeRepository {
     owner_addresses,
     token_mint,
     author_address,
-    user_id
+    user_id,
+    selling_price,
+    owner_price,
+    status
   }: CreateThemeParams) {
     return prisma.theme.create({
       data: {
@@ -193,20 +202,20 @@ export abstract class ThemeRepository {
         owner_addresses,
         token_mint,
         author_address,
-        user_id
+        user_id,
+        selling_price,
+        owner_price,
+        status,
+        owned_at: new Date()
       }
     });
   }
 
-  static findProductsByUserId({
-    page,
-    take,
-    user_id
-  }: GetProductsByUserIdParams) {
+  static findThemesByUserId(page: number, take: number, id: number) {
     const filter: Prisma.ThemeWhereInput = {};
 
-    if (user_id) {
-      filter.user_id = user_id;
+    if (id) {
+      filter.user_id = id;
     }
     filter.listing = {
       isNot: null
