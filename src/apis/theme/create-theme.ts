@@ -1,3 +1,4 @@
+import { ThemeStatus } from "@prisma/client";
 import type { Static } from "elysia";
 import Elysia, { t } from "elysia";
 
@@ -5,7 +6,6 @@ import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { StorageType, uploadFile } from "@root/services/firebase/upload";
 import { ENDPOINT } from "@root/shared/constant";
-import { ThemeStatus } from "@prisma/client";
 
 const createThemePayload = t.Object({
   theme: t.File({

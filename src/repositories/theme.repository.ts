@@ -2,7 +2,7 @@ import { TransactionKind, type Currency, type Prisma } from "@prisma/client";
 
 import type { CreateThemePayload } from "@root/apis/theme/create-theme";
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
-import type { ListingThemePayload } from "@root/apis/theme/list-theme";
+// import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
 import type { ThemeMedia } from "@root/types/Themes";
 
@@ -173,7 +173,7 @@ export abstract class ThemeRepository {
             kind: TransactionKind.buy_owned_ship,
             seller,
             tx_id,
-            currency,
+            currency
           }
         }
       }
