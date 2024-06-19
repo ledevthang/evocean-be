@@ -2,9 +2,9 @@ import type { Static } from "elysia";
 import Elysia, { InternalServerError, t } from "elysia";
 
 import { ForbiddenError } from "@root/errors/ForbiddenError";
+import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import { authPlugin } from "@root/plugins/auth.plugin";
 
 const listingThemePayload = t.Object({
   seller: t.String({ minLength: 1 }),

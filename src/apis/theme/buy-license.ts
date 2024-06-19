@@ -1,9 +1,9 @@
 import { Currency } from "@prisma/client";
 import Elysia, { InternalServerError, t } from "elysia";
 
+import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import { authPlugin } from "@root/plugins/auth.plugin";
 
 const buyLicensePayload = t.Object({
   buyer: t.String({ minLength: 1 }),
@@ -17,7 +17,7 @@ export const buyLicense = new Elysia({
   .use(authPlugin)
   .post(
     ENDPOINT.THEME.BUY_LICENSE,
-    async ({ body, claims }) => {
+    async ({ body }) => {
       const { buyer, theme_id, currency } = body;
 
       const theme = await ThemeRepository.findById(theme_id, {
