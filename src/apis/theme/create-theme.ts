@@ -5,6 +5,7 @@ import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { StorageType, uploadFile } from "@root/services/firebase/upload";
 import { ENDPOINT } from "@root/shared/constant";
+import { ThemeStatus } from "@prisma/client";
 
 const createThemePayload = t.Object({
   theme: t.File({
@@ -16,10 +17,15 @@ const createThemePayload = t.Object({
   //
   selling_price: t.Numeric(),
   owner_price: t.Numeric(),
+  thumbnail: t.File({
+    type: ["image/jpeg", "image/png"],
+    maxSize: 100_000_000
+  }),
   previews: t.Files({
     type: ["image/jpeg", "image/png"],
     maxSize: 100_000_000
   }),
+  status: t.Enum(ThemeStatus),
   // MEDIA
   pages: t.Optional(t.Array(t.String())),
   format: t.Optional(t.Array(t.String())),
@@ -43,18 +49,20 @@ export const createTheme = new Elysia({
         theme,
         pages,
         format,
+        thumbnail,
         previews,
         categories,
         highlight,
         live_preview,
         template_features,
         figma_features,
-        selling_price,
-        owner_price
+        status
       } = body;
 
       // upload theme
       const zip_link = await uploadFile(theme, StorageType.ZIP);
+
+      const thumbnail_link = await uploadFile(thumbnail, StorageType.IMAGE);
 
       // upload media (images)
       const imageLinks: string[] = [];
@@ -67,6 +75,7 @@ export const createTheme = new Elysia({
         pages,
         format,
         previews: imageLinks,
+        thumbnail: thumbnail_link,
         categories,
         highlight,
         live_preview,
@@ -81,17 +90,13 @@ export const createTheme = new Elysia({
         media,
         owner_addresses: [claims.id.toString()],
         author_address: claims.id.toString(),
-        user_id: claims.id
-      });
-      // list-theme
-      await ThemeRepository.createListingAndSale({
-        theme_id: newTheme.id,
-        listing_price: owner_price,
-        sale_price: selling_price
+        user_id: claims.id,
+        status
       });
 
       return {
-        theme_id: newTheme.id
+        theme_id: newTheme.id,
+        createdAt: newTheme.created_at
       };
     },
     {

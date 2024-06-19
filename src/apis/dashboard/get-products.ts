@@ -16,17 +16,6 @@ type GetProductParams = {
   earning: number;
 };
 
-const getProductsByUserIdParams = t.Composite([
-  pagedModel,
-  t.Object({
-    user_id: t.Numeric()
-  })
-]);
-
-export type GetProductsByUserIdParams = Static<
-  typeof getProductsByUserIdParams
->;
-
 export const getProducts = new Elysia({
   name: "Handler.Products"
 })
@@ -39,11 +28,7 @@ export const getProducts = new Elysia({
 
       const response: GetProductParams[] = [];
 
-      const products = await ThemeRepository.findProductsByUserId({
-        page,
-        take,
-        user_id: id
-      });
+      const products = await ThemeRepository.findThemesByUserId(page, take, id);
 
       let total = 0;
       for (const p of products) {
@@ -56,8 +41,7 @@ export const getProducts = new Elysia({
             id: p.id,
             thumbnail: (p.media as ThemeMedia)?.previews[0],
             name: p.name,
-            price:
-              sellingTotal._sum.price !== null ? p.listing.price.toNumber() : 0,
+            price: p.listing.price.toNumber(),
             sales: p._count.transactions,
             earning:
               sellingTotal._sum.price !== null

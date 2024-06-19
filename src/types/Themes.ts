@@ -7,4 +7,5 @@ export type ThemeMedia = {
   live_preview?: string;
   template_features?: string[];
   figma_features?: string[];
+  thumbnail?: string;
 };
