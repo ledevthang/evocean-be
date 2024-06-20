@@ -101,11 +101,21 @@ export abstract class ThemeRepository {
     ]);
   }
 
-  static findAll(user_id: number) {
+  static findAll(user_id: number, search?: string) {
+    const filter: Prisma.ThemeWhereInput = {};
+
+    if (user_id) {
+      filter.user_id = user_id;
+    }
+
+    if (search) {
+      filter.name = {
+        contains: search
+      };
+    }
+
     return prisma.theme.findMany({
-      where: {
-        user_id
-      }
+      where: filter
     });
   }
 
