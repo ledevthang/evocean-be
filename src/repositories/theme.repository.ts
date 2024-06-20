@@ -101,6 +101,14 @@ export abstract class ThemeRepository {
     ]);
   }
 
+  static findAll(user_id: number) {
+    return prisma.theme.findMany({
+      where: {
+        user_id
+      }
+    });
+  }
+
   static createListingAndSale({
     listing_price,
     theme_id,
