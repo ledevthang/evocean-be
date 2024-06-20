@@ -4,9 +4,9 @@ import Elysia, { t } from "elysia";
 
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { ENDPOINT } from "@root/shared/constant";
+import { ThemeRepository } from "@root/repositories/theme.repository";
 
 const updateThemeDto = t.Object({
-  theme_id: t.Numeric(),
   // main fields
   theme: t.Optional(
     t.File({
@@ -42,17 +42,24 @@ const updateThemeDto = t.Object({
   figma_features: t.Optional(t.Array(t.String()))
 });
 
-const updateThemeParams = t.Object({
+const params = t.Object({
   theme_id: t.Numeric({
     minimum: 1
   })
 });
 
-export type UpdateThemeParams = Omit<Static<typeof updateThemeDto>, "theme_id">;
+export type UpdateThemeParams = Static<typeof updateThemeDto>;
 
 // TODO
-export const updateTheme = new Elysia()
-  .use(authPlugin)
-  .put(ENDPOINT.THEME.UPDATE_THEME, async () => {}, {
-    params: updateThemeParams
-  });
+export const updateTheme = new Elysia().use(authPlugin).put(
+  ENDPOINT.THEME.UPDATE_THEME,
+  async ({ params, body }) => {
+    const { theme_id } = params;
+
+    return ThemeRepository.updateTheme(theme_id, body);
+  },
+  {
+    params,
+    body: updateThemeDto
+  }
+);
