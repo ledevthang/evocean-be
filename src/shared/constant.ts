@@ -22,8 +22,9 @@ export const ENDPOINT = {
     UPLOAD_THEME: "/upload",
     DOWNLOAD: "/download",
     PAYMENT: "/payment",
-    CREATE_THEME_COLLECTION: "/collection",
-    GET_A_THEME_COLLECTION: "/collection/:collection_id"
+    CREATE_THEME_COLLECTION: "/collections",
+    GET_ALL_COLLECTION: "/collections",
+    GET_A_THEME_COLLECTION: "/collections/:collection_id"
   },
   MOONPAY: {
     PREFIX: "moonpay",
