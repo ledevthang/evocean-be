@@ -4,16 +4,19 @@ import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
+const getAllThemeBody = t.Object({
+  search: t.Optional(t.String())
+});
+
 export const getAllThemes = new Elysia({
   name: "Handler.GetThemes"
 })
   .use(authPlugin)
-  .post(
+  .get(
     ENDPOINT.THEME.GET_ALL_THEME,
-    async ({ claims, body }) => {
+    async ({ claims, query }) => {
       const { id } = claims;
-      const { search } = body;
-      console.log("=> ", search);
+      const { search } = query;
 
       const allThemes = await ThemeRepository.findAll(id, search);
 
@@ -22,8 +25,6 @@ export const getAllThemes = new Elysia({
       };
     },
     {
-      body: t.Object({
-        search: t.Optional(t.String())
-      })
+      query: getAllThemeBody
     }
   );
