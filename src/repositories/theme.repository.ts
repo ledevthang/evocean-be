@@ -2,6 +2,7 @@ import { TransactionKind, type Currency, type Prisma } from "@prisma/client";
 
 import type { CreateThemePayload } from "@root/apis/theme/create-theme";
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
+import type { UpdateThemeParams } from "@root/apis/theme/update-theme";
 // import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
 import type { ThemeMedia } from "@root/types/Themes";
@@ -207,6 +208,17 @@ export abstract class ThemeRepository {
         owner_price,
         status,
         owned_at: new Date()
+      }
+    });
+  }
+
+  static updateTheme(theme_id: number, updateThemeParams: UpdateThemeParams) {
+    return prisma.theme.update({
+      where: {
+        id: theme_id
+      },
+      data: {
+        ...updateThemeParams
       }
     });
   }

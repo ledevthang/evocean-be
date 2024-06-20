@@ -13,6 +13,8 @@ import { getSales } from "./dashboard/get-sales";
 import { webhookMoonPay } from "./moonpay/webhook-moonpay";
 import { buyLicense } from "./theme/buy-license";
 import { buyTheme } from "./theme/buy-theme";
+import { createThemeCollection } from "./theme/collection/create-collection";
+import { getThemeCollection } from "./theme/collection/get-collection-detail";
 import { createTheme } from "./theme/create-theme";
 import { downloadTheme } from "./theme/download-theme";
 import { getPurchasedTheme } from "./theme/get-purchased-themes";
@@ -20,6 +22,7 @@ import { getTheme } from "./theme/get-theme";
 import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { payment } from "./theme/payment";
+import { updateTheme } from "./theme/update-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
 
@@ -51,12 +54,15 @@ export const theme = new Elysia({
   .use(createTheme)
   .use(getTheme)
   .use(getThemes)
+  .use(updateTheme)
   .use(getPurchasedTheme)
   .use(listTheme)
   .use(buyTheme)
   .use(buyLicense)
   .use(uploadTheme)
   .use(downloadTheme)
+  .use(createThemeCollection)
+  .use(getThemeCollection)
   .use(payment);
 
 export const moonpay = new Elysia({
