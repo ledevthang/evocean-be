@@ -17,6 +17,7 @@ import { createThemeCollection } from "./theme/collection/create-collection";
 import { getThemeCollection } from "./theme/collection/get-collection-detail";
 import { createTheme } from "./theme/create-theme";
 import { downloadTheme } from "./theme/download-theme";
+import { getAllThemes } from "./theme/get-all-theme";
 import { getPurchasedTheme } from "./theme/get-purchased-themes";
 import { getTheme } from "./theme/get-theme";
 import { getThemes } from "./theme/get-themes";
@@ -25,7 +26,6 @@ import { payment } from "./theme/payment";
 import { updateTheme } from "./theme/update-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { me } from "./user/me";
-import { getAllThemes } from "./theme/get-all-theme";
 
 export const auth = new Elysia({
   name: "Controller.Auth",

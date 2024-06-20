@@ -1,8 +1,8 @@
-import Elysia, { t } from "elysia";
+import Elysia from "elysia";
 
+import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import { authPlugin } from "@root/plugins/auth.plugin";
 
 export const getAllThemes = new Elysia({
   name: "Handler.GetThemes"
