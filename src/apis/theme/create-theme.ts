@@ -7,7 +7,7 @@ import { ThemeRepository } from "@root/repositories/theme.repository";
 import { StorageType, uploadFile } from "@root/services/firebase/upload";
 import { ENDPOINT } from "@root/shared/constant";
 
-const createThemePayload = t.Object({
+const createThemeDto = t.Object({
   theme: t.File({
     type: ["application/zip"],
     maxSize: 100_000_000
@@ -36,7 +36,7 @@ const createThemePayload = t.Object({
   figma_features: t.Optional(t.Array(t.String()))
 });
 
-export type CreateThemePayload = Static<typeof createThemePayload>;
+export type CreateThemePayload = Static<typeof createThemeDto>;
 
 export const createTheme = new Elysia({
   name: "Handler.CreateTheme"
@@ -100,6 +100,6 @@ export const createTheme = new Elysia({
       };
     },
     {
-      body: createThemePayload
+      body: createThemeDto
     }
   );
