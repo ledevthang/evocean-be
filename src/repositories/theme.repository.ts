@@ -241,15 +241,27 @@ export abstract class ThemeRepository {
     });
   }
 
-  static findThemesByUserId(page: number, take: number, id: number) {
+  static findThemesByUserId(
+    page: number,
+    take: number,
+    id: number,
+    search?: string
+  ) {
     const filter: Prisma.ThemeWhereInput = {};
 
     if (id) {
       filter.user_id = id;
     }
+
     filter.listing = {
       isNot: null
     };
+
+    if (search) {
+      filter.name = {
+        contains: search
+      };
+    }
 
     return prisma.theme.findMany({
       where: filter,

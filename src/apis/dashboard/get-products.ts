@@ -1,4 +1,4 @@
-import Elysia from "elysia";
+import Elysia, { t } from "elysia";
 
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
@@ -22,12 +22,17 @@ export const getProducts = new Elysia({
   .get(
     ENDPOINT.DASHBOARD.GET_PRODUCTS,
     async ({ query, claims }) => {
-      const { page, take } = query;
+      const { page, take, search } = query;
       const { id } = claims;
 
       const response: GetProductParams[] = [];
 
-      const products = await ThemeRepository.findThemesByUserId(page, take, id);
+      const products = await ThemeRepository.findThemesByUserId(
+        page,
+        take,
+        id,
+        search
+      );
 
       let total = 0;
       for (const p of products) {
@@ -58,6 +63,16 @@ export const getProducts = new Elysia({
       };
     },
     {
-      query: pagedModel
+      query: t.Object({
+        page: t.Numeric({
+          minimum: 1,
+          default: 1
+        }),
+        take: t.Numeric({
+          maximum: 300,
+          default: 10
+        }),
+        search: t.Optional(t.String())
+      })
     }
   );
