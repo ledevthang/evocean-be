@@ -3,8 +3,8 @@ import type { Static } from "elysia";
 import Elysia, { t } from "elysia";
 
 import { authPlugin } from "@root/plugins/auth.plugin";
-import { ENDPOINT } from "@root/shared/constant";
 import { ThemeRepository } from "@root/repositories/theme.repository";
+import { ENDPOINT } from "@root/shared/constant";
 
 const updateThemeDto = t.Object({
   // main fields
@@ -53,7 +53,7 @@ export type UpdateThemeParams = Static<typeof updateThemeDto>;
 // TODO
 export const updateTheme = new Elysia().use(authPlugin).put(
   ENDPOINT.THEME.UPDATE_THEME,
-  async ({ params, body }) => {
+  ({ params, body }) => {
     const { theme_id } = params;
 
     return ThemeRepository.updateTheme(theme_id, body);

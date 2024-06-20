@@ -4,7 +4,6 @@ import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { TransactionRepository } from "@root/repositories/transaction.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import { pagedModel } from "@root/shared/model";
 import type { ThemeMedia } from "@root/types/Themes";
 
 type GetProductParams = {
