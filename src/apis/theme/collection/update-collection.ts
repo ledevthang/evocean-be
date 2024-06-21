@@ -15,7 +15,9 @@ const updateThemeCollectionDto = t.Object({
 });
 export type UpdateCollectionParams = Static<typeof updateThemeCollectionDto>;
 
-export type UpdateThemeCollectionParams = Static<typeof updateThemeCollectionParams>;
+export type UpdateThemeCollectionParams = Static<
+  typeof updateThemeCollectionParams
+>;
 
 // TODO
 export const updateThemeCollection = new Elysia({
