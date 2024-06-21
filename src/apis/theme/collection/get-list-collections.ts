@@ -1,29 +1,39 @@
-import Elysia from "elysia";
+import Elysia, { t } from "elysia";
 
 import { CollectionRepository } from "@root/repositories/collection.repository";
 import { ENDPOINT } from "@root/shared/constant";
 import { pagedModel } from "@root/shared/model";
+import { authPlugin } from "@root/plugins/auth.plugin";
 
 // TODO
-export const getThemes = new Elysia({
+export const getListCollections = new Elysia({
   name: "Handler.GetThemes"
-}).get(
-  ENDPOINT.THEME.GET_THEMES,
-  async ({ query }) => {
-    const { page, take } = query;
+})
+  .use(authPlugin)
+  .get(
+    ENDPOINT.THEME.GET_ALL_COLLECTION,
+    async ({ claims, query }) => {
+      const { id } = claims;
+      const { page, take } = query;
 
-    const [themes, total] = await CollectionRepository.getCollections(
-      page,
-      take
-    );
+      const [themes, total] = await CollectionRepository.getCollections(
+        page,
+        take,
+        id
+      );
 
-    return {
-      total,
-      page: query.page,
-      data: themes
-    };
-  },
-  {
-    query: pagedModel
-  }
-);
+      return {
+        total,
+        page: query.page,
+        data: themes
+      };
+    },
+    {
+      query: t.Composite([
+        pagedModel,
+        t.Object({
+          search: t.Optional(t.String())
+        })
+      ])
+    }
+  );

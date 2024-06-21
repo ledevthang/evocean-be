@@ -22,11 +22,21 @@ export abstract class CollectionRepository {
     });
   }
 
-  static getCollections(page: number, take: number) {
-    return prisma.collection.findMany({
-      take,
-      skip: (page - 1) * take
-    });
+  static getCollections(page: number, take: number, user_id: number) {
+    return Promise.all([
+      prisma.collection.findMany({
+        where: {
+          created_by: user_id
+        },
+        take,
+        skip: (page - 1) * take
+      }),
+      prisma.collection.count({
+        where: {
+          created_by: user_id
+        }
+      })
+    ]);
   }
 
   static getCollectionById(id: number) {
