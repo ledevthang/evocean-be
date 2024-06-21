@@ -9,7 +9,6 @@ const getThemeCollectionParams = t.Object({
   collection_id: t.Numeric()
 });
 
-
 const updateThemeCollectionDto = t.Object({
   collection_name: t.String(),
   theme_ids: t.Array(t.Numeric())

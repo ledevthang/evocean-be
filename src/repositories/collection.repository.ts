@@ -1,5 +1,5 @@
 import type { CreateThemeCollectionParams } from "@root/apis/theme/collection/create-collection";
-import { UpdateCollectionParams } from "@root/apis/theme/collection/update-collection";
+import type { UpdateCollectionParams } from "@root/apis/theme/collection/update-collection";
 import { BadRequestError } from "@root/errors/BadRequestError";
 import { prisma } from "@root/shared/prisma";
 
@@ -70,8 +70,8 @@ export abstract class CollectionRepository {
       where: {
         id: id
       }
-    })
-    if(!collection) throw new BadRequestError("Collection not found");
+    });
+    if (!collection) throw new BadRequestError("Collection not found");
 
     return prisma.collection.update({
       where: {
@@ -81,7 +81,7 @@ export abstract class CollectionRepository {
         name: data.collection_name,
         themes: {
           connect: data.theme_ids.map(id => ({ id }))
-        },
+        }
       }
     });
   }
