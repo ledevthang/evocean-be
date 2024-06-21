@@ -5,7 +5,7 @@ import { authPlugin } from "@root/plugins/auth.plugin";
 import { CollectionRepository } from "@root/repositories/collection.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
-const getThemeCollectionParams = t.Object({
+const updateThemeCollectionParams = t.Object({
   collection_id: t.Numeric()
 });
 
@@ -15,11 +15,13 @@ const updateThemeCollectionDto = t.Object({
 });
 export type UpdateCollectionParams = Static<typeof updateThemeCollectionDto>;
 
-export type GetThemeCollectionParams = Static<typeof getThemeCollectionParams>;
+export type UpdateThemeCollectionParams = Static<
+  typeof updateThemeCollectionParams
+>;
 
 // TODO
-export const getThemeCollection = new Elysia({
-  name: "Handler.GetThemeCollection"
+export const updateThemeCollection = new Elysia({
+  name: "Handler.UpdateThemeCollection"
 })
   .use(authPlugin)
   .put(
@@ -30,7 +32,7 @@ export const getThemeCollection = new Elysia({
       return CollectionRepository.updateCollectionById(collection_id, body);
     },
     {
-      params: getThemeCollectionParams,
+      params: updateThemeCollectionParams,
       body: updateThemeCollectionDto
     }
   );

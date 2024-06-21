@@ -16,6 +16,7 @@ import { buyTheme } from "./theme/buy-theme";
 import { createThemeCollection } from "./theme/collection/create-collection";
 import { getThemeCollection } from "./theme/collection/get-collection-detail";
 import { getListCollections } from "./theme/collection/get-list-collections";
+import { updateThemeCollection } from "./theme/collection/update-collection";
 import { createTheme } from "./theme/create-theme";
 import { downloadTheme } from "./theme/download-theme";
 import { getAllThemes } from "./theme/get-all-theme";
@@ -66,6 +67,7 @@ export const theme = new Elysia({
   .use(downloadTheme)
   .use(createThemeCollection)
   .use(getThemeCollection)
+  .use(updateThemeCollection)
   .use(getListCollections)
   .use(payment);
 
