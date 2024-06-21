@@ -17,7 +17,7 @@ export const ENDPOINT = {
     CREATE_THEME: "/creating",
     LIST_THEME: "/listing",
     BUY_THEME: "/buying",
-    UPDATE_THEME: "/updating/:id",
+    UPDATE_THEME: "/updating/:theme_id",
     BUY_LICENSE: "/license-buying",
     UPLOAD_THEME: "/upload",
     DOWNLOAD: "/download",
