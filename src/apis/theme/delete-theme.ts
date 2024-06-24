@@ -1,11 +1,9 @@
-import { ThemeStatus } from "@prisma/client";
-import type { Static } from "elysia";
 import Elysia, { t } from "elysia";
 
+import { BadRequestError } from "@root/errors/BadRequestError";
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
-import { BadRequestError } from "@root/errors/BadRequestError";
 
 const params = t.Object({
   theme_id: t.Numeric({
@@ -17,17 +15,17 @@ export const deleteTheme = new Elysia({
   name: "Handler.DeleteTheme"
 })
   .use(authPlugin)
-  .post(
+  .delete(
     ENDPOINT.THEME.DELETE_THEME,
-    async ({ claims }) => {
+    async ({ claims, params }) => {
       const themeData = await ThemeRepository.findById(params.theme_id);
       if (!themeData) {
         throw new BadRequestError("Theme not found");
       }
-      if(themeData.user_id !== claims.id) {
+      if (themeData.user_id !== claims.id) {
         throw new BadRequestError("Theme not found");
       }
-      return ThemeRepository.deleteThemem(params.theme_id);
+      return ThemeRepository.deleteTheme(params.theme_id);
     },
     {
       params

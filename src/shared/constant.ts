@@ -27,7 +27,8 @@ export const ENDPOINT = {
     CREATE_THEME_COLLECTION: "/collections",
     GET_ALL_COLLECTION: "/collections",
     GET_A_THEME_COLLECTION: "/collections/:collection_id",
-    UPDATE_A_THEME_COLLECTION: "/collections/:collection_id"
+    UPDATE_A_THEME_COLLECTION: "/collections/:collection_id",
+    DELETE_A_THEME_COLLECTION: "/collections/:collection_id"
   },
   MOONPAY: {
     PREFIX: "moonpay",

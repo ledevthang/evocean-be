@@ -49,7 +49,7 @@ model Theme {
 model ThemeSale {
   theme_id Int     @id @unique
   price    Decimal
-  theme    Theme   @relation(fields: [theme_id], references: [id])
+  theme    Theme   @relation(fields: [theme_id], references: [id], onDelete: Cascade)
 
   @@map("theme_sale")
 }
@@ -58,7 +58,7 @@ model ThemeSale {
 model ThemeListing {
   theme_id Int     @id @unique
   price    Decimal
-  theme    Theme   @relation(fields: [theme_id], references: [id])
+  theme    Theme   @relation(fields: [theme_id], references: [id], onDelete: Cascade)
 
   @@map("theme_listing")
 }
