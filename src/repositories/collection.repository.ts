@@ -85,4 +85,21 @@ export abstract class CollectionRepository {
       }
     });
   }
+
+  static deleteCollectionById(id: number) {
+    return prisma.collection.delete({
+      where: {
+        id: id
+      }
+    });
+  }
+
+  // common
+  static findById(collection_id: number) {
+    return prisma.collection.findFirst({
+      where: {
+        id: collection_id
+      }
+    });
+  }
 }

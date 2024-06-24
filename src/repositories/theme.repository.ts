@@ -240,6 +240,14 @@ export abstract class ThemeRepository {
     });
   }
 
+  static deleteTheme(theme_id: number) {
+    return prisma.theme.delete({
+      where: {
+        id: theme_id
+      }
+    });
+  }
+
   static findThemesByUserId(
     page: number,
     take: number,
