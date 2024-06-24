@@ -5,7 +5,6 @@ import Elysia, { t } from "elysia";
 import { BadRequestError } from "@root/errors/BadRequestError";
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
-import { StorageType, uploadFile } from "@root/services/firebase/upload";
 import { ENDPOINT } from "@root/shared/constant";
 
 const updateThemeDto = t.Object({
