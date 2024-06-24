@@ -70,6 +70,12 @@ export const createTheme = new Elysia({
         status
       });
 
+      await ThemeRepository.createListingAndSale({
+        listing_price: newTheme.selling_price.toNumber(),
+        theme_id: newTheme.id,
+        sale_price: newTheme.owner_price.toNumber()
+      });
+
       return {
         theme_id: newTheme.id,
         createdAt: newTheme.created_at
