@@ -4,7 +4,6 @@ import Elysia, { t } from "elysia";
 
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
-import { StorageType, uploadFile } from "@root/services/firebase/upload";
 import { ENDPOINT } from "@root/shared/constant";
 
 const createThemeDto = t.Object({
@@ -37,7 +36,6 @@ export const createTheme = new Elysia({
     ENDPOINT.THEME.CREATE_THEME,
     async ({ body, claims }) => {
       const {
-        zip_link,
         pages,
         format,
         thumbnail_link,

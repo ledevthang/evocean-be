@@ -30,7 +30,7 @@ export const uploadThemeDetail = new Elysia({
   async ({ body }) => {
     const { zip_file, thumbnail, previews } = body;
 
-    let response: {
+    const response: {
       zip_file?: string;
       thumbnail?: string;
       previews?: string[];
@@ -50,7 +50,7 @@ export const uploadThemeDetail = new Elysia({
     }
 
     // previews
-    let previews_link: string[] = [];
+    const previews_link: string[] = [];
     if (previews) {
       for (const image of previews) {
         const link = await uploadFile(image, StorageType.IMAGE);
