@@ -5,34 +5,17 @@ import Elysia, { t } from "elysia";
 import { BadRequestError } from "@root/errors/BadRequestError";
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
-import { StorageType, uploadFile } from "@root/services/firebase/upload";
 import { ENDPOINT } from "@root/shared/constant";
 
 const updateThemeDto = t.Object({
-  // main fields
-  theme: t.Optional(
-    t.File({
-      type: ["application/zip"],
-      maxSize: 100_000_000
-    })
-  ),
+  zip_link: t.Optional(t.String()),
   name: t.Optional(t.String()),
   overview: t.Optional(t.String()),
-
+  //
   selling_price: t.Optional(t.Numeric()),
   owner_price: t.Optional(t.Numeric()),
-  thumbnail: t.Optional(
-    t.File({
-      type: ["image/jpeg", "image/png"],
-      maxSize: 100_000_000
-    })
-  ),
-  previews: t.Optional(
-    t.Files({
-      type: ["image/jpeg", "image/png"],
-      maxSize: 100_000_000
-    })
-  ),
+  thumbnail_link: t.Optional(t.String()),
+  previews_links: t.Optional(t.Array(t.String())),
   status: t.Optional(t.Enum(ThemeStatus)),
   // MEDIA
   pages: t.Optional(t.Array(t.String())),
@@ -50,10 +33,20 @@ const params = t.Object({
   })
 });
 
-export interface UpdateThemeParams extends Static<typeof updateThemeDto> {
-  media: object;
-  zip_link: string;
-}
+export type UpdateThemeParams = Omit<
+  Static<typeof updateThemeDto>,
+  | "previews_links"
+  | "thumbnail_link"
+  | "pages"
+  | "format"
+  | "categories"
+  | "highlight"
+  | "live_preview"
+  | "template_features"
+  | "figma_features"
+> & {
+  media?: object;
+};
 
 // TODO
 export const updateTheme = new Elysia().use(authPlugin).put(
@@ -61,9 +54,9 @@ export const updateTheme = new Elysia().use(authPlugin).put(
   async ({ params, body }) => {
     const { theme_id } = params;
     const {
-      theme,
-      thumbnail,
-      previews,
+      zip_link,
+      thumbnail_link,
+      previews_links,
       status,
       name,
       overview,
@@ -83,39 +76,30 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     if (!themeData) {
       throw new BadRequestError("Theme not found");
     }
+
     const media = {
       /* eslint-disable  @typescript-eslint/no-explicit-any */
       ...(themeData.media as any),
       ...mediaData
     };
 
-    if (thumbnail) {
-      const thumbnail_link = await uploadFile(thumbnail, StorageType.IMAGE);
-      media["thumbnail_link"] = thumbnail_link;
+    if (thumbnail_link) {
+      media["thumbnail"] = thumbnail_link;
     }
-    if (previews) {
-      const imageLinks: string[] = [];
-      for (const image of previews) {
-        const link = await uploadFile(image, StorageType.IMAGE);
-        imageLinks.push(link);
-      }
-      media["previews"] = imageLinks;
+    if (previews_links) {
+      media["previews"] = previews_links;
     }
 
-    let zip_link = "";
-    if (theme) {
-      zip_link = await uploadFile(theme, StorageType.ZIP);
-    }
+    const updateData: UpdateThemeParams = {};
+    if (zip_link) updateData.zip_link = zip_link;
+    if (name) updateData.name = name;
+    if (overview) updateData.overview = overview;
+    if (selling_price) updateData.selling_price = selling_price;
+    if (owner_price) updateData.owner_price = owner_price;
+    if (status) updateData.status = status;
+    updateData.media = media;
 
-    return ThemeRepository.updateTheme(theme_id, {
-      zip_link,
-      status,
-      name,
-      overview,
-      selling_price,
-      owner_price,
-      media
-    });
+    return ThemeRepository.updateTheme(theme_id, updateData);
   },
   {
     params,
