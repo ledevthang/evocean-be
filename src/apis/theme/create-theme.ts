@@ -8,23 +8,14 @@ import { StorageType, uploadFile } from "@root/services/firebase/upload";
 import { ENDPOINT } from "@root/shared/constant";
 
 const createThemeDto = t.Object({
-  theme: t.File({
-    type: ["application/zip"],
-    maxSize: 100_000_000
-  }),
+  zip_link: t.String(),
   name: t.String(),
   overview: t.String(),
   //
   selling_price: t.Numeric(),
   owner_price: t.Numeric(),
-  thumbnail: t.File({
-    type: ["image/jpeg", "image/png"],
-    maxSize: 100_000_000
-  }),
-  previews: t.Files({
-    type: ["image/jpeg", "image/png"],
-    maxSize: 100_000_000
-  }),
+  thumbnail_link: t.String(),
+  previews_links: t.Array(t.String()),
   status: t.Enum(ThemeStatus),
   // MEDIA
   pages: t.Optional(t.Array(t.String())),
@@ -46,11 +37,11 @@ export const createTheme = new Elysia({
     ENDPOINT.THEME.CREATE_THEME,
     async ({ body, claims }) => {
       const {
-        theme,
+        zip_link,
         pages,
         format,
-        thumbnail,
-        previews,
+        thumbnail_link,
+        previews_links,
         categories,
         highlight,
         live_preview,
@@ -59,22 +50,10 @@ export const createTheme = new Elysia({
         status
       } = body;
 
-      // upload theme
-      const zip_link = await uploadFile(theme, StorageType.ZIP);
-
-      const thumbnail_link = await uploadFile(thumbnail, StorageType.IMAGE);
-
-      // upload media (images)
-      const imageLinks: string[] = [];
-      for (const image of previews) {
-        const link = await uploadFile(image, StorageType.IMAGE);
-        imageLinks.push(link);
-      }
-
       const media = {
         pages,
         format,
-        previews: imageLinks,
+        previews: previews_links,
         thumbnail: thumbnail_link,
         categories,
         highlight,
@@ -86,7 +65,6 @@ export const createTheme = new Elysia({
       // create theme
       const newTheme = await ThemeRepository.create({
         ...body,
-        zip_link,
         media,
         owner_addresses: [claims.id.toString()],
         author_address: claims.id.toString(),

@@ -20,7 +20,7 @@ export const uploadFile = async (file: File, storageType: StorageType) => {
       location = `themes/zip/${time}_${filename}`;
       break;
     case StorageType.IMAGE:
-      location = `themes/preview-images/${time}_${filename}`;
+      location = `themes/images/${time}_${filename}`;
       break;
     case StorageType.AVATAR:
       location = `themes/avatar/${time}_${filename}`;

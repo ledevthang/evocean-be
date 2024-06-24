@@ -18,8 +18,7 @@ type CreateListingAndSaleParams = {
   sale_price: number;
 };
 
-type CreateThemeParams = Omit<CreateThemePayload, "media" | "zip_file"> & {
-  zip_link: string;
+type CreateThemeParams = Omit<CreateThemePayload, "media"> & {
   media: ThemeMedia;
   token_mint?: string;
   owner_addresses: string[];
