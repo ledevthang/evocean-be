@@ -13,6 +13,7 @@ const createThemeDto = t.Object({
   //
   selling_price: t.Numeric(),
   owner_price: t.Numeric(),
+  percentageOfOwnership: t.Numeric(),
   thumbnail_link: t.String(),
   previews_links: t.Array(t.String()),
   status: t.Enum(ThemeStatus),
@@ -20,8 +21,12 @@ const createThemeDto = t.Object({
   pages: t.Optional(t.Array(t.String())),
   format: t.Optional(t.Array(t.String())),
   categories: t.Optional(t.Array(t.String())),
-  highlight: t.Optional(t.Array(t.String())),
-  live_preview: t.Optional(t.String()),
+  tags: t.Optional(t.Array(t.String())),
+  coverImage: t.Array(t.String()),
+  detailImage: t.Optional(t.String()),
+  fullPeviewImage: t.Array(t.String()),
+  highlight: t.Array(t.String()),
+  live_preview: t.String(),
   template_features: t.Optional(t.Array(t.String())),
   figma_features: t.Optional(t.Array(t.String()))
 });
@@ -40,12 +45,17 @@ export const createTheme = new Elysia({
         format,
         thumbnail_link,
         previews_links,
-        categories,
+        fullPeviewImage,
+        coverImage,
+        detailImage,
         highlight,
         live_preview,
         template_features,
         figma_features,
-        status
+        status,
+        percentageOfOwnership,
+        categories,
+        tags
       } = body;
 
       const media = {
@@ -53,8 +63,10 @@ export const createTheme = new Elysia({
         format,
         previews: previews_links,
         thumbnail: thumbnail_link,
-        categories,
         highlight,
+        coverImage,
+        fullPeviewImage,
+        detailImage,
         live_preview,
         figma_features,
         template_features
@@ -63,11 +75,14 @@ export const createTheme = new Elysia({
       // create theme
       const newTheme = await ThemeRepository.create({
         ...body,
+        percentageOfOwnership,
         media,
         owner_addresses: [claims.id.toString()],
         author_address: claims.id.toString(),
         user_id: claims.id,
-        status
+        status,
+        categories,
+        tags
       });
 
       await ThemeRepository.createListingAndSale({

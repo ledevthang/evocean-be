@@ -5,7 +5,7 @@ import type { GetThemeParams } from "@root/apis/theme/get-themes";
 import type { UpdateThemeParams } from "@root/apis/theme/update-theme";
 // import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
-import type { ThemeMedia } from "@root/types/Themes";
+import type { IUpdateThemeData, ThemeMedia } from "@root/types/Themes";
 
 // type CreateListingAndSaleParams = Pick<
 //   ListingThemePayload,
@@ -38,7 +38,7 @@ type BuyThemeParams = {
 type BuyLicenseParams = BuyThemeParams;
 
 export abstract class ThemeRepository {
-  static findById(
+  static async findById(
     id: number,
     opts?: {
       withListing?: boolean;
@@ -46,16 +46,37 @@ export abstract class ThemeRepository {
       withTxs?: boolean;
     }
   ) {
-    return prisma.theme.findUnique({
+    const theme = await prisma.theme.findUnique({
       where: {
         id: +id
       },
       include: {
         listing: opts?.withListing,
         sale: opts?.withSale,
-        transactions: opts?.withTxs
+        transactions: opts?.withTxs,
+        themeCategories: {
+          select: {
+            category: true
+          }
+        },
+        themeTags: {
+          select: {
+            tag: true
+          }
+        }
       }
     });
+
+    const mapThemeCategories = theme?.themeCategories.map(
+      ({ category }) => category
+    );
+    const mapThemeTags = theme?.themeTags.map(({ tag }) => tag);
+
+    return {
+      ...theme,
+      categories: mapThemeCategories,
+      tags: mapThemeTags
+    };
   }
 
   static findPaged({ page, take, author, owner, listing }: GetThemeParams) {
@@ -198,7 +219,7 @@ export abstract class ThemeRepository {
     });
   }
 
-  static create({
+  static async create({
     zip_link,
     name,
     overview,
@@ -209,9 +230,12 @@ export abstract class ThemeRepository {
     user_id,
     selling_price,
     owner_price,
-    status
+    status,
+    percentageOfOwnership,
+    categories,
+    tags
   }: CreateThemeParams) {
-    return prisma.theme.create({
+    const newTheme = await prisma.theme.create({
       data: {
         zip_link,
         name,
@@ -224,12 +248,69 @@ export abstract class ThemeRepository {
         selling_price,
         owner_price,
         status,
-        owned_at: new Date()
+        owned_at: new Date(),
+        percentageOfOwnership
       }
     });
+
+    if (categories?.length) {
+      await Promise.all(
+        categories?.map(categoryId =>
+          prisma.themeCategories.create({
+            data: {
+              categoryId: +categoryId,
+              themeId: newTheme.id
+            }
+          })
+        )
+      );
+    }
+    if (tags?.length) {
+      await Promise.all(
+        tags?.map(tagId =>
+          prisma.themeTags.create({
+            data: {
+              tagId: +tagId,
+              themeId: newTheme.id
+            }
+          })
+        )
+      );
+    }
+
+    return newTheme;
   }
 
-  static updateTheme(theme_id: number, updateThemeParams: UpdateThemeParams) {
+  static async updateTheme(
+    theme_id: number,
+    updateThemeParams: UpdateThemeParams,
+    { categories, tags }: IUpdateThemeData
+  ) {
+    if (categories?.length || categories?.length === 0) {
+      const themeId = await prisma.themeCategories.findMany({
+        where: {
+          themeId: theme_id
+        }
+      });
+      if (themeId) {
+        await prisma.themeCategories.deleteMany({
+          where: {
+            themeId: theme_id
+          }
+        });
+      }
+
+      await Promise.all(
+        categories?.map(categoryId =>
+          prisma.themeCategories.create({
+            data: {
+              categoryId: +categoryId,
+              themeId: theme_id
+            }
+          })
+        )
+      );
+    }
     return prisma.theme.update({
       where: {
         id: theme_id

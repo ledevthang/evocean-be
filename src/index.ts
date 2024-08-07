@@ -10,20 +10,39 @@ import { loggerPlugin } from "./plugins/logger.plugin";
 const app = new Elysia()
   .use(loggerPlugin)
   .use(errorPlugin)
+
   .use(
     swagger({
       documentation: {
         info: {
           title: "Moonkit APIs documentation",
           version: "1.0.50"
+        },
+        security: [
+          {
+            Bearer: []
+          }
+        ],
+        components: {
+          securitySchemes: {
+            Bearer: {
+              type: "http",
+              scheme: "bearer",
+              bearerFormat: "JWT"
+            }
+          }
         }
       },
-      scalarConfig: {
-        layout: "modern",
-        metaData: {}
-      }
+
+      provider: "swagger-ui"
+
+      // scalarConfig: {
+      //   layout: "modern",
+      //   metaData: {}
+      // }
     })
   )
+
   .use(cors())
   .use(auth)
   .use(user)

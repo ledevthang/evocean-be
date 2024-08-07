@@ -9,3 +9,8 @@ export type ThemeMedia = {
   figma_features?: string[];
   thumbnail?: string;
 };
+
+export interface IUpdateThemeData {
+  categories: string[] | undefined;
+  tags: string[] | undefined;
+}

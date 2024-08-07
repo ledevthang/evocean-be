@@ -4,24 +4,31 @@ import { BadRequestError } from "@root/errors/BadRequestError";
 import { prisma } from "@root/shared/prisma";
 
 export abstract class CollectionRepository {
-  static createCollection({
+  static async createCollection({
     collection_name,
     theme_ids,
     created_by
   }: CreateThemeCollectionParams) {
-    return prisma.collection.create({
+    {
+    }
+    const collect = await prisma.collection.create({
       data: {
         name: collection_name,
-        themes: {
-          connect: theme_ids.map(id => ({ id }))
-        },
         created_by,
         created_at: new Date()
-      },
-      include: {
-        themes: true
       }
     });
+
+    return Promise.all(
+      theme_ids.map(id =>
+        prisma.themeCollection.create({
+          data: {
+            themeId: id,
+            collectionId: collect.id
+          }
+        })
+      )
+    );
   }
 
   static getCollections(page: number, take: number, user_id: number) {
@@ -30,8 +37,14 @@ export abstract class CollectionRepository {
         where: {
           created_by: user_id
         },
+        include: {
+          themeCollection: true
+        },
         take,
-        skip: (page - 1) * take
+        skip: (page - 1) * take,
+        orderBy: {
+          created_at: "desc"
+        }
       }),
       prisma.collection.count({
         where: {
@@ -41,28 +54,27 @@ export abstract class CollectionRepository {
     ]);
   }
 
-  static getCollectionById(id: number) {
-    return prisma.collection.findUnique({
+  static async getCollectionById(id: number) {
+    const collection = await prisma.collection.findUnique({
       where: {
         id: id
       },
       include: {
-        themes: {
+        themeCollection: {
           select: {
-            id: true,
-            name: true,
-            selling_price: true,
-            owner_price: true,
-            user: {
+            theme: {
               select: {
                 id: true,
-                email: true
+                name: true
               }
             }
           }
         }
       }
     });
+    const mapTheme = collection?.themeCollection.map(({ theme }) => theme);
+
+    return { ...collection, themeCollection: mapTheme };
   }
 
   static async updateCollectionById(id: number, data: UpdateCollectionParams) {
@@ -78,10 +90,10 @@ export abstract class CollectionRepository {
         id: id
       },
       data: {
-        name: data.collection_name,
-        themes: {
-          connect: data.theme_ids.map(id => ({ id }))
-        }
+        name: data.collection_name
+        // themes: {
+        //   connect: data.theme_ids.map(id => ({ id }))
+        // }
       }
     });
   }
