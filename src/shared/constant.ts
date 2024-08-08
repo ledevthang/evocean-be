@@ -20,6 +20,7 @@ export const ENDPOINT = {
     UPDATE_THEME: "/updating/:theme_id",
     DELETE_THEME: "/deleting/:theme_id",
     GET_CATEGORY: "/categories",
+    GET_ALL_TAGS: "/tags",
     BUY_LICENSE: "/license-buying",
     UPLOAD_THEME: "/upload-theme",
     UPLOAD_THEME_DETAIL: "/upload",

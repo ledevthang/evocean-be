@@ -22,7 +22,9 @@ import { createTheme } from "./theme/create-theme";
 import { deleteTheme } from "./theme/delete-theme";
 import { downloadTheme } from "./theme/download-theme";
 import { getAllThemes } from "./theme/get-all-theme";
+import { getAllCategories } from "./theme/get-category";
 import { getPurchasedTheme } from "./theme/get-purchased-themes";
+import { getAllTags } from "./theme/get-tag";
 import { getTheme } from "./theme/get-theme";
 import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
@@ -31,7 +33,6 @@ import { updateTheme } from "./theme/update-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { uploadThemeDetail } from "./theme/upload-theme-details";
 import { me } from "./user/me";
-import { getCategory } from "./theme/get-category";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -62,7 +63,8 @@ export const theme = new Elysia({
   .use(getTheme)
   .use(getThemes)
   .use(getAllThemes)
-  .use(getCategory)
+  .use(getAllCategories)
+  .use(getAllTags)
   .use(updateTheme)
   .use(getPurchasedTheme)
   .use(listTheme)
