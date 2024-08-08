@@ -20,29 +20,69 @@ model User {
 }
 
 model Theme {
-  id              Int           @id @default(autoincrement())
-  zip_link        String        @db.VarChar
-  name            String        @db.VarChar
-  overview        String        @db.VarChar
-  media           Json
-  owner_addresses String[]      @db.VarChar
-  token_mint      String?       @db.VarChar
-  author_address  String?       @db.VarChar
-  sale            ThemeSale?
-  listing         ThemeListing?
-  transactions    Transaction[]
-  user            User?         @relation(fields: [user_id], references: [id])
-  user_id         Int?
-  status          ThemeStatus
-  selling_price   Decimal
-  owner_price     Decimal
-  owned_at        DateTime?
-  created_at      DateTime      @default(now())
-  updated_at      DateTime?
-  Collection      Collection?   @relation(fields: [collection_id], references: [id], onDelete: SetNull)
-  collection_id   Int?
+  id                    Int               @id @default(autoincrement())
+  zip_link              String            @db.VarChar
+  name                  String            @db.VarChar
+  overview              String            @db.VarChar
+  media                 Json
+  owner_addresses       String[]          @db.VarChar
+  token_mint            String?           @db.VarChar
+  author_address        String?           @db.VarChar
+  sale                  ThemeSale?
+  listing               ThemeListing?
+  transactions          Transaction[]
+  user                  User?             @relation(fields: [user_id], references: [id])
+  user_id               Int?
+  status                ThemeStatus
+  selling_price         Decimal
+  owner_price           Decimal
+  percentageOfOwnership Decimal?
+  owned_at              DateTime?
+  created_at            DateTime          @default(now())
+  updated_at            DateTime?
+  themeCategories       ThemeCategories[]
+  themeTags             ThemeTags[]
+  themeCollection       ThemeCollection[]
 
   @@map("theme")
+}
+
+model ThemeCategories {
+  id         Int      @id @default(autoincrement())
+  categoryId Int      @map("category_id")
+  themeId    Int      @map("theme_id")
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  theme      Theme    @relation(fields: [themeId], references: [id], onDelete: Cascade)
+
+  @@map("theme_category")
+}
+
+model Category {
+  id              Int               @id @default(autoincrement())
+  createdAt       DateTime          @default(now()) @map("created_at")
+  name            String
+  ThemeCategories ThemeCategories[]
+
+  @@map("category")
+}
+
+model ThemeTags {
+  id      Int   @id @default(autoincrement())
+  tagId   Int   @map("tag_id")
+  themeId Int   @map("theme_id")
+  theme   Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  tag     Tag   @relation(fields: [tagId], references: [id])
+
+  @@map("theme_tag")
+}
+
+model Tag {
+  id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now()) @map("created_at")
+  name      String
+  ThemeTags ThemeTags[]
+
+  @@map("tag")
 }
 
 // buy for download 
@@ -88,15 +128,26 @@ model Transaction {
   @@map("transaction")
 }
 
+model ThemeCollection {
+  id           Int        @id @default(autoincrement())
+  collectionId Int        @map("collection_id")
+  themeId      Int        @map("themme_id")
+  theme        Theme      @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@map("theme_collection")
+}
+
 model Collection {
-  id         Int       @id @default(autoincrement())
-  name       String    @db.VarChar
-  themes     Theme[]
-  created_at DateTime  @default(now())
-  created_by Int
-  updated_at DateTime?
-  updated_by Int?
-  User       User      @relation(fields: [created_by], references: [id])
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar
+
+  created_at      DateTime          @default(now())
+  created_by      Int
+  updated_at      DateTime?
+  updated_by      Int?
+  User            User              @relation(fields: [created_by], references: [id])
+  themeCollection ThemeCollection[]
 
   @@map("collection")
 }

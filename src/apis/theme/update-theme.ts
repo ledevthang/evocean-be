@@ -14,6 +14,7 @@ const updateThemeDto = t.Object({
   //
   selling_price: t.Optional(t.Numeric()),
   owner_price: t.Optional(t.Numeric()),
+  percentageOfOwnership: t.Optional(t.Numeric()),
   thumbnail_link: t.Optional(t.String()),
   previews_links: t.Optional(t.Array(t.String())),
   status: t.Optional(t.Enum(ThemeStatus)),
@@ -21,6 +22,7 @@ const updateThemeDto = t.Object({
   pages: t.Optional(t.Array(t.String())),
   format: t.Optional(t.Array(t.String())),
   categories: t.Optional(t.Array(t.String())),
+  tags: t.Optional(t.Array(t.String())),
   highlight: t.Optional(t.Array(t.String())),
   live_preview: t.Optional(t.String()),
   template_features: t.Optional(t.Array(t.String())),
@@ -39,7 +41,6 @@ export type UpdateThemeParams = Omit<
   | "thumbnail_link"
   | "pages"
   | "format"
-  | "categories"
   | "highlight"
   | "live_preview"
   | "template_features"
@@ -62,14 +63,9 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       overview,
       selling_price,
       owner_price,
+      categories,
+      tags,
       ...mediaData
-      // format,
-      // pages,
-      // categories,
-      // highlight,
-      // live_preview,
-      // template_features,
-      // figma_features,
     } = body;
 
     const themeData = await ThemeRepository.findById(params.theme_id);
@@ -99,7 +95,12 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     if (status) updateData.status = status;
     updateData.media = media;
 
-    return ThemeRepository.updateTheme(theme_id, updateData);
+    // console.log("updateData", updateData);
+
+    return ThemeRepository.updateTheme(theme_id, updateData, {
+      categories,
+      tags
+    });
   },
   {
     params,
