@@ -382,4 +382,7 @@ export abstract class ThemeRepository {
       }
     });
   }
+  static getAllCategory() {
+    return prisma.category.findMany({});
+  }
 }

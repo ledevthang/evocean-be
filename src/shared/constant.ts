@@ -19,6 +19,7 @@ export const ENDPOINT = {
     BUY_THEME: "/buying",
     UPDATE_THEME: "/updating/:theme_id",
     DELETE_THEME: "/deleting/:theme_id",
+    GET_CATEGORY: "/categories",
     BUY_LICENSE: "/license-buying",
     UPLOAD_THEME: "/upload-theme",
     UPLOAD_THEME_DETAIL: "/upload",

@@ -31,6 +31,7 @@ import { updateTheme } from "./theme/update-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { uploadThemeDetail } from "./theme/upload-theme-details";
 import { me } from "./user/me";
+import { getCategory } from "./theme/get-category";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -61,6 +62,7 @@ export const theme = new Elysia({
   .use(getTheme)
   .use(getThemes)
   .use(getAllThemes)
+  .use(getCategory)
   .use(updateTheme)
   .use(getPurchasedTheme)
   .use(listTheme)
