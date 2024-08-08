@@ -36,7 +36,7 @@ model Theme {
   status                ThemeStatus
   selling_price         Decimal
   owner_price           Decimal
-  percentageOfOwnership Decimal
+  percentageOfOwnership Decimal?
   owned_at              DateTime?
   created_at            DateTime          @default(now())
   updated_at            DateTime?
