@@ -37,7 +37,7 @@ type BuyThemeParams = {
 
 type BuyLicenseParams = BuyThemeParams;
 
-type CreateFileTypeParams = {
+type CreateFeatureTypeParams = {
   name: string;
   icon: string;
 };
@@ -395,10 +395,10 @@ export abstract class ThemeRepository {
     return prisma.tag.findMany();
   }
 
-  static findAllFileType() {
+  static findAllFeatureType() {
     return prisma.featureTypes.findMany();
   }
-  static createFileType({ name, icon }: CreateFileTypeParams) {
+  static createFeatureType({ name, icon }: CreateFeatureTypeParams) {
     console.log(name, icon);
     return prisma.featureTypes.create({ data: { name, icon } });
   }
