@@ -37,6 +37,20 @@ type BuyThemeParams = {
 
 type BuyLicenseParams = BuyThemeParams;
 
+type CreateFeatureTypeParams = {
+  name: string;
+  iconUrl?: string;
+};
+
+type CreateFeatureTagParams = {
+  name: string;
+  typeId: number;
+};
+
+type FindFeatureTagParams = {
+  typeId: number;
+};
+
 export abstract class ThemeRepository {
   static async findById(
     id: number,
@@ -386,7 +400,46 @@ export abstract class ThemeRepository {
   static getAllCategory() {
     return prisma.category.findMany();
   }
+
   static getAllTags() {
     return prisma.tag.findMany();
+  }
+
+  static findAllFeatureType() {
+    return prisma.featureTypes.findMany();
+  }
+
+  static createFeatureType({ name, iconUrl }: CreateFeatureTypeParams) {
+    return prisma.featureTypes.create({ data: { name, iconUrl } });
+  }
+
+  static async createFeatureTag({ name, typeId }: CreateFeatureTagParams) {
+    const featureTag = await prisma.features.findFirst({
+      where: {
+        featureTypeId: typeId,
+        name: name
+      }
+    });
+    if (!featureTag)
+      return prisma.features.create({
+        data: {
+          name,
+          featureTypeId: typeId
+        }
+      });
+  }
+
+  static async findAllFeatureTags({ typeId }: FindFeatureTagParams) {
+    return prisma.features.findMany({
+      where: {
+        featureTypeId: typeId
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        name: true,
+        featureTypeId: true
+      }
+    });
   }
 }
