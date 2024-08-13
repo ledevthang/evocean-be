@@ -104,7 +104,8 @@ model FeatureTypes {
   name      String
   iconUrl   String?    @map("icon_url")
   Features  Features[]
-
+  collectionId Int
+  collection  Collection    @relation(fields: [collectionId], references: [id])
   @@map("feature_types")
 }
 
@@ -174,15 +175,20 @@ model ThemeCollection {
 }
 
 model Collection {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar
-
-  created_at      DateTime          @default(now())
-  created_by      Int
-  updated_at      DateTime?
-  updated_by      Int?
-  User            User              @relation(fields: [created_by], references: [id])
-  themeCollection ThemeCollection[]
+  id   I                nt                @id @default(autoincrement())
+  name                  String            @db.VarChar
+  description           String
+  sellingPricing        Decimal
+  percentageOfOwnership Decimal
+  ownershipPrice        Decimal
+  created_at            DateTime          @default(now())
+  created_by            Int
+  updated_at            DateTime?
+  updated_by            Int?
+  User                  User              @relation(fields: [created_by], references: [id])
+  thumbnail             String
+  featureTypes          FeatureTypes[]
+  themeCollection       ThemeCollection[]
 
   @@map("collection")
 }
