@@ -91,7 +91,7 @@ model Features {
   id            Int             @id @default(autoincrement())
   createdAt     DateTime        @default(now()) @map("created_at")
   name          String
-  fileTypeId    Int             @unique @map("file_type_id")
+  fileTypeId    Int             @map("file_type_id")
   FileTypes     FileTypes       @relation(fields: [fileTypeId], references: [id])
   ThemeFeatures ThemeFeatures[]
 
@@ -99,10 +99,10 @@ model Features {
 }
 
 model FileTypes {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now()) @map("created_at")
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now()) @map("created_at")
   name      String
-  Features  Features?
+  Features  Features[]
 
   @@map("file_types")
 }
