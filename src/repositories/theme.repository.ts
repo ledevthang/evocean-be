@@ -247,7 +247,8 @@ export abstract class ThemeRepository {
     status,
     percentageOfOwnership,
     categories,
-    tags
+    tags,
+    feature_ids
   }: CreateThemeParams) {
     const newTheme = await prisma.theme.create({
       data: {
@@ -285,6 +286,19 @@ export abstract class ThemeRepository {
           prisma.themeTags.create({
             data: {
               tagId: +tagId,
+              themeId: newTheme.id
+            }
+          })
+        )
+      );
+    }
+
+    if (feature_ids?.length) {
+      await Promise.all(
+        feature_ids.map(id =>
+          prisma.themeFeatures.create({
+            data: {
+              featureId: id,
               themeId: newTheme.id
             }
           })
@@ -430,16 +444,23 @@ export abstract class ThemeRepository {
   }
 
   static async findAllFeatureTags({ typeId }: FindFeatureTagParams) {
-    return prisma.features.findMany({
+    const data = await prisma.features.findMany({
       where: {
         featureTypeId: typeId
       },
-      select: {
-        id: true,
-        createdAt: true,
-        name: true,
-        featureTypeId: true
+      include: {
+        FeatureTypes: true
       }
     });
+    const result = data.map(item => {
+      const iconUrl = item.FeatureTypes.iconUrl;
+      delete item["FeatureTypes"];
+      return {
+        ...item,
+        iconUrl
+      };
+    });
+
+    return result;
   }
 }

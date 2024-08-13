@@ -26,8 +26,7 @@ const createThemeDto = t.Object({
   detailImages: t.Array(t.String()),
   fullPreviewImages: t.Array(t.String()),
   highlight: t.Optional(t.Array(t.String())),
-  template_features: t.Optional(t.Array(t.String())),
-  figma_features: t.Optional(t.Array(t.String()))
+  feature_ids: t.Optional(t.Array(t.Integer()))
 });
 
 export type CreateThemePayload = Static<typeof createThemeDto>;
@@ -47,13 +46,12 @@ export const createTheme = new Elysia({
         coverImages,
         detailImages,
         highlight,
-        template_features,
-        figma_features,
         status,
         percentageOfOwnership,
         categories,
         tags,
-        linkPreview
+        linkPreview,
+        feature_ids
       } = body;
 
       const media = {
@@ -63,9 +61,7 @@ export const createTheme = new Elysia({
         thumbnail: thumbnail_link,
         highlight,
         coverImages,
-        detailImages,
-        figma_features,
-        template_features
+        detailImages
       };
 
       // create theme
@@ -79,7 +75,8 @@ export const createTheme = new Elysia({
         status,
         categories,
         tags,
-        linkPreview
+        linkPreview,
+        feature_ids
       });
 
       await ThemeRepository.createListingAndSale({
