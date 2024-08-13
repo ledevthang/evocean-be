@@ -91,14 +91,14 @@ model Features {
   id            Int             @id @default(autoincrement())
   createdAt     DateTime        @default(now()) @map("created_at")
   name          String
-  fileTypeId    Int             @map("file_type_id")
-  FileTypes     FileTypes       @relation(fields: [fileTypeId], references: [id])
+  featureTypeId Int             @map("feature_type_id")
+  FeatureTypes  FeatureTypes    @relation(fields: [featureTypeId], references: [id])
   ThemeFeatures ThemeFeatures[]
 
   @@map("features")
 }
 
-model FileTypes {
+model FeatureTypes {
   id        Int        @id @default(autoincrement())
   createdAt DateTime   @default(now()) @map("created_at")
   name      String
