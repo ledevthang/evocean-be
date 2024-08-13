@@ -102,9 +102,10 @@ model FeatureTypes {
   id        Int        @id @default(autoincrement())
   createdAt DateTime   @default(now()) @map("created_at")
   name      String
+  icon      String
   Features  Features[]
 
-  @@map("file_types")
+  @@map("feature_types")
 }
 
 model ThemeFeatures {

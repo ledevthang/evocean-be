@@ -37,6 +37,11 @@ type BuyThemeParams = {
 
 type BuyLicenseParams = BuyThemeParams;
 
+type CreateFileTypeParams = {
+  name: string;
+  icon: string;
+};
+
 export abstract class ThemeRepository {
   static async findById(
     id: number,
@@ -388,5 +393,13 @@ export abstract class ThemeRepository {
   }
   static getAllTags() {
     return prisma.tag.findMany();
+  }
+
+  static findAllFileType() {
+    return prisma.featureTypes.findMany();
+  }
+  static createFileType({ name, icon }: CreateFileTypeParams) {
+    console.log(name, icon);
+    return prisma.featureTypes.create({ data: { name, icon } });
   }
 }

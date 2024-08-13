@@ -11,6 +11,8 @@ export const ENDPOINT = {
   THEME: {
     PREFIX: "themes",
     GET_THEMES: "/",
+    GET_FILE_TYPE: "/file-type",
+    CREATE_FILE_TYPE: "/file-type",
     GET_THEME: "/:theme_id",
     GET_ALL_THEME: "/all",
     GET_PURCHASED_THEME: "/purchased",
