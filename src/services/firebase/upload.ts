@@ -6,7 +6,8 @@ import { firebaseStorage } from "./config";
 export enum StorageType {
   ZIP,
   IMAGE,
-  AVATAR
+  AVATAR,
+  FEATURE_ICON
 }
 
 export const uploadFile = async (file: File, storageType: StorageType) => {
@@ -24,6 +25,9 @@ export const uploadFile = async (file: File, storageType: StorageType) => {
       break;
     case StorageType.AVATAR:
       location = `themes/avatar/${time}_${filename}`;
+      break;
+    case StorageType.FEATURE_ICON:
+      location = `themes/feature-icon/${time}_${filename}`;
       break;
 
     default:
