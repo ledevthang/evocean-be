@@ -35,7 +35,7 @@ import { updateTheme } from "./theme/update-theme";
 import { uploadTheme } from "./theme/upload-theme";
 import { uploadThemeDetail } from "./theme/upload-theme-details";
 import { me } from "./user/me";
-import { uploadFeatureIcon } from "./theme/upload-features-icon";
+import { uploadFeatureIcon } from "./theme/upload-feature-icon";
 import { createFeatureTag } from "./theme/create-feature-tag";
 import { getFeatureTags } from "./theme/get-feature-tag";
 

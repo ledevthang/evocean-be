@@ -39,7 +39,7 @@ type BuyLicenseParams = BuyThemeParams;
 
 type CreateFeatureTypeParams = {
   name: string;
-  icon: string;
+  iconUrl?: string;
 };
 
 type CreateFeatureTagParams = {
@@ -409,8 +409,8 @@ export abstract class ThemeRepository {
     return prisma.featureTypes.findMany();
   }
 
-  static createFeatureType({ name, icon }: CreateFeatureTypeParams) {
-    return prisma.featureTypes.create({ data: { name, icon } });
+  static createFeatureType({ name, iconUrl }: CreateFeatureTypeParams) {
+    return prisma.featureTypes.create({ data: { name, iconUrl } });
   }
 
   static async createFeatureTag({ name, typeId }: CreateFeatureTagParams) {

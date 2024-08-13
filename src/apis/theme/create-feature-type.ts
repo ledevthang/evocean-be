@@ -5,7 +5,7 @@ import { ENDPOINT } from "@root/shared/constant";
 
 const createFeatureTypeDto = t.Object({
   name: t.String(),
-  icon: t.String()
+  iconUrl: t.String()
 });
 
 export const createFeatureType = new Elysia({
@@ -13,8 +13,8 @@ export const createFeatureType = new Elysia({
 }).post(
   ENDPOINT.THEME.CREATE_FEATURE_TYPE,
   ({ body }) => {
-    const { name, icon } = body;
-    return ThemeRepository.createFeatureType({ name, icon });
+    const { name, iconUrl } = body;
+    return ThemeRepository.createFeatureType({ name, iconUrl });
   },
   {
     body: createFeatureTypeDto
