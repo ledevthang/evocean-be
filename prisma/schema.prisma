@@ -37,13 +37,14 @@ model Theme {
   linkPreview           String?           @map("link_preview")
   selling_price         Decimal
   owner_price           Decimal
-  percentageOfOwnership Decimal?
+  percentageOfOwnership Decimal?          @map("percentage_of_ownership")
   owned_at              DateTime?
   created_at            DateTime          @default(now())
   updated_at            DateTime?
   themeCategories       ThemeCategories[]
   themeTags             ThemeTags[]
   themeCollection       ThemeCollection[]
+  themeFeatures         ThemeFeatures[]
 
   @@map("theme")
 }
@@ -84,6 +85,38 @@ model Tag {
   ThemeTags ThemeTags[]
 
   @@map("tag")
+}
+
+model Features {
+  id            Int             @id @default(autoincrement())
+  createdAt     DateTime        @default(now()) @map("created_at")
+  name          String
+  fileTypeId    Int             @unique @map("file_type_id")
+  FileTypes     FileTypes       @relation(fields: [fileTypeId], references: [id])
+  ThemeFeatures ThemeFeatures[]
+
+  @@map("features")
+}
+
+model FileTypes {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now()) @map("created_at")
+  name      String
+  Features  Features?
+
+  @@map("file_types")
+}
+
+model ThemeFeatures {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  featureId Int      @map("feature_id")
+  themeId   Int      @map("theme_id")
+  Features  Features @relation(fields: [featureId], references: [id])
+  Theme     Theme    @relation(fields: [themeId], references: [id])
+
+  @@index([featureId, themeId])
+  @@map("theme_features")
 }
 
 // buy for download 
