@@ -6,20 +6,35 @@ import { prisma } from "@root/shared/prisma";
 export abstract class CollectionRepository {
   static async createCollection({
     collection_name,
+    description,
+    sellingPricing,
+    percentageOfOwnership,
+    ownershipPrice,
+    created_by,
     theme_ids,
-    created_by
+    thumbnail,
+    media,
+    linkPreview,
+    collectionCategories,
+    collectionTags,
+    collectionFeatureTypes
   }: CreateThemeCollectionParams) {
-    {
-    }
     const collect = await prisma.collection.create({
       data: {
         name: collection_name,
+        description: (description as string) || "",
+        sellingPricing: (sellingPricing as number) || 0,
+        percentageOfOwnership: (percentageOfOwnership as number) || 0,
+        ownershipPrice: (ownershipPrice as number) || 0,
         created_by,
-        created_at: new Date()
+        created_at: new Date(),
+        thumbnail: (thumbnail as string) || "",
+        media: media || {},
+        linkPreview: linkPreview
       }
     });
 
-    return Promise.all(
+    await Promise.all(
       theme_ids.map(id =>
         prisma.themeCollection.create({
           data: {
@@ -29,6 +44,47 @@ export abstract class CollectionRepository {
         })
       )
     );
+
+    if (collectionCategories && collectionCategories.length > 0) {
+      await Promise.all(
+        collectionCategories.map(categoryId =>
+          prisma.collectionCategories.create({
+            data: {
+              collectionId: collect.id,
+              categoryId: Number(categoryId)
+            }
+          })
+        )
+      );
+    }
+
+    if (collectionTags && collectionTags.length > 0) {
+      await Promise.all(
+        collectionTags.map(tagId =>
+          prisma.collectionTags.create({
+            data: {
+              collectionId: collect.id,
+              tagId: Number(tagId)
+            }
+          })
+        )
+      );
+    }
+
+    if (collectionFeatureTypes && collectionFeatureTypes.length > 0) {
+      await Promise.all(
+        collectionFeatureTypes.map(featureTypeId =>
+          prisma.collectionFeatureTypes.create({
+            data: {
+              collectionId: collect.id,
+              featureTypeId: Number(featureTypeId)
+            }
+          })
+        )
+      );
+    }
+
+    return collect;
   }
 
   static getCollections(page: number, take: number, user_id: number) {
