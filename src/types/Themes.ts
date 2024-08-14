@@ -11,6 +11,7 @@ export type ThemeMedia = {
 };
 
 export interface IUpdateThemeData {
-  categories: string[] | undefined;
-  tags: string[] | undefined;
+  categories?: number[] | undefined;
+  tags?: number[] | undefined;
+  feature_ids?: number[] | undefined;
 }

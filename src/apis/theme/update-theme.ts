@@ -21,12 +21,12 @@ const updateThemeDto = t.Object({
   // MEDIA
   pages: t.Optional(t.Array(t.String())),
   format: t.Optional(t.Array(t.String())),
-  categories: t.Optional(t.Array(t.String())),
-  tags: t.Optional(t.Array(t.String())),
+  categories: t.Optional(t.Array(t.Integer())),
+  tags: t.Optional(t.Array(t.Integer())),
   highlight: t.Optional(t.Array(t.String())),
   live_preview: t.Optional(t.String()),
-  template_features: t.Optional(t.Array(t.String())),
-  figma_features: t.Optional(t.Array(t.String()))
+
+  feature_ids: t.Optional(t.Array(t.Integer()))
 });
 
 const params = t.Object({
@@ -65,6 +65,7 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       owner_price,
       categories,
       tags,
+      feature_ids,
       ...mediaData
     } = body;
 
@@ -99,7 +100,8 @@ export const updateTheme = new Elysia().use(authPlugin).put(
 
     return ThemeRepository.updateTheme(theme_id, updateData, {
       categories,
-      tags
+      tags,
+      feature_ids
     });
   },
   {

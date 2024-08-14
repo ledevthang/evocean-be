@@ -6,6 +6,7 @@ import type { UpdateThemeParams } from "@root/apis/theme/update-theme";
 // import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
 import type { IUpdateThemeData, ThemeMedia } from "@root/types/Themes";
+import { NotFoundError } from "elysia";
 
 // type CreateListingAndSaleParams = Pick<
 //   ListingThemePayload,
@@ -312,33 +313,85 @@ export abstract class ThemeRepository {
   static async updateTheme(
     theme_id: number,
     updateThemeParams: UpdateThemeParams,
-    { categories, tags }: IUpdateThemeData
+    { categories, tags, feature_ids }: IUpdateThemeData
   ) {
+    const theme = await prisma.themeCategories.findMany({
+      where: {
+        themeId: theme_id
+      }
+    });
+
+    if (!theme) throw new NotFoundError("Not found theme");
+
     if (categories?.length || categories?.length === 0) {
-      const themeId = await prisma.themeCategories.findMany({
-        where: {
-          themeId: theme_id
-        }
-      });
-      if (themeId) {
-        await prisma.themeCategories.deleteMany({
+      await prisma.$transaction(async tx => {
+        await tx.themeCategories.deleteMany({
           where: {
-            themeId: theme_id
+            themeId: theme_id,
+            categoryId: {
+              in: categories
+            }
           }
         });
-      }
-
-      await Promise.all(
-        categories?.map(categoryId =>
-          prisma.themeCategories.create({
-            data: {
-              categoryId: +categoryId,
-              themeId: theme_id
-            }
-          })
-        )
-      );
+        await Promise.all(
+          categories?.map(categoryId =>
+            tx.themeCategories.create({
+              data: {
+                categoryId: +categoryId,
+                themeId: theme_id
+              }
+            })
+          )
+        );
+      });
     }
+
+    if (tags?.length || tags?.length === 0) {
+      await prisma.$transaction(async tx => {
+        await tx.themeTags.deleteMany({
+          where: {
+            themeId: theme_id,
+            tagId: {
+              in: tags
+            }
+          }
+        });
+        await Promise.all(
+          tags?.map(tagId =>
+            tx.themeTags.create({
+              data: {
+                tagId: +tagId,
+                themeId: theme_id
+              }
+            })
+          )
+        );
+      });
+    }
+
+    if (feature_ids?.length || feature_ids?.length === 0) {
+      await prisma.$transaction(async tx => {
+        await tx.themeFeatures.deleteMany({
+          where: {
+            themeId: theme_id,
+            featureId: {
+              in: feature_ids
+            }
+          }
+        });
+        await Promise.all(
+          feature_ids?.map(feature_id =>
+            tx.themeFeatures.create({
+              data: {
+                featureId: +feature_id,
+                themeId: theme_id
+              }
+            })
+          )
+        );
+      });
+    }
+
     return prisma.theme.update({
       where: {
         id: theme_id
