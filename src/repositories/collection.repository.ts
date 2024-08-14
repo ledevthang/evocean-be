@@ -134,24 +134,104 @@ export abstract class CollectionRepository {
   }
 
   static async updateCollectionById(id: number, data: UpdateCollectionParams) {
-    const collection = await prisma.collection.findFirst({
-      where: {
-        id: id
-      }
+    const collection = await prisma.collection.findUnique({
+      where: { id }
     });
+
     if (!collection) throw new BadRequestError("Collection not found");
 
-    return prisma.collection.update({
-      where: {
-        id: id
-      },
+    const updatedCollection = await prisma.collection.update({
+      where: { id },
       data: {
-        name: data.collection_name
-        // themes: {
-        //   connect: data.theme_ids.map(id => ({ id }))
-        // }
+        name: data.collection_name,
+        description: data.description || "",
+        sellingPricing: data.sellingPricing || 0,
+        percentageOfOwnership: data.percentageOfOwnership || 0,
+        ownershipPrice: data.ownershipPrice || 0,
+        thumbnail: data.thumbnail || "",
+        media: data.media,
+        linkPreview: data.linkPreview,
+        updated_at: new Date()
       }
     });
+
+    if (data.theme_ids) {
+      await prisma.themeCollection.deleteMany({
+        where: {
+          collectionId: id
+        }
+      });
+
+      await Promise.all(
+        data.theme_ids.map(themeId =>
+          prisma.themeCollection.create({
+            data: {
+              themeId,
+              collectionId: updatedCollection.id
+            }
+          })
+        )
+      );
+    }
+
+    if (data.collectionCategories) {
+      await prisma.collectionCategories.deleteMany({
+        where: {
+          collectionId: id
+        }
+      });
+
+      await Promise.all(
+        data.collectionCategories.map(categoryId =>
+          prisma.collectionCategories.create({
+            data: {
+              collectionId: updatedCollection.id,
+              categoryId: Number(categoryId)
+            }
+          })
+        )
+      );
+    }
+
+    if (data.collectionTags) {
+      await prisma.collectionTags.deleteMany({
+        where: {
+          collectionId: id
+        }
+      });
+
+      await Promise.all(
+        data.collectionTags.map(tagId =>
+          prisma.collectionTags.create({
+            data: {
+              collectionId: updatedCollection.id,
+              tagId: Number(tagId)
+            }
+          })
+        )
+      );
+    }
+
+    if (data.collectionFeatureTypes) {
+      await prisma.collectionFeatureTypes.deleteMany({
+        where: {
+          collectionId: id
+        }
+      });
+
+      await Promise.all(
+        data.collectionFeatureTypes.map(featureTypeId =>
+          prisma.collectionFeatureTypes.create({
+            data: {
+              collectionId: updatedCollection.id,
+              featureTypeId: Number(featureTypeId)
+            }
+          })
+        )
+      );
+    }
+
+    return updatedCollection;
   }
 
   static deleteCollectionById(id: number) {
