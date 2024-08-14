@@ -209,17 +209,17 @@ model CollectionFeatureTypes {
 model Collection {
   id                     Int                      @id @default(autoincrement())
   name                   String                   @db.VarChar
-  description            String
-  sellingPricing         Decimal                  @map("selling_pricing")
-  percentageOfOwnership  Decimal                  @map("percentage_of_ownership")
-  ownershipPrice         Decimal                  @map("owner_ship_price")
+  description            String?
+  sellingPricing         Decimal?                 @map("selling_pricing")
+  percentageOfOwnership  Decimal?                 @map("percentage_of_ownership")
+  ownershipPrice         Decimal?                 @map("owner_ship_price")
   created_at             DateTime                 @default(now())
   created_by             Int
   updated_at             DateTime?
   updated_by             Int?
   User                   User                     @relation(fields: [created_by], references: [id])
-  thumbnail              String
-  media                  Json
+  thumbnail              String?
+  media                  Json?
   linkPreview            String?                  @map("link_preview")
   collectionCategories   CollectionCategories[]
   collectionTags         CollectionTags[]
