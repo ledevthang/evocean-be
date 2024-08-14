@@ -78,6 +78,23 @@ export abstract class ThemeRepository {
           select: {
             tag: true
           }
+        },
+        themeFeatures: {
+          select: {
+            Features: {
+              select: {
+                id: true,
+                name: true,
+                FeatureTypes: {
+                  select: {
+                    iconUrl: true,
+                    name: true,
+                    id: true
+                  }
+                }
+              }
+            }
+          }
         }
       }
     });
@@ -87,10 +104,33 @@ export abstract class ThemeRepository {
     );
     const mapThemeTags = theme?.themeTags.map(({ tag }) => tag);
 
+    const mapThemeFeatures = theme?.themeFeatures.map(item => ({
+      ...item.Features
+    }));
+
+    const groupedFeatures = mapThemeFeatures?.reduce<{
+      [key: string]: any;
+    }>((acc, item) => {
+      const typeId = item.FeatureTypes.id;
+      if (!acc[typeId]) {
+        acc[typeId] = {
+          type: item.FeatureTypes,
+          features: []
+        };
+      }
+      acc[typeId].features.push({ name: item.name, id: item.id });
+      return acc;
+    }, {});
+
+    const themeFeatures = Object.values(groupedFeatures as object);
+
+    delete (theme as Partial<typeof theme>)?.themeFeatures;
+
     return {
       ...theme,
       categories: mapThemeCategories,
-      tags: mapThemeTags
+      tags: mapThemeTags,
+      themeFeatures: themeFeatures
     };
   }
 
