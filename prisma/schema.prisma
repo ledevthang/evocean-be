@@ -117,8 +117,8 @@ model ThemeFeatures {
   createdAt DateTime @default(now()) @map("created_at")
   featureId Int      @map("feature_id")
   themeId   Int      @map("theme_id")
-  Features  Features @relation(fields: [featureId], references: [id])
-  Theme     Theme    @relation(fields: [themeId], references: [id])
+  Features  Features @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  Theme     Theme    @relation(fields: [themeId], references: [id], onDelete: Cascade)
 
   @@index([featureId, themeId])
   @@map("theme_features")
