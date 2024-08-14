@@ -357,9 +357,9 @@ export abstract class ThemeRepository {
     updateThemeParams: UpdateThemeParams,
     { categories, tags, feature_ids }: IUpdateThemeData
   ) {
-    const theme = await prisma.themeCategories.findMany({
+    const theme = await prisma.theme.findUnique({
       where: {
-        themeId: theme_id
+        id: theme_id
       }
     });
 
@@ -369,10 +369,7 @@ export abstract class ThemeRepository {
       await prisma.$transaction(async tx => {
         await tx.themeCategories.deleteMany({
           where: {
-            themeId: theme_id,
-            categoryId: {
-              in: categories
-            }
+            themeId: theme_id
           }
         });
         await Promise.all(
@@ -392,10 +389,7 @@ export abstract class ThemeRepository {
       await prisma.$transaction(async tx => {
         await tx.themeTags.deleteMany({
           where: {
-            themeId: theme_id,
-            tagId: {
-              in: tags
-            }
+            themeId: theme_id
           }
         });
         await Promise.all(
@@ -415,10 +409,7 @@ export abstract class ThemeRepository {
       await prisma.$transaction(async tx => {
         await tx.themeFeatures.deleteMany({
           where: {
-            themeId: theme_id,
-            featureId: {
-              in: feature_ids
-            }
+            themeId: theme_id
           }
         });
         await Promise.all(
