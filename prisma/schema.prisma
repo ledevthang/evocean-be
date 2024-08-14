@@ -60,11 +60,12 @@ model ThemeCategories {
 }
 
 model Category {
-  id                              Int               @id @default(autoincrement())
-  createdAt                       DateTime          @default(now()) @map("created_at")
-  name                            String
-  ThemeCategories                 ThemeCategories[]
-  collectionCategories            CollectionCategories[]
+  id                   Int                    @id @default(autoincrement())
+  createdAt            DateTime               @default(now()) @map("created_at")
+  name                 String
+  ThemeCategories      ThemeCategories[]
+  collectionCategories CollectionCategories[]
+
   @@map("category")
 }
 
@@ -79,11 +80,12 @@ model ThemeTags {
 }
 
 model Tag {
-  id                        Int         @id @default(autoincrement())
-  createdAt                 DateTime    @default(now()) @map("created_at")
-  name                      String
-  ThemeTags                 ThemeTags[]
-  collectionTags            CollectionTags[]
+  id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now()) @map("created_at")
+  name           String
+  ThemeTags      ThemeTags[]
+  collectionTags CollectionTags[]
+
   @@map("tag")
 }
 
@@ -99,12 +101,13 @@ model Features {
 }
 
 model FeatureTypes {
-  id            Int        @id @default(autoincrement())
-  createdAt     DateTime   @default(now()) @map("created_at")
-  name          String
-  iconUrl       String?    @map("icon_url")
-  Features      Features[]
-  collectionFeatureTypes    CollectionFeatureTypes[]
+  id                     Int                      @id @default(autoincrement())
+  createdAt              DateTime                 @default(now()) @map("created_at")
+  name                   String
+  iconUrl                String?                  @map("icon_url")
+  Features               Features[]
+  collectionFeatureTypes CollectionFeatureTypes[]
+
   @@map("feature_types")
 }
 
@@ -173,49 +176,55 @@ model ThemeCollection {
   @@map("theme_collection")
 }
 
-model CollectionCategories{
-    id                    Int               @id @default(autoincrement())
-    categoryId            Int               @map("category_id")
-    collectionId          Int               @map("collection_id")
-    category              Category          @relation(fields: [categoryId], references: [id])
-    collection            Collection        @relation(fields: [collectionId], references: [id])
+model CollectionCategories {
+  id           Int        @id @default(autoincrement())
+  categoryId   Int        @map("category_id")
+  collectionId Int        @map("collection_id")
+  category     Category   @relation(fields: [categoryId], references: [id])
+  collection   Collection @relation(fields: [collectionId], references: [id])
+
+  @@map("collection_categories")
 }
 
-model CollectionTags{
-    id                    Int               @id @default(autoincrement())
-    tagId                 Int               @map("tag_id")
-    collectionId          Int               @map("collection_id")
-    tag                   Tag               @relation(fields: [tagId], references: [id])
-    collection            Collection        @relation(fields: [collectionId], references: [id])
+model CollectionTags {
+  id           Int        @id @default(autoincrement())
+  tagId        Int        @map("tag_id")
+  collectionId Int        @map("collection_id")
+  tag          Tag        @relation(fields: [tagId], references: [id])
+  collection   Collection @relation(fields: [collectionId], references: [id])
+
+  @@map("collection_tags")
 }
 
-model CollectionFeatureTypes{
-    id                    Int               @id @default(autoincrement())
-    featureTypeId         Int               @map("feature_type_id")
-    collectionId          Int               @map("collection_id")
-    featureTypes          FeatureTypes      @relation(fields: [featureTypeId], references: [id])
-    collection            Collection        @relation(fields: [collectionId], references: [id])
+model CollectionFeatureTypes {
+  id            Int          @id @default(autoincrement())
+  featureTypeId Int          @map("feature_type_id")
+  collectionId  Int          @map("collection_id")
+  featureTypes  FeatureTypes @relation(fields: [featureTypeId], references: [id])
+  collection    Collection   @relation(fields: [collectionId], references: [id])
+
+  @@map("collection_feature_types")
 }
 
 model Collection {
-  id                        Int               @id @default(autoincrement())
-  name                      String            @db.VarChar
-  description               String
-  sellingPricing            Decimal           @map("selling_pricing")
-  percentageOfOwnership     Decimal           @map("percentage_of_ownership")
-  ownershipPrice            Decimal           @map("owner_ship_price")
-  created_at                DateTime          @default(now())
-  created_by                Int
-  updated_at                DateTime?
-  updated_by                Int?
-  User                      User              @relation(fields: [created_by], references: [id])
-  thumbnail                 String
-  media                     Json
-  linkPreview               String?           @map("link_preview")
-  collectionCategories      CollectionCategories[]
-  collectionTags            CollectionTags[]
-  collectionFeatureTypes    CollectionFeatureTypes[]
-  themeCollection           ThemeCollection[]
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @db.VarChar
+  description            String
+  sellingPricing         Decimal                  @map("selling_pricing")
+  percentageOfOwnership  Decimal                  @map("percentage_of_ownership")
+  ownershipPrice         Decimal                  @map("owner_ship_price")
+  created_at             DateTime                 @default(now())
+  created_by             Int
+  updated_at             DateTime?
+  updated_by             Int?
+  User                   User                     @relation(fields: [created_by], references: [id])
+  thumbnail              String
+  media                  Json
+  linkPreview            String?                  @map("link_preview")
+  collectionCategories   CollectionCategories[]
+  collectionTags         CollectionTags[]
+  collectionFeatureTypes CollectionFeatureTypes[]
+  themeCollection        ThemeCollection[]
 
   @@map("collection")
 }
