@@ -8,26 +8,23 @@ import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 const updateThemeDto = t.Object({
-  zip_link: t.Optional(t.String()),
   name: t.Optional(t.String()),
   overview: t.Optional(t.String()),
-  //
   selling_price: t.Optional(t.Numeric()),
   owner_price: t.Optional(t.Numeric()),
   percentageOfOwnership: t.Optional(t.Numeric()),
-  thumbnail_link: t.Optional(t.String()),
-  previews_links: t.Optional(t.Array(t.String())),
-  status: t.Optional(t.Enum(ThemeStatus)),
-  // MEDIA
-  pages: t.Optional(t.Array(t.String())),
-  format: t.Optional(t.Array(t.String())),
+  highlight: t.Optional(t.Array(t.String())),
+  linkPreview: t.Optional(t.String()),
   categories: t.Optional(t.Array(t.Integer())),
   tags: t.Optional(t.Array(t.Integer())),
-  highlight: t.Optional(t.Array(t.String())),
-  live_preview: t.Optional(t.String()),
-
   feature_ids: t.Optional(t.Array(t.Integer())),
-  fileUrl: t.Optional(t.String())
+  zip_link: t.Optional(t.String()),
+  thumbnail_link: t.Optional(t.String()),
+  fileUrl: t.Optional(t.String()),
+  status: t.Optional(t.Enum(ThemeStatus)),
+  coverImages: t.Array(t.String()),
+  fullPreviewImages: t.Array(t.String()),
+  detailImages: t.Array(t.String())
 });
 
 const params = t.Object({
@@ -36,17 +33,7 @@ const params = t.Object({
   })
 });
 
-export type UpdateThemeParams = Omit<
-  Static<typeof updateThemeDto>,
-  | "previews_links"
-  | "thumbnail_link"
-  | "pages"
-  | "format"
-  | "highlight"
-  | "live_preview"
-  | "template_features"
-  | "figma_features"
-> & {
+export type UpdateThemeParams = Partial<typeof updateThemeDto> & {
   media?: object;
 };
 
@@ -58,7 +45,6 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     const {
       zip_link,
       thumbnail_link,
-      previews_links,
       status,
       name,
       overview,
@@ -67,7 +53,13 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       categories,
       tags,
       feature_ids,
+      fullPreviewImages,
+      coverImages,
+      detailImages,
+      highlight,
       fileUrl,
+      linkPreview,
+      percentageOfOwnership,
       ...mediaData
     } = body;
 
@@ -82,11 +74,20 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       ...mediaData
     };
 
+    if (fullPreviewImages) {
+      media["previews"] = fullPreviewImages;
+    }
     if (thumbnail_link) {
       media["thumbnail"] = thumbnail_link;
     }
-    if (previews_links) {
-      media["previews"] = previews_links;
+    if (highlight) {
+      media["highlight"] = highlight;
+    }
+    if (coverImages) {
+      media["coverImages"] = coverImages;
+    }
+    if (detailImages) {
+      media["detailImages"] = detailImages;
     }
 
     const updateData: UpdateThemeParams = {};
@@ -96,7 +97,6 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     if (selling_price) updateData.selling_price = selling_price;
     if (owner_price) updateData.owner_price = owner_price;
     if (status) updateData.status = status;
-    if (fileUrl) updateData.fileUrl = fileUrl;
     updateData.media = media;
 
     // console.log("updateData", updateData);
