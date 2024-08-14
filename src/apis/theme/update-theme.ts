@@ -97,6 +97,7 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     if (selling_price) updateData.selling_price = selling_price;
     if (owner_price) updateData.owner_price = owner_price;
     if (status) updateData.status = status;
+    if (linkPreview) updateData.linkPreview = linkPreview;
     updateData.media = media;
 
     // console.log("updateData", updateData);
