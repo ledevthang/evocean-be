@@ -41,6 +41,7 @@ model Theme {
   owned_at              DateTime?
   created_at            DateTime          @default(now())
   updated_at            DateTime?
+  fileUrl               String?           @map("file_url")
   themeCategories       ThemeCategories[]
   themeTags             ThemeTags[]
   themeCollection       ThemeCollection[]

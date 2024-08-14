@@ -249,7 +249,8 @@ export abstract class ThemeRepository {
     percentageOfOwnership,
     categories,
     tags,
-    feature_ids
+    feature_ids,
+    fileUrl
   }: CreateThemeParams) {
     const newTheme = await prisma.theme.create({
       data: {
@@ -265,7 +266,8 @@ export abstract class ThemeRepository {
         owner_price,
         status,
         owned_at: new Date(),
-        percentageOfOwnership
+        percentageOfOwnership,
+        fileUrl
       }
     });
 

@@ -21,6 +21,12 @@ const payload = t.Object({
       type: ["image/jpeg", "image/png"],
       maxSize: 100_000_000
     })
+  ),
+  theme_file: t.Optional(
+    t.File({
+      type: ["application/zip"],
+      maxSize: 100_000_000
+    })
   )
 });
 export const uploadThemeDetail = new Elysia({
@@ -28,11 +34,12 @@ export const uploadThemeDetail = new Elysia({
 }).post(
   ENDPOINT.THEME.UPLOAD_THEME_DETAIL,
   async ({ body }) => {
-    const { zip_file, thumbnail, previews } = body;
+    const { zip_file, thumbnail, previews, theme_file } = body;
 
     const response: {
       zip_file?: string;
       thumbnail?: string;
+      theme_file?: string;
       previews?: string[];
     } = {};
 
@@ -47,6 +54,11 @@ export const uploadThemeDetail = new Elysia({
     let thumbnail_link = null;
     if (thumbnail) {
       thumbnail_link = await uploadFile(thumbnail, StorageType.IMAGE);
+    }
+
+    let theme_file_link = null;
+    if (theme_file) {
+      theme_file_link = await uploadFile(theme_file, StorageType.ZIP);
     }
 
     // previews
@@ -68,7 +80,9 @@ export const uploadThemeDetail = new Elysia({
     if (previews_link.length > 0) {
       response.previews = previews_link;
     }
-
+    if (theme_file_link) {
+      response.theme_file = theme_file_link;
+    }
     return response;
   },
   {

@@ -26,7 +26,8 @@ const createThemeDto = t.Object({
   detailImages: t.Array(t.String()),
   fullPreviewImages: t.Array(t.String()),
   highlight: t.Optional(t.Array(t.String())),
-  feature_ids: t.Optional(t.Array(t.Integer()))
+  feature_ids: t.Optional(t.Array(t.Integer())),
+  fileUrl: t.Optional(t.String())
 });
 
 export type CreateThemePayload = Static<typeof createThemeDto>;

@@ -26,7 +26,8 @@ const updateThemeDto = t.Object({
   highlight: t.Optional(t.Array(t.String())),
   live_preview: t.Optional(t.String()),
 
-  feature_ids: t.Optional(t.Array(t.Integer()))
+  feature_ids: t.Optional(t.Array(t.Integer())),
+  fileUrl: t.Optional(t.String())
 });
 
 const params = t.Object({
@@ -66,6 +67,7 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       categories,
       tags,
       feature_ids,
+      fileUrl,
       ...mediaData
     } = body;
 
@@ -94,6 +96,7 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     if (selling_price) updateData.selling_price = selling_price;
     if (owner_price) updateData.owner_price = owner_price;
     if (status) updateData.status = status;
+    if (fileUrl) updateData.fileUrl = fileUrl;
     updateData.media = media;
 
     // console.log("updateData", updateData);
