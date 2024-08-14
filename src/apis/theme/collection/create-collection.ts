@@ -12,7 +12,7 @@ const createThemeCollectionDto = t.Object({
   percentageOfOwnership: t.Optional(t.Numeric()),
   ownershipPrice: t.Optional(t.Numeric()),
   linkPreview: t.Optional(t.String()),
-  media: t.Optional(t.Object({})),
+  highlights: t.Optional(t.Array(t.String())),
   thumbnail: t.Optional(t.String()),
   collectionCategories: t.Optional(t.Array(t.Numeric())),
   collectionTags: t.Optional(t.Array(t.Numeric())),
@@ -22,7 +22,7 @@ const createThemeCollectionDto = t.Object({
 
 export type CreateThemeCollectionParams = Static<
   typeof createThemeCollectionDto
-> & { created_by: number };
+> & { created_by: number; media?: string };
 
 export const createThemeCollection = new Elysia({
   name: "Handler.CreateThemeCollection"
@@ -37,6 +37,7 @@ export const createThemeCollection = new Elysia({
         collectionCategories,
         collectionTags,
         collectionFeatureTypes,
+        highlights,
         ...restBody
       } = body;
 
@@ -44,6 +45,9 @@ export const createThemeCollection = new Elysia({
       const categories = collectionCategories?.map(category => category) || [];
       const tags = collectionTags?.map(tag => tag) || [];
       const featureTypes = collectionFeatureTypes?.map(type => type) || [];
+      const media = {
+        highlights
+      };
 
       return CollectionRepository.createCollection({
         ...restBody,
@@ -51,7 +55,8 @@ export const createThemeCollection = new Elysia({
         collectionCategories: categories,
         collectionTags: tags,
         collectionFeatureTypes: featureTypes,
-        created_by: id
+        created_by: id,
+        media: JSON.stringify(media)
       });
     },
     {

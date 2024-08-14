@@ -29,7 +29,7 @@ export abstract class CollectionRepository {
         created_by,
         created_at: new Date(),
         thumbnail: (thumbnail as string) || "",
-        media: media || {},
+        media: media,
         linkPreview: linkPreview
       }
     });
