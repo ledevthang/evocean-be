@@ -99,13 +99,12 @@ model Features {
 }
 
 model FeatureTypes {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now()) @map("created_at")
-  name      String
-  iconUrl   String?    @map("icon_url")
-  Features  Features[]
-  collectionId Int
-  collection  Collection    @relation(fields: [collectionId], references: [id])
+  id            Int        @id @default(autoincrement())
+  createdAt     DateTime   @default(now()) @map("created_at")
+  name          String
+  iconUrl       String?    @map("icon_url")
+  Features      Features[]
+  collectionFeatureTypes    CollectionFeatureTypes[]
   @@map("feature_types")
 }
 
@@ -190,25 +189,33 @@ model CollectionTags{
     collection            Collection        @relation(fields: [collectionId], references: [id])
 }
 
+model CollectionFeatureTypes{
+    id                    Int               @id @default(autoincrement())
+    featureTypeId         Int               @map("feature_type_id")
+    collectionId          Int               @map("collection_id")
+    featureTypes          FeatureTypes      @relation(fields: [featureTypeId], references: [id])
+    collection            Collection        @relation(fields: [collectionId], references: [id])
+}
+
 model Collection {
-  id                    Int               @id @default(autoincrement())
-  name                  String            @db.VarChar
-  description           String
-  sellingPricing        Decimal           @map("selling_pricing")
-  percentageOfOwnership Decimal           @map("percentage_of_ownership")
-  ownershipPrice        Decimal           @map("owner_ship_price")
-  created_at            DateTime          @default(now())
-  created_by            Int
-  updated_at            DateTime?
-  updated_by            Int?
-  User                  User              @relation(fields: [created_by], references: [id])
-  thumbnail             String
-  media                 Json
-  linkPreview           String?           @map("link_preview")
-  collectionCategories  CollectionCategories[]
-  collectionTags        CollectionTags[]
-  featureTypes          FeatureTypes[]
-  themeCollection       ThemeCollection[]
+  id                        Int               @id @default(autoincrement())
+  name                      String            @db.VarChar
+  description               String
+  sellingPricing            Decimal           @map("selling_pricing")
+  percentageOfOwnership     Decimal           @map("percentage_of_ownership")
+  ownershipPrice            Decimal           @map("owner_ship_price")
+  created_at                DateTime          @default(now())
+  created_by                Int
+  updated_at                DateTime?
+  updated_by                Int?
+  User                      User              @relation(fields: [created_by], references: [id])
+  thumbnail                 String
+  media                     Json
+  linkPreview               String?           @map("link_preview")
+  collectionCategories      CollectionCategories[]
+  collectionTags            CollectionTags[]
+  collectionFeatureTypes    CollectionFeatureTypes[]
+  themeCollection           ThemeCollection[]
 
   @@map("collection")
 }
