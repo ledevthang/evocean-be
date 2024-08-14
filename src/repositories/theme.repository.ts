@@ -454,7 +454,7 @@ export abstract class ThemeRepository {
     });
     const result = data.map(item => {
       const iconUrl = item.FeatureTypes.iconUrl;
-      delete item["FeatureTypes"];
+      delete (item as Partial<typeof item>).FeatureTypes;
       return {
         ...item,
         iconUrl
