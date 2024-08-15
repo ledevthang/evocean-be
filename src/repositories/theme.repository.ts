@@ -5,7 +5,7 @@ import type { GetThemeParams } from "@root/apis/theme/get-themes";
 import type { UpdateThemeParams } from "@root/apis/theme/update-theme";
 // import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
-import type { IUpdateThemeData, ThemeMedia } from "@root/types/Themes";
+import type { ThemeMedia } from "@root/types/Themes";
 import { NotFoundError } from "elysia";
 
 // type CreateListingAndSaleParams = Pick<
@@ -20,7 +20,7 @@ type CreateListingAndSaleParams = {
 };
 
 type CreateThemeParams = Omit<CreateThemePayload, "media"> & {
-  media: ThemeMedia;
+  media?: ThemeMedia;
   token_mint?: string;
   owner_addresses: string[];
   author_address: string;
@@ -275,38 +275,37 @@ export abstract class ThemeRepository {
   }
 
   static async create({
-    zip_link,
+    user_id,
     name,
     overview,
-    media,
-    owner_addresses,
-    token_mint,
-    author_address,
-    user_id,
     selling_price,
-    owner_price,
-    status,
     percentageOfOwnership,
+    media,
+    owner_price,
     categories,
     tags,
     feature_ids,
-    fileUrl
+    linkPreview,
+    zip_link,
+    owner_addresses,
+    token_mint,
+    author_address
   }: CreateThemeParams) {
     const newTheme = await prisma.theme.create({
       data: {
-        zip_link,
+        user_id,
         name,
         overview,
+        selling_price,
+        percentageOfOwnership,
         media,
+        owner_price,
+        linkPreview,
+        zip_link,
         owner_addresses,
         token_mint,
         author_address,
-        user_id,
-        selling_price,
-        owner_price,
-        status,
-        owned_at: new Date(),
-        percentageOfOwnership
+        owned_at: new Date()
       }
     });
 
@@ -334,7 +333,6 @@ export abstract class ThemeRepository {
         )
       );
     }
-
     if (feature_ids?.length) {
       await Promise.all(
         feature_ids.map(id =>
@@ -353,8 +351,7 @@ export abstract class ThemeRepository {
 
   static async updateTheme(
     theme_id: number,
-    updateThemeParams: UpdateThemeParams,
-    { categories, tags, feature_ids }: IUpdateThemeData
+    updateThemeData: UpdateThemeParams
   ) {
     const theme = await prisma.theme.findUnique({
       where: {
@@ -363,6 +360,8 @@ export abstract class ThemeRepository {
     });
 
     if (!theme) throw new NotFoundError("Not found theme");
+
+    const { categories, tags, feature_ids, ...rest } = updateThemeData;
 
     if (categories?.length || categories?.length === 0) {
       await prisma.$transaction(async tx => {
@@ -428,9 +427,7 @@ export abstract class ThemeRepository {
       where: {
         id: theme_id
       },
-      data: {
-        ...updateThemeParams
-      }
+      data: rest
     });
   }
 

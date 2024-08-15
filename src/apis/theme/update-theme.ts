@@ -8,23 +8,22 @@ import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 const updateThemeDto = t.Object({
-  name: t.Optional(t.String()),
-  overview: t.Optional(t.String()),
-  selling_price: t.Optional(t.Numeric()),
-  owner_price: t.Optional(t.Numeric()),
-  percentageOfOwnership: t.Optional(t.Numeric()),
+  name: t.String(),
+  overview: t.String(),
+  selling_price: t.Numeric(),
+  percentageOfOwnership: t.Numeric(),
+  owner_price: t.Numeric(),
+  thumbnail_link: t.Optional(t.String()),
   highlight: t.Optional(t.Array(t.String())),
   linkPreview: t.Optional(t.String()),
   categories: t.Optional(t.Array(t.Integer())),
   tags: t.Optional(t.Array(t.Integer())),
   feature_ids: t.Optional(t.Array(t.Integer())),
+  coverImages: t.Optional(t.Array(t.String())),
+  detailImages: t.Optional(t.Array(t.String())),
+  fullPreviewImages: t.Optional(t.Array(t.String())),
   zip_link: t.Optional(t.String()),
-  thumbnail_link: t.Optional(t.String()),
-  fileUrl: t.Optional(t.String()),
-  status: t.Optional(t.Enum(ThemeStatus)),
-  coverImages: t.Array(t.String()),
-  fullPreviewImages: t.Array(t.String()),
-  detailImages: t.Array(t.String())
+  theme_id: t.Optional(t.Number())
 });
 
 const params = t.Object({
@@ -35,6 +34,9 @@ const params = t.Object({
 
 export type UpdateThemeParams = Partial<typeof updateThemeDto> & {
   media?: object;
+  categories?: number[];
+  tags?: number[];
+  feature_ids?: number[];
 };
 
 // TODO
@@ -45,7 +47,6 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     const {
       zip_link,
       thumbnail_link,
-      status,
       name,
       overview,
       selling_price,
@@ -57,7 +58,6 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       coverImages,
       detailImages,
       highlight,
-      fileUrl,
       linkPreview,
       percentageOfOwnership,
       ...mediaData
@@ -96,17 +96,12 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     if (overview) updateData.overview = overview;
     if (selling_price) updateData.selling_price = selling_price;
     if (owner_price) updateData.owner_price = owner_price;
-    if (status) updateData.status = status;
     if (linkPreview) updateData.linkPreview = linkPreview;
     updateData.media = media;
 
     // console.log("updateData", updateData);
 
-    return ThemeRepository.updateTheme(theme_id, updateData, {
-      categories,
-      tags,
-      feature_ids
-    });
+    return ThemeRepository.updateTheme(theme_id, updateData);
   },
   {
     params,
