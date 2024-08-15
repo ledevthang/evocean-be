@@ -94,6 +94,9 @@ export abstract class CollectionRepository {
           created_by: user_id
         },
         include: {
+          collectionFeatureTypes: true,
+          collectionTags: true,
+          collectionCategories: true,
           themeCollection: true
         },
         take,
