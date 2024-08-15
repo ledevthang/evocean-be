@@ -122,6 +122,36 @@ export abstract class CollectionRepository {
               }
             }
           }
+        },
+        collectionCategories: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
+        collectionTags: {
+          select: {
+            tag: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
+        collectionFeatureTypes: {
+          select: {
+            featureTypes: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
         }
       }
     });
