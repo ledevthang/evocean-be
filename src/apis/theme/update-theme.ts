@@ -69,13 +69,27 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       throw new BadRequestError("Theme not found");
     }
 
-    const media: ThemeMedia = {
-      ...(themeData.media as ThemeMedia),
-      previews: fullPreviewImages,
-      thumbnail: thumbnail_link,
-      highlight: highlight,
-      coverImages: coverImages,
-      detailImages: detailImages
+    const currentMedia = themeData.media as ThemeMedia;
+
+    const newMedia: ThemeMedia = {
+      previews:
+        typeof fullPreviewImages === "undefined"
+          ? currentMedia.previews
+          : fullPreviewImages,
+      thumbnail:
+        typeof thumbnail_link === "undefined"
+          ? currentMedia.thumbnail
+          : thumbnail_link,
+      highlight:
+        typeof highlight === "undefined" ? currentMedia.highlight : highlight,
+      coverImages:
+        typeof coverImages === "undefined"
+          ? currentMedia.coverImages
+          : coverImages,
+      detailImages:
+        typeof detailImages === "undefined"
+          ? currentMedia.detailImages
+          : detailImages
     };
 
     const updateData: UpdateThemeParams = {
@@ -90,7 +104,7 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       tags,
       feature_ids,
       zip_link,
-      media
+      media: newMedia
     };
 
     return ThemeRepository.updateTheme(theme_id, updateData);
