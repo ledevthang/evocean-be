@@ -306,8 +306,7 @@ export abstract class ThemeRepository {
         owner_price,
         status,
         owned_at: new Date(),
-        percentageOfOwnership,
-        fileUrl
+        percentageOfOwnership
       }
     });
 
