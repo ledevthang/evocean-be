@@ -149,7 +149,9 @@ export abstract class CollectionRepository {
         percentageOfOwnership: data.percentageOfOwnership || 0,
         ownershipPrice: data.ownershipPrice || 0,
         thumbnail: data.thumbnail || "",
-        media: data.media,
+        media: data.highlights
+          ? JSON.parse(JSON.stringify(data.highlights))
+          : {},
         linkPreview: data.linkPreview,
         updated_at: new Date()
       }
