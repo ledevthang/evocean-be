@@ -276,6 +276,7 @@ export abstract class ThemeRepository {
 
   static async create({
     user_id,
+    status,
     name,
     overview,
     selling_price,
@@ -294,6 +295,7 @@ export abstract class ThemeRepository {
     const newTheme = await prisma.theme.create({
       data: {
         user_id,
+        status: status || "DRAFT",
         name,
         overview,
         selling_price,
@@ -361,7 +363,7 @@ export abstract class ThemeRepository {
 
     if (!theme) throw new NotFoundError("Not found theme");
 
-    const { categories, tags, feature_ids, ...rest } = updateThemeData;
+    const { categories, tags, feature_ids, ...data } = updateThemeData;
 
     if (categories?.length || categories?.length === 0) {
       await prisma.$transaction(async tx => {
@@ -427,7 +429,7 @@ export abstract class ThemeRepository {
       where: {
         id: theme_id
       },
-      data: rest
+      data: data
     });
   }
 

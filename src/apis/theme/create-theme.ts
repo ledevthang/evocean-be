@@ -10,6 +10,7 @@ import { BadRequestError } from "@root/errors/BadRequestError";
 import { UpdateThemeParams } from "./update-theme";
 
 export const createThemeDto = t.Object({
+  status: t.Optional(t.Enum(ThemeStatus)),
   name: t.String(),
   overview: t.String(),
   selling_price: t.Numeric(),
@@ -38,6 +39,7 @@ export const createTheme = new Elysia({
     ENDPOINT.THEME.CREATE_THEME,
     async ({ body, claims }) => {
       const {
+        status,
         name,
         overview,
         selling_price,
@@ -70,6 +72,7 @@ export const createTheme = new Elysia({
         if (coverImages) media["coverImages"] = coverImages;
         if (detailImages) media["detailImages"] = detailImages;
         if (fullPreviewImages) media["previews"] = fullPreviewImages;
+        if (status) updateData.status = status;
         if (name) updateData.name = name;
         if (overview) updateData.overview = overview;
         if (selling_price) updateData.selling_price = selling_price;
