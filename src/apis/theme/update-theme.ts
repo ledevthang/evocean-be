@@ -68,38 +68,30 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     if (!themeData) {
       throw new BadRequestError("Theme not found");
     }
-    const updateData: UpdateThemeParams = {};
-    const media: ThemeMedia = themeData.media as ThemeMedia;
 
-    if (fullPreviewImages) {
-      media["previews"] = fullPreviewImages;
-    }
-    if (thumbnail_link) {
-      media["thumbnail"] = thumbnail_link;
-    }
-    if (highlight) {
-      media["highlight"] = highlight;
-    }
-    if (coverImages) {
-      media["coverImages"] = coverImages;
-    }
-    if (detailImages) {
-      media["detailImages"] = detailImages;
-    }
+    const media: ThemeMedia = {
+      ...(themeData.media as ThemeMedia),
+      previews: fullPreviewImages,
+      thumbnail: thumbnail_link,
+      highlight: highlight,
+      coverImages: coverImages,
+      detailImages: detailImages
+    };
 
-    if (status) updateData.status = status;
-    if (name) updateData.name = name;
-    if (overview) updateData.overview = overview;
-    if (selling_price) updateData.selling_price = selling_price;
-    if (percentageOfOwnership)
-      updateData.percentageOfOwnership = percentageOfOwnership;
-    if (owner_price) updateData.owner_price = owner_price;
-    if (linkPreview) updateData.linkPreview = linkPreview;
-    if (categories) updateData.categories = categories;
-    if (tags) updateData.tags = tags;
-    if (feature_ids) updateData.feature_ids = feature_ids;
-    if (zip_link) updateData.zip_link = zip_link;
-    updateData.media = media;
+    const updateData: UpdateThemeParams = {
+      status,
+      name,
+      overview,
+      selling_price,
+      percentageOfOwnership,
+      owner_price,
+      linkPreview,
+      categories,
+      tags,
+      feature_ids,
+      zip_link,
+      media
+    };
 
     return ThemeRepository.updateTheme(theme_id, updateData);
   },
