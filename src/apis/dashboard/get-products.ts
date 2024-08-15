@@ -42,7 +42,7 @@ export const getProducts = new Elysia({
           total++;
           const temp = {
             id: p.id,
-            thumbnail: (p.media as ThemeMedia)?.previews?.[0],
+            thumbnail: (p.media as ThemeMedia)?.thumbnail,
             name: p.name,
             price: p.listing.price.toNumber(),
             sales: p._count.transactions,
