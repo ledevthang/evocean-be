@@ -21,27 +21,26 @@ model User {
 
 model Theme {
   id                    Int               @id @default(autoincrement())
-  zip_link              String            @db.VarChar
+  user_id               Int
   name                  String            @db.VarChar
   overview              String            @db.VarChar
-  media                 Json
+  selling_price         Decimal           @default(0)
+  owner_price           Decimal           @default(0)
+  percentageOfOwnership Decimal?          @default(0) @map("percentage_of_ownership")
+  media                 Json?
+  linkPreview           String?           @map("link_preview")
+  status                ThemeStatus       @default(DRAFT)
+  zip_link              String?           @db.VarChar
   owner_addresses       String[]          @db.VarChar
   token_mint            String?           @db.VarChar
   author_address        String?           @db.VarChar
-  sale                  ThemeSale?
-  listing               ThemeListing?
-  transactions          Transaction[]
-  user                  User?             @relation(fields: [user_id], references: [id])
-  user_id               Int?
-  status                ThemeStatus
-  linkPreview           String?           @map("link_preview")
-  selling_price         Decimal
-  owner_price           Decimal
-  percentageOfOwnership Decimal?          @map("percentage_of_ownership")
   owned_at              DateTime?
   created_at            DateTime          @default(now())
-  updated_at            DateTime?
-  fileUrl               String?           @map("file_url")
+  updated_at            DateTime?         @updatedAt
+  sale                  ThemeSale?
+  listing               ThemeListing?
+  user                  User?             @relation(fields: [user_id], references: [id])
+  transactions          Transaction[]
   themeCategories       ThemeCategories[]
   themeTags             ThemeTags[]
   themeCollection       ThemeCollection[]

@@ -7,27 +7,24 @@ import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 const createThemeDto = t.Object({
-  zip_link: t.String(),
   name: t.String(),
   overview: t.String(),
-  //
   selling_price: t.Numeric(),
-  owner_price: t.Numeric(),
   percentageOfOwnership: t.Numeric(),
-  thumbnail_link: t.String(),
+  owner_price: t.Numeric(),
+  thumbnail_link: t.Optional(t.String()),
+
   linkPreview: t.Optional(t.String()),
   status: t.Enum(ThemeStatus),
-
-  pages: t.Optional(t.Array(t.String())),
-  format: t.Optional(t.Array(t.String())),
   categories: t.Optional(t.Array(t.Integer())),
   tags: t.Optional(t.Array(t.Integer())),
-  coverImages: t.Array(t.String()),
-  detailImages: t.Array(t.String()),
-  fullPreviewImages: t.Array(t.String()),
+  coverImages: t.Optional(t.Array(t.String())),
+  detailImages: t.Optional(t.Array(t.String())),
+  fullPreviewImages: t.Optional(t.Array(t.String())),
   highlight: t.Optional(t.Array(t.String())),
   feature_ids: t.Optional(t.Array(t.Integer())),
-  fileUrl: t.Optional(t.String())
+
+  zip_link: t.Optional(t.String())
 });
 
 export type CreateThemePayload = Static<typeof createThemeDto>;
@@ -40,8 +37,6 @@ export const createTheme = new Elysia({
     ENDPOINT.THEME.CREATE_THEME,
     async ({ body, claims }) => {
       const {
-        pages,
-        format,
         thumbnail_link,
         fullPreviewImages,
         coverImages,
@@ -56,8 +51,6 @@ export const createTheme = new Elysia({
       } = body;
 
       const media = {
-        pages,
-        format,
         previews: fullPreviewImages,
         thumbnail: thumbnail_link,
         highlight,
