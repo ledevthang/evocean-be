@@ -9,6 +9,7 @@ import { ENDPOINT } from "@root/shared/constant";
 import { ThemeMedia } from "@root/types/Themes";
 
 const updateThemeDto = t.Object({
+  status: t.Optional(t.Enum(ThemeStatus)),
   name: t.Optional(t.String()),
   overview: t.Optional(t.String()),
   selling_price: t.Optional(t.Numeric()),
@@ -45,6 +46,7 @@ export const updateTheme = new Elysia().use(authPlugin).put(
   async ({ params, body }) => {
     const { theme_id } = params;
     const {
+      status,
       name,
       overview,
       selling_price,
@@ -85,6 +87,7 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       media["detailImages"] = detailImages;
     }
 
+    if (status) updateData.status = status;
     if (name) updateData.name = name;
     if (overview) updateData.overview = overview;
     if (selling_price) updateData.selling_price = selling_price;
