@@ -119,7 +119,8 @@ export abstract class CollectionRepository {
             theme: {
               select: {
                 id: true,
-                name: true
+                name: true,
+                media: true
               }
             }
           }

@@ -6,7 +6,7 @@ import { CollectionRepository } from "@root/repositories/collection.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 const createThemeCollectionDto = t.Object({
-  collection_name: t.String(),
+  collection_name: t.Optional(t.String()),
   description: t.Optional(t.String()),
   sellingPricing: t.Optional(t.Numeric()),
   percentageOfOwnership: t.Optional(t.Numeric()),
