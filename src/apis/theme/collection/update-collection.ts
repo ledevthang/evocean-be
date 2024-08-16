@@ -10,7 +10,7 @@ const updateThemeCollectionParams = t.Object({
 });
 
 const updateThemeCollectionDto = t.Object({
-  collection_name: t.String(),
+  collection_name: t.Optional(t.String()),
   description: t.Optional(t.String()),
   sellingPricing: t.Optional(t.Numeric()),
   percentageOfOwnership: t.Optional(t.Numeric()),
