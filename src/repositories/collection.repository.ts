@@ -93,12 +93,6 @@ export abstract class CollectionRepository {
         where: {
           created_by: user_id
         },
-        include: {
-          collectionFeatureTypes: true,
-          collectionTags: true,
-          collectionCategories: true,
-          themeCollection: true
-        },
         take,
         skip: (page - 1) * take,
         orderBy: {
@@ -122,6 +116,36 @@ export abstract class CollectionRepository {
         themeCollection: {
           select: {
             theme: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
+        collectionCategories: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
+        collectionTags: {
+          select: {
+            tag: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
+        collectionFeatureTypes: {
+          select: {
+            featureTypes: {
               select: {
                 id: true,
                 name: true
