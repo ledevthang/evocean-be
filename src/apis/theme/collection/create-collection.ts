@@ -17,7 +17,8 @@ const createThemeCollectionDto = t.Object({
   collectionCategories: t.Optional(t.Array(t.Numeric())),
   collectionTags: t.Optional(t.Array(t.Numeric())),
   collectionFeatureTypes: t.Optional(t.Array(t.Numeric())),
-  theme_ids: t.Array(t.Numeric())
+  theme_ids: t.Optional(t.Array(t.Numeric())),
+  colleciton_id: t.Optional(t.Number())
 });
 
 export type CreateThemeCollectionParams = Static<
@@ -33,6 +34,7 @@ export const createThemeCollection = new Elysia({
     ({ body, claims }) => {
       const { id } = claims;
       const {
+        colleciton_id,
         theme_ids,
         collectionCategories,
         collectionTags,
@@ -41,23 +43,30 @@ export const createThemeCollection = new Elysia({
         ...restBody
       } = body;
 
-      const themeIds = theme_ids.map(id => Number(id));
+      const themeIds = theme_ids?.map(id => Number(id));
       const categories = collectionCategories?.map(category => category) || [];
       const tags = collectionTags?.map(tag => tag) || [];
       const featureTypes = collectionFeatureTypes?.map(type => type) || [];
-      const media = {
-        highlights
-      };
 
-      return CollectionRepository.createCollection({
-        ...restBody,
-        theme_ids: themeIds,
-        collectionCategories: categories,
-        collectionTags: tags,
-        collectionFeatureTypes: featureTypes,
-        created_by: id,
-        media: JSON.stringify(media)
-      });
+      if (colleciton_id) {
+        const collection = CollectionRepository.updateCollectionById(
+          colleciton_id,
+          body
+        );
+      } else {
+        const media = {
+          highlights
+        };
+        return CollectionRepository.createCollection({
+          ...restBody,
+          theme_ids: themeIds,
+          collectionCategories: categories,
+          collectionTags: tags,
+          collectionFeatureTypes: featureTypes,
+          created_by: id,
+          media: JSON.stringify(media)
+        });
+      }
     },
     {
       body: createThemeCollectionDto

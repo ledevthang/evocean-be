@@ -34,16 +34,17 @@ export abstract class CollectionRepository {
       }
     });
 
-    await Promise.all(
-      theme_ids.map(id =>
-        prisma.themeCollection.create({
-          data: {
-            themeId: id,
-            collectionId: collect.id
-          }
-        })
-      )
-    );
+    if (theme_ids)
+      await Promise.all(
+        theme_ids?.map(id =>
+          prisma.themeCollection.create({
+            data: {
+              themeId: id,
+              collectionId: collect.id
+            }
+          })
+        )
+      );
 
     if (collectionCategories && collectionCategories.length > 0) {
       await Promise.all(
@@ -171,11 +172,11 @@ export abstract class CollectionRepository {
       where: { id },
       data: {
         name: data.collection_name,
-        description: data.description || "",
-        sellingPricing: data.sellingPricing || 0,
-        percentageOfOwnership: data.percentageOfOwnership || 0,
-        ownershipPrice: data.ownershipPrice || 0,
-        thumbnail: data.thumbnail || "",
+        description: data.description,
+        sellingPricing: data.sellingPricing,
+        percentageOfOwnership: data.percentageOfOwnership,
+        ownershipPrice: data.ownershipPrice,
+        thumbnail: data.thumbnail,
         media: data.highlights
           ? JSON.parse(JSON.stringify(data.highlights))
           : {},
