@@ -49,10 +49,7 @@ export const createThemeCollection = new Elysia({
       const featureTypes = collectionFeatureTypes?.map(type => type) || [];
 
       if (colleciton_id) {
-        const collection = CollectionRepository.updateCollectionById(
-          colleciton_id,
-          body
-        );
+        return CollectionRepository.updateCollectionById(colleciton_id, body);
       } else {
         const media = {
           highlights
