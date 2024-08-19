@@ -206,6 +206,21 @@ model CollectionFeatureTypes {
   @@map("collection_feature_types")
 }
 
+model Earnings{
+    id                      Int          @id @default(autoincrement())
+    address                 String
+    percentage              Decimal
+    collectionEarnings      CollectionEarnings[]    
+}
+
+model CollectionEarnings{
+    id            Int          @id @default(autoincrement())
+    earningsId    Int          @map("earnings_id")
+    collectionId  Int          @map("collection_id")
+    earnings      Earnings     @relation(fields: [earningsId], references: [id])
+    collection    Collection   @relation(fields: [collectionId], references: [id])
+}
+
 model Collection {
   id                     Int                      @id @default(autoincrement())
   name                   String                   @db.VarChar
@@ -225,7 +240,7 @@ model Collection {
   collectionTags         CollectionTags[]
   collectionFeatureTypes CollectionFeatureTypes[]
   themeCollection        ThemeCollection[]
-
+  collectionEarnings     CollectionEarnings[]
   @@map("collection")
 }
 
