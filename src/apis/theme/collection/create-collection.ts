@@ -3,8 +3,10 @@ import Elysia, { t } from "elysia";
 
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { CollectionRepository } from "@root/repositories/collection.repository";
+import { CollectionEarningRepository } from "@root/repositories/collectionEarnings.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
+// Định nghĩa DTO cho việc tạo theme collection
 const createThemeCollectionDto = t.Object({
   collection_name: t.Optional(t.String()),
   description: t.Optional(t.String()),
@@ -18,7 +20,9 @@ const createThemeCollectionDto = t.Object({
   collectionTags: t.Optional(t.Array(t.Numeric())),
   collectionFeatureTypes: t.Optional(t.Array(t.Numeric())),
   theme_ids: t.Optional(t.Array(t.Numeric())),
-  collectionId: t.Optional(t.Number())
+  collectionId: t.Optional(t.Number()),
+  userId: t.Optional(t.Number()),
+  percentage: t.Optional(t.Numeric())
 });
 
 export type CreateThemeCollectionParams = Static<
@@ -31,7 +35,7 @@ export const createThemeCollection = new Elysia({
   .use(authPlugin)
   .post(
     ENDPOINT.THEME.CREATE_THEME_COLLECTION,
-    ({ body, claims }) => {
+    async ({ body, claims }) => {
       const { id } = claims;
       const {
         collectionId,
@@ -40,20 +44,60 @@ export const createThemeCollection = new Elysia({
         collectionTags,
         collectionFeatureTypes,
         highlights,
+        userId,
+        percentage,
         ...restBody
       } = body;
 
-      const themeIds = theme_ids?.map(id => Number(id));
-      const categories = collectionCategories?.map(category => category) || [];
-      const tags = collectionTags?.map(tag => tag) || [];
-      const featureTypes = collectionFeatureTypes?.map(type => type) || [];
+      const themeIds = theme_ids?.map(Number);
+      const categories = collectionCategories || [];
+      const tags = collectionTags || [];
+      const featureTypes = collectionFeatureTypes || [];
+
+      if (percentage && (percentage < 0 || percentage > 100)) {
+        throw new Error("Percentage must be between 0 and 100");
+      }
+
+      if (
+        userId &&
+        (await CollectionEarningRepository.findByUserId(userId)).length !== 0
+      ) {
+        throw new Error("User already exists in collection earnings");
+      }
 
       if (collectionId) {
-        return CollectionRepository.updateCollectionById(collectionId, body);
-      } else {
-        const media = {
+        const collectionEarnings =
+          await CollectionEarningRepository.findByCollectionId(collectionId);
+        const totalPercentage = collectionEarnings.reduce(
+          (acc: number, curr) => acc + +curr.percentage,
+          0
+        );
+
+        if (totalPercentage + (percentage || 0) > 100) {
+          throw new Error("Total percentage must be less than or equal to 100");
+        }
+
+        if (percentage) {
+          await CollectionEarningRepository.create({
+            userId,
+            collectionId,
+            percentage
+          });
+        }
+      }
+
+      if (collectionId) {
+        return CollectionRepository.updateCollectionById(collectionId, {
+          ...restBody,
+          theme_ids: themeIds,
+          collectionCategories: categories,
+          collectionTags: tags,
+          collectionFeatureTypes: featureTypes,
+          created_by: id,
           highlights
-        };
+        });
+      } else {
+        const media = { highlights };
         return CollectionRepository.createCollection({
           ...restBody,
           theme_ids: themeIds,
