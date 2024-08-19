@@ -18,7 +18,7 @@ const createThemeCollectionDto = t.Object({
   collectionTags: t.Optional(t.Array(t.Numeric())),
   collectionFeatureTypes: t.Optional(t.Array(t.Numeric())),
   theme_ids: t.Optional(t.Array(t.Numeric())),
-  colleciton_id: t.Optional(t.Number())
+  collectionId: t.Optional(t.Number())
 });
 
 export type CreateThemeCollectionParams = Static<
@@ -34,7 +34,7 @@ export const createThemeCollection = new Elysia({
     ({ body, claims }) => {
       const { id } = claims;
       const {
-        colleciton_id,
+        collectionId,
         theme_ids,
         collectionCategories,
         collectionTags,
@@ -48,8 +48,8 @@ export const createThemeCollection = new Elysia({
       const tags = collectionTags?.map(tag => tag) || [];
       const featureTypes = collectionFeatureTypes?.map(type => type) || [];
 
-      if (colleciton_id) {
-        return CollectionRepository.updateCollectionById(colleciton_id, body);
+      if (collectionId) {
+        return CollectionRepository.updateCollectionById(collectionId, body);
       } else {
         const media = {
           highlights

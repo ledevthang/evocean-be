@@ -32,6 +32,7 @@ export const ENDPOINT = {
     DOWNLOAD: "/download",
     PAYMENT: "/payment",
     CREATE_THEME_COLLECTION: "/collections",
+    CREATE_COLLECTION_EARNING: "/collection-earnings",
     GET_ALL_COLLECTION: "/collections",
     GET_A_THEME_COLLECTION: "/collections/:collection_id",
     UPDATE_A_THEME_COLLECTION: "/collections/:collection_id",
