@@ -13,8 +13,9 @@ model User {
   google_id String? @unique
   email     String? @unique @db.VarChar
 
-  themes     Theme[]
-  Collection Collection[]
+  themes             Theme[]
+  Collection         Collection[]
+  collectionEarnings CollectionEarnings[]
 
   @@map("user")
 }
@@ -206,6 +207,17 @@ model CollectionFeatureTypes {
   @@map("collection_feature_types")
 }
 
+model CollectionEarnings {
+  id           Int        @id @default(autoincrement())
+  userId       Int        @map("user_id")
+  collectionId Int        @map("collection_id")
+  percentage   Decimal
+  user         User       @relation(fields: [userId], references: [id])
+  collection   Collection @relation(fields: [collectionId], references: [id])
+
+  @@map("collection_earnings")
+}
+
 model Collection {
   id                     Int                      @id @default(autoincrement())
   name                   String                   @db.VarChar
@@ -225,6 +237,7 @@ model Collection {
   collectionTags         CollectionTags[]
   collectionFeatureTypes CollectionFeatureTypes[]
   themeCollection        ThemeCollection[]
+  collectionEarnings     CollectionEarnings[]
 
   @@map("collection")
 }
