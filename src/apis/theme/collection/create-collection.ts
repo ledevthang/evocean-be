@@ -6,7 +6,6 @@ import { CollectionRepository } from "@root/repositories/collection.repository";
 import { CollectionEarningRepository } from "@root/repositories/collectionEarnings.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
-// Định nghĩa DTO cho việc tạo theme collection
 const createThemeCollectionDto = t.Object({
   collection_name: t.Optional(t.String()),
   description: t.Optional(t.String()),
@@ -21,8 +20,8 @@ const createThemeCollectionDto = t.Object({
   collectionFeatureTypes: t.Optional(t.Array(t.Numeric())),
   theme_ids: t.Optional(t.Array(t.Numeric())),
   collectionId: t.Optional(t.Number()),
-  userId: t.Optional(t.Number()),
-  percentage: t.Optional(t.Numeric())
+  userId: t.Optional(t.Array(t.Number())),
+  percentage: t.Optional(t.Array(t.Numeric()))
 });
 
 export type CreateThemeCollectionParams = Static<
@@ -54,34 +53,23 @@ export const createThemeCollection = new Elysia({
       const tags = collectionTags || [];
       const featureTypes = collectionFeatureTypes || [];
 
-      if (percentage && (percentage < 0 || percentage > 100)) {
-        throw new Error("Percentage must be between 0 and 100");
-      }
-
-      if (
-        userId &&
-        (await CollectionEarningRepository.findByUserId(userId)).length !== 0
-      ) {
-        throw new Error("User already exists in collection earnings");
-      }
-
-      if (collectionId) {
-        const collectionEarnings =
-          await CollectionEarningRepository.findByCollectionId(collectionId);
-        const totalPercentage = collectionEarnings.reduce(
-          (acc: number, curr) => acc + +curr.percentage,
-          0
-        );
-
-        if (totalPercentage + (percentage || 0) > 100) {
-          throw new Error("Total percentage must be less than or equal to 100");
+      if (userId && percentage) {
+        if (
+          percentage?.reduce((acc, curr) => acc + curr, 0) > 100 ||
+          percentage?.reduce((acc, curr) => acc + curr, 0) < 0
+        ) {
+          throw new Error("Total percentage must be between 0 and 100");
         }
 
-        if (percentage) {
+        const hasDuplicates = new Set(userId).size !== userId.length;
+        if (hasDuplicates) {
+          throw new Error("User already exists in collection earnings");
+        }
+        for (let i = 0; i < userId?.length; i++) {
           await CollectionEarningRepository.create({
-            userId,
+            userId: userId[i],
             collectionId,
-            percentage
+            percentage: percentage[i]
           });
         }
       }

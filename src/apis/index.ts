@@ -13,7 +13,6 @@ import { getSales } from "./dashboard/get-sales";
 import { webhookMoonPay } from "./moonpay/webhook-moonpay";
 import { buyLicense } from "./theme/buy-license";
 import { buyTheme } from "./theme/buy-theme";
-import { createCollectionEarning } from "./theme/collection/collectionEarnings/create-collection-earnings";
 import { createThemeCollection } from "./theme/collection/create-collection";
 import { deleteThemeCollection } from "./theme/collection/delete-collection";
 import { getThemeCollection } from "./theme/collection/get-collection-detail";
@@ -90,8 +89,7 @@ export const theme = new Elysia({
   .use(getFeatureTags)
   .use(createFeatureType)
   .use(createFeatureTag)
-  .use(uploadFeatureIcon)
-  .use(createCollectionEarning);
+  .use(uploadFeatureIcon);
 
 export const moonpay = new Elysia({
   name: "Controller.Moonpay",
