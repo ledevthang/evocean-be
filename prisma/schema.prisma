@@ -15,7 +15,7 @@ model User {
 
   themes     Theme[]
   Collection Collection[]
-
+  collectionEarnings CollectionEarnings[]
   @@map("user")
 }
 
@@ -206,19 +206,14 @@ model CollectionFeatureTypes {
   @@map("collection_feature_types")
 }
 
-model Earnings{
-    id                      Int          @id @default(autoincrement())
-    address                 String
-    percentage              Decimal
-    collectionEarnings      CollectionEarnings[]    
-}
 
 model CollectionEarnings{
-    id            Int          @id @default(autoincrement())
-    earningsId    Int          @map("earnings_id")
-    collectionId  Int          @map("collection_id")
-    earnings      Earnings     @relation(fields: [earningsId], references: [id])
-    collection    Collection   @relation(fields: [collectionId], references: [id])
+    id              Int          @id @default(autoincrement())
+    userId          Int          @map("user_id")
+    collectionId    Int          @map("collection_id")
+    percentage              Decimal
+    user            User     @relation(fields: [userId], references: [id])
+    collection      Collection   @relation(fields: [collectionId], references: [id])
 }
 
 model Collection {
