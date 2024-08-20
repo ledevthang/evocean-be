@@ -21,7 +21,15 @@ const updateThemeCollectionDto = t.Object({
   collectionCategories: t.Optional(t.Array(t.Numeric())),
   collectionTags: t.Optional(t.Array(t.Numeric())),
   collectionFeatureTypes: t.Optional(t.Array(t.Numeric())),
-  theme_ids: t.Optional(t.Array(t.Numeric()))
+  theme_ids: t.Optional(t.Array(t.Numeric())),
+  earnings: t.Optional(
+    t.Array(
+      t.Object({
+        userId: t.Number(),
+        percentage: t.Numeric()
+      })
+    )
+  )
 });
 
 export type UpdateCollectionParams = Static<typeof updateThemeCollectionDto>;

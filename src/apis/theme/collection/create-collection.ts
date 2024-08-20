@@ -1,13 +1,11 @@
 import type { Static } from "elysia";
 import Elysia, { t } from "elysia";
-
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { CollectionRepository } from "@root/repositories/collection.repository";
-import { CollectionEarningRepository } from "@root/repositories/collectionEarnings.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 const createThemeCollectionDto = t.Object({
-  collection_name: t.Optional(t.String()),
+  collection_name: t.String(),
   description: t.Optional(t.String()),
   sellingPricing: t.Optional(t.Numeric()),
   percentageOfOwnership: t.Optional(t.Numeric()),
@@ -20,8 +18,14 @@ const createThemeCollectionDto = t.Object({
   collectionFeatureTypes: t.Optional(t.Array(t.Numeric())),
   theme_ids: t.Optional(t.Array(t.Numeric())),
   collectionId: t.Optional(t.Number()),
-  userId: t.Optional(t.Array(t.Number())),
-  percentage: t.Optional(t.Array(t.Numeric()))
+  earnings: t.Optional(
+    t.Array(
+      t.Object({
+        userId: t.Number(),
+        percentage: t.Numeric()
+      })
+    )
+  )
 });
 
 export type CreateThemeCollectionParams = Static<
@@ -43,8 +47,7 @@ export const createThemeCollection = new Elysia({
         collectionTags,
         collectionFeatureTypes,
         highlights,
-        userId,
-        percentage,
+        earnings,
         ...restBody
       } = body;
 
@@ -53,27 +56,6 @@ export const createThemeCollection = new Elysia({
       const tags = collectionTags || [];
       const featureTypes = collectionFeatureTypes || [];
 
-      if (userId && percentage) {
-        if (
-          percentage?.reduce((acc, curr) => acc + curr, 0) > 100 ||
-          percentage?.reduce((acc, curr) => acc + curr, 0) < 0
-        ) {
-          throw new Error("Total percentage must be between 0 and 100");
-        }
-
-        const hasDuplicates = new Set(userId).size !== userId.length;
-        if (hasDuplicates) {
-          throw new Error("User already exists in collection earnings");
-        }
-        for (let i = 0; i < userId?.length; i++) {
-          await CollectionEarningRepository.create({
-            userId: userId[i],
-            collectionId,
-            percentage: percentage[i]
-          });
-        }
-      }
-
       if (collectionId) {
         return CollectionRepository.updateCollectionById(collectionId, {
           ...restBody,
@@ -81,8 +63,8 @@ export const createThemeCollection = new Elysia({
           collectionCategories: categories,
           collectionTags: tags,
           collectionFeatureTypes: featureTypes,
-          created_by: id,
-          highlights
+          highlights,
+          earnings
         });
       } else {
         const media = { highlights };
@@ -93,7 +75,8 @@ export const createThemeCollection = new Elysia({
           collectionTags: tags,
           collectionFeatureTypes: featureTypes,
           created_by: id,
-          media: JSON.stringify(media)
+          media: JSON.stringify(media),
+          earnings
         });
       }
     },
