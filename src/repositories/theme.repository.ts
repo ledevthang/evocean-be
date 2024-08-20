@@ -163,8 +163,26 @@ export abstract class ThemeRepository {
         include: {
           sale: true,
           listing: true,
-          themeCategories: true,
-          themeTags: true
+          themeCategories: {
+            select: {
+              category: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          },
+          themeTags: {
+            select: {
+              tag: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          }
         },
         take,
         skip: (page - 1) * take,
