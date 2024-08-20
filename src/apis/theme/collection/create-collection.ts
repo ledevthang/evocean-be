@@ -1,12 +1,11 @@
 import type { Static } from "elysia";
 import Elysia, { t } from "elysia";
-
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { CollectionRepository } from "@root/repositories/collection.repository";
 import { ENDPOINT } from "@root/shared/constant";
 
 const createThemeCollectionDto = t.Object({
-  collection_name: t.Optional(t.String()),
+  collection_name: t.String(),
   description: t.Optional(t.String()),
   sellingPricing: t.Optional(t.Numeric()),
   percentageOfOwnership: t.Optional(t.Numeric()),
@@ -18,7 +17,15 @@ const createThemeCollectionDto = t.Object({
   collectionTags: t.Optional(t.Array(t.Numeric())),
   collectionFeatureTypes: t.Optional(t.Array(t.Numeric())),
   theme_ids: t.Optional(t.Array(t.Numeric())),
-  colleciton_id: t.Optional(t.Number())
+  collectionId: t.Optional(t.Number()),
+  earnings: t.Optional(
+    t.Array(
+      t.Object({
+        userId: t.Number(),
+        percentage: t.Numeric()
+      })
+    )
+  )
 });
 
 export type CreateThemeCollectionParams = Static<
@@ -31,29 +38,36 @@ export const createThemeCollection = new Elysia({
   .use(authPlugin)
   .post(
     ENDPOINT.THEME.CREATE_THEME_COLLECTION,
-    ({ body, claims }) => {
+    async ({ body, claims }) => {
       const { id } = claims;
       const {
-        colleciton_id,
+        collectionId,
         theme_ids,
         collectionCategories,
         collectionTags,
         collectionFeatureTypes,
         highlights,
+        earnings,
         ...restBody
       } = body;
 
-      const themeIds = theme_ids?.map(id => Number(id));
-      const categories = collectionCategories?.map(category => category) || [];
-      const tags = collectionTags?.map(tag => tag) || [];
-      const featureTypes = collectionFeatureTypes?.map(type => type) || [];
+      const themeIds = theme_ids?.map(Number);
+      const categories = collectionCategories || [];
+      const tags = collectionTags || [];
+      const featureTypes = collectionFeatureTypes || [];
 
-      if (colleciton_id) {
-        return CollectionRepository.updateCollectionById(colleciton_id, body);
+      if (collectionId) {
+        return CollectionRepository.updateCollectionById(collectionId, {
+          ...restBody,
+          theme_ids: themeIds,
+          collectionCategories: categories,
+          collectionTags: tags,
+          collectionFeatureTypes: featureTypes,
+          highlights,
+          earnings
+        });
       } else {
-        const media = {
-          highlights
-        };
+        const media = { highlights };
         return CollectionRepository.createCollection({
           ...restBody,
           theme_ids: themeIds,
@@ -61,7 +75,8 @@ export const createThemeCollection = new Elysia({
           collectionTags: tags,
           collectionFeatureTypes: featureTypes,
           created_by: id,
-          media: JSON.stringify(media)
+          media: JSON.stringify(media),
+          earnings
         });
       }
     },

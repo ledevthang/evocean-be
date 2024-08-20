@@ -18,12 +18,14 @@ import { deleteThemeCollection } from "./theme/collection/delete-collection";
 import { getThemeCollection } from "./theme/collection/get-collection-detail";
 import { getListCollections } from "./theme/collection/get-list-collections";
 import { updateThemeCollection } from "./theme/collection/update-collection";
+import { createFeatureTag } from "./theme/create-feature-tag";
 import { createFeatureType } from "./theme/create-feature-type";
 import { createTheme } from "./theme/create-theme";
 import { deleteTheme } from "./theme/delete-theme";
 import { downloadTheme } from "./theme/download-theme";
 import { getAllThemes } from "./theme/get-all-theme";
 import { getAllCategories } from "./theme/get-category";
+import { getFeatureTags } from "./theme/get-feature-tag";
 import { getFeatureType } from "./theme/get-feature-type";
 import { getPurchasedTheme } from "./theme/get-purchased-themes";
 import { getAllTags } from "./theme/get-tag";
@@ -32,12 +34,10 @@ import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { payment } from "./theme/payment";
 import { updateTheme } from "./theme/update-theme";
+import { uploadFeatureIcon } from "./theme/upload-feature-icon";
 import { uploadTheme } from "./theme/upload-theme";
 import { uploadThemeDetail } from "./theme/upload-theme-details";
 import { me } from "./user/me";
-import { uploadFeatureIcon } from "./theme/upload-feature-icon";
-import { createFeatureTag } from "./theme/create-feature-tag";
-import { getFeatureTags } from "./theme/get-feature-tag";
 
 export const auth = new Elysia({
   name: "Controller.Auth",

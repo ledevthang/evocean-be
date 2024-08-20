@@ -17,7 +17,8 @@ export abstract class CollectionRepository {
     linkPreview,
     collectionCategories,
     collectionTags,
-    collectionFeatureTypes
+    collectionFeatureTypes,
+    earnings
   }: CreateThemeCollectionParams) {
     const collect = await prisma.collection.create({
       data: {
@@ -83,6 +84,23 @@ export abstract class CollectionRepository {
           })
         )
       );
+    }
+
+    if (earnings?.length) {
+      const totalPercentage = earnings.reduce((t, i) => (t += i.percentage), 0);
+
+      if (totalPercentage > 100 || totalPercentage < 0) {
+        throw new BadRequestError("Total percentage must be between 0 and 100");
+      }
+
+      const data = earnings.map(earning => ({
+        ...earning,
+        collectionId: collect.id
+      }));
+      await prisma.collectionEarnings.createMany({
+        data: data,
+        skipDuplicates: true
+      });
     }
 
     return collect;
@@ -260,6 +278,33 @@ export abstract class CollectionRepository {
           })
         )
       );
+    }
+
+    if (data?.earnings?.length) {
+      const totalPercentage = data.earnings.reduce(
+        (t, i) => (t += i.percentage),
+        0
+      );
+
+      if (totalPercentage > 100 || totalPercentage < 0) {
+        throw new BadRequestError("Total percentage must be between 0 and 100");
+      }
+
+      await prisma.collectionEarnings.deleteMany({
+        where: {
+          collectionId: id
+        }
+      });
+
+      const newEarings = data.earnings.map(earning => ({
+        ...earning,
+        collectionId: id
+      }));
+
+      prisma.collectionEarnings.createMany({
+        data: newEarings,
+        skipDuplicates: true
+      });
     }
 
     return updatedCollection;
