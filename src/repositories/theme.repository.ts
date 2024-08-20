@@ -1,4 +1,5 @@
 import { TransactionKind, type Currency, type Prisma } from "@prisma/client";
+import { NotFoundError } from "elysia";
 
 import type { CreateThemePayload } from "@root/apis/theme/create-theme";
 import type { GetThemeParams } from "@root/apis/theme/get-themes";
@@ -6,7 +7,6 @@ import type { UpdateThemeParams } from "@root/apis/theme/update-theme";
 // import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
 import type { ThemeMedia } from "@root/types/Themes";
-import { NotFoundError } from "elysia";
 
 // type CreateListingAndSaleParams = Pick<
 //   ListingThemePayload,
@@ -162,7 +162,9 @@ export abstract class ThemeRepository {
         where: filter,
         include: {
           sale: true,
-          listing: true
+          listing: true,
+          themeCategories: true,
+          themeTags: true
         },
         take,
         skip: (page - 1) * take,

@@ -1,5 +1,6 @@
 import type { Static } from "elysia";
 import Elysia, { t } from "elysia";
+
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { CollectionRepository } from "@root/repositories/collection.repository";
 import { ENDPOINT } from "@root/shared/constant";
