@@ -38,6 +38,7 @@ import { uploadFeatureIcon } from "./theme/upload-feature-icon";
 import { uploadTheme } from "./theme/upload-theme";
 import { uploadThemeDetail } from "./theme/upload-theme-details";
 import { me } from "./user/me";
+import { getAll } from "./user/get-users";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -55,7 +56,9 @@ export const user = new Elysia({
   detail: {
     tags: ["User"]
   }
-}).use(me);
+})
+  .use(me)
+  .use(getAll);
 
 export const theme = new Elysia({
   name: "Controller.Theme",

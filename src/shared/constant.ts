@@ -6,7 +6,8 @@ export const ENDPOINT = {
   },
   USER: {
     PREFIX: "users",
-    ME: "/me"
+    ME: "/me",
+    ALL: "/"
   },
   THEME: {
     PREFIX: "themes",

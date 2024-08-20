@@ -13,6 +13,10 @@ export abstract class UserRepository {
     });
   }
 
+  static findAll() {
+    return prisma.user.findMany({});
+  }
+
   static findByGoogleId(google_id: string) {
     return prisma.user.findUnique({
       where: {
