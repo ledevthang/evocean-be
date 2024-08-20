@@ -181,8 +181,8 @@ model CollectionCategories {
   id           Int        @id @default(autoincrement())
   categoryId   Int        @map("category_id")
   collectionId Int        @map("collection_id")
-  category     Category   @relation(fields: [categoryId], references: [id])
-  collection   Collection @relation(fields: [collectionId], references: [id])
+  category     Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
   @@map("collection_categories")
 }
@@ -191,8 +191,8 @@ model CollectionTags {
   id           Int        @id @default(autoincrement())
   tagId        Int        @map("tag_id")
   collectionId Int        @map("collection_id")
-  tag          Tag        @relation(fields: [tagId], references: [id])
-  collection   Collection @relation(fields: [collectionId], references: [id])
+  tag          Tag        @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
   @@map("collection_tags")
 }
@@ -201,8 +201,8 @@ model CollectionFeatureTypes {
   id            Int          @id @default(autoincrement())
   featureTypeId Int          @map("feature_type_id")
   collectionId  Int          @map("collection_id")
-  featureTypes  FeatureTypes @relation(fields: [featureTypeId], references: [id])
-  collection    Collection   @relation(fields: [collectionId], references: [id])
+  featureTypes  FeatureTypes @relation(fields: [featureTypeId], references: [id], onDelete: Cascade)
+  collection    Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
   @@map("collection_feature_types")
 }
@@ -212,8 +212,8 @@ model CollectionEarnings {
   userId       Int        @map("user_id")
   collectionId Int        @map("collection_id")
   percentage   Decimal
-  user         User       @relation(fields: [userId], references: [id])
-  collection   Collection @relation(fields: [collectionId], references: [id])
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
   @@map("collection_earnings")
 }
