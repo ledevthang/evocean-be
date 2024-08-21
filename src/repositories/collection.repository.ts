@@ -85,7 +85,6 @@ export abstract class CollectionRepository {
         )
       );
     }
-    console.log("earnings: ", earnings);
 
     if (earnings?.length) {
       const totalPercentage = earnings.reduce((t, i) => (t += i.percentage), 0);
@@ -291,7 +290,6 @@ export abstract class CollectionRepository {
         )
       );
     }
-    console.log("data?.earnings: ", data?.earnings);
 
     if (data?.earnings?.length) {
       const totalPercentage = data.earnings.reduce(
