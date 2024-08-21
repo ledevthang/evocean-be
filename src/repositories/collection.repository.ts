@@ -172,6 +172,17 @@ export abstract class CollectionRepository {
               }
             }
           }
+        },
+        collectionEarnings: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                email: true
+              }
+            },
+            percentage: true
+          }
         }
       }
     });
