@@ -312,7 +312,7 @@ export abstract class CollectionRepository {
         collectionId: id
       }));
 
-      prisma.collectionEarnings.createMany({
+      await prisma.collectionEarnings.createMany({
         data: newEarings,
         skipDuplicates: true
       });
