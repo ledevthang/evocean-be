@@ -198,6 +198,13 @@ export abstract class CollectionRepository {
 
     if (!collection) throw new BadRequestError("Collection not found");
 
+    const media =
+      typeof data.highlights !== "undefined"
+        ? {
+            highlights: data.highlights
+          }
+        : collection.media;
+
     const updatedCollection = await prisma.collection.update({
       where: { id },
       data: {
@@ -207,7 +214,7 @@ export abstract class CollectionRepository {
         percentageOfOwnership: data.percentageOfOwnership,
         ownershipPrice: data.ownershipPrice,
         thumbnail: data.thumbnail,
-        media: typeof data.highlights !== "undefined" ? data.highlights : {},
+        media: JSON.stringify(media),
         linkPreview: data.linkPreview,
         updated_at: new Date()
       }
