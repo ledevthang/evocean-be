@@ -3,7 +3,7 @@ import Elysia from "elysia";
 import { ENDPOINT } from "@root/shared/constant";
 
 import { fetchPrices } from "../plugins/fetch-solana-price.plugin";
-import { signIn } from "./auth/sign-in";
+import { signInWallet } from "./auth/sign-in-wallet";
 import { signInGoogle } from "./auth/sign-in-google";
 import { getPrice } from "./crypto-price/get-price";
 import { getOverview } from "./dashboard/get-overview";
@@ -47,7 +47,7 @@ export const auth = new Elysia({
     tags: ["Auth"]
   }
 })
-  .use(signIn)
+  .use(signInWallet)
   .use(signInGoogle);
 
 export const user = new Elysia({

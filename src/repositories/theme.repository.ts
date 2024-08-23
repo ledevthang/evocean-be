@@ -135,7 +135,9 @@ export abstract class ThemeRepository {
   }
 
   static findPaged({ page, take, author, owner, listing }: GetThemeParams) {
-    const filter: Prisma.ThemeWhereInput = {};
+    const filter: Prisma.ThemeWhereInput = {
+      status: "APPROVED"
+    };
 
     if (author) {
       filter.author_address = author;
