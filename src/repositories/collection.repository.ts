@@ -224,9 +224,9 @@ export abstract class CollectionRepository {
       data: {
         name: data.collection_name,
         description: data.description,
-        sellingPricing: data.sellingPricing,
+        sellingPricing: solToLamports(data.sellingPricing),
         percentageOfOwnership: data.percentageOfOwnership,
-        ownershipPrice: data.ownershipPrice,
+        ownershipPrice: solToLamports(data.ownershipPrice),
         thumbnail: data.thumbnail,
         media: JSON.stringify(media),
         linkPreview: data.linkPreview,
@@ -310,7 +310,7 @@ export abstract class CollectionRepository {
       );
     }
 
-    if (data?.earnings?.length) {
+    if (data?.earnings) {
       const totalPercentage = data.earnings.reduce(
         (t, i) => (t += i.percentage),
         0
