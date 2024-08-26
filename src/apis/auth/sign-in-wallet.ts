@@ -1,5 +1,4 @@
 import Elysia, { t } from "elysia";
-
 import { ENDPOINT } from "@root/shared/constant";
 import { prisma } from "@root/shared/prisma";
 import { accessJwt, renewJwt } from "@root/plugins/jwt.plugin";
@@ -37,7 +36,18 @@ export const signInWallet = new Elysia({
           }
         });
 
+        if (user?.address && user?.address !== address) {
+          throw new BadRequestError(
+            `Wallet address already associated with another email`
+          );
+        }
+
         if (!user?.address) {
+          await prisma.user.delete({
+            where: {
+              address
+            }
+          });
           user = await prisma.user.update({
             where: {
               id: user_id
@@ -46,12 +56,6 @@ export const signInWallet = new Elysia({
               address
             }
           });
-        }
-
-        if (user?.address !== address) {
-          throw new BadRequestError(
-            `Please connect with ${user.address} wallet`
-          );
         }
       }
 
