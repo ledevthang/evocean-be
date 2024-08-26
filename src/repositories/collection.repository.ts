@@ -2,6 +2,7 @@ import type { CreateThemeCollectionParams } from "@root/apis/theme/collection/cr
 import type { UpdateCollectionParams } from "@root/apis/theme/collection/update-collection";
 import { BadRequestError } from "@root/errors/BadRequestError";
 import { prisma } from "@root/shared/prisma";
+import { solToLamports } from "@root/utils/sol-to-lamports";
 
 export abstract class CollectionRepository {
   static async createCollection({
@@ -24,9 +25,9 @@ export abstract class CollectionRepository {
       data: {
         name: collection_name,
         description: (description as string) || "",
-        sellingPricing: (sellingPricing as number) || 0,
-        percentageOfOwnership: (percentageOfOwnership as number) || 0,
-        ownershipPrice: (ownershipPrice as number) || 0,
+        sellingPricing: solToLamports(sellingPricing),
+        percentageOfOwnership: percentageOfOwnership || 0,
+        ownershipPrice: solToLamports(ownershipPrice),
         created_by,
         created_at: new Date(),
         thumbnail: (thumbnail as string) || "",
@@ -121,6 +122,19 @@ export abstract class CollectionRepository {
       prisma.collection.count({
         where: {
           created_by: user_id
+        }
+      })
+    ]);
+  }
+
+  static getCollectionsByUser(user_id: number) {
+    return Promise.all([
+      prisma.collection.findMany({
+        where: {
+          created_by: user_id
+        },
+        orderBy: {
+          created_at: "desc"
         }
       })
     ]);

@@ -40,6 +40,7 @@ import { uploadTheme } from "./theme/upload-theme";
 import { uploadThemeDetail } from "./theme/upload-theme-details";
 import { getAll } from "./user/get-users";
 import { me } from "./user/me";
+import { getCollectionsByUser } from "./theme/collection/get-collection-by-user";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -88,6 +89,7 @@ export const theme = new Elysia({
   .use(updateThemeCollection)
   .use(deleteThemeCollection)
   .use(getListCollections)
+  .use(getCollectionsByUser)
   .use(payment)
   .use(getFeatureType)
   .use(getFeatureTags)

@@ -24,7 +24,8 @@ const updateThemeDto = t.Object({
   coverImages: t.Optional(t.Array(t.String())),
   detailImages: t.Optional(t.Array(t.String())),
   fullPreviewImages: t.Optional(t.Array(t.String())),
-  zip_link: t.Optional(t.String())
+  zip_link: t.Optional(t.String()),
+  collection_ids: t.Optional(t.Array(t.Number()))
 });
 
 const params = t.Object({
@@ -61,7 +62,8 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       coverImages,
       detailImages,
       fullPreviewImages,
-      zip_link
+      zip_link,
+      collection_ids
     } = body;
 
     const themeData = await ThemeRepository.findById(params.theme_id);
@@ -104,7 +106,8 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       tags,
       feature_ids,
       zip_link,
-      media: newMedia
+      media: newMedia,
+      collection_ids
     };
 
     return ThemeRepository.updateTheme(theme_id, updateData);

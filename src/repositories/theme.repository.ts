@@ -356,7 +356,8 @@ export abstract class ThemeRepository {
     zip_link,
     owner_addresses,
     token_mint,
-    author_address
+    author_address,
+    collection_ids
   }: CreateThemeParams) {
     const newTheme = await prisma.theme.create({
       data: {
@@ -413,6 +414,18 @@ export abstract class ThemeRepository {
         )
       );
     }
+    if (collection_ids?.length) {
+      await Promise.all(
+        collection_ids.map(id =>
+          prisma.themeCollection.create({
+            data: {
+              collectionId: id,
+              themeId: newTheme.id
+            }
+          })
+        )
+      );
+    }
 
     return newTheme;
   }
@@ -429,7 +442,8 @@ export abstract class ThemeRepository {
 
     if (!theme) throw new NotFoundError("Not found theme");
 
-    const { categories, tags, feature_ids, ...data } = updateThemeData;
+    const { categories, tags, feature_ids, collection_ids, ...data } =
+      updateThemeData;
 
     if (categories?.length || categories?.length === 0) {
       await prisma.$transaction(async tx => {
@@ -491,6 +505,25 @@ export abstract class ThemeRepository {
       });
     }
 
+    if (collection_ids?.length) {
+      await prisma.$transaction(async tx => {
+        await tx.themeCollection.deleteMany({
+          where: {
+            themeId: theme_id
+          }
+        });
+        await Promise.all(
+          collection_ids?.map((id: number) =>
+            tx.themeCollection.create({
+              data: {
+                collectionId: +id,
+                themeId: theme_id
+              }
+            })
+          )
+        );
+      });
+    }
     return prisma.theme.update({
       where: {
         id: theme_id

@@ -27,7 +27,8 @@ export const createThemeDto = t.Object({
   detailImages: t.Optional(t.Array(t.String())),
   fullPreviewImages: t.Optional(t.Array(t.String())),
   zip_link: t.Optional(t.String()),
-  theme_id: t.Optional(t.Number())
+  theme_id: t.Optional(t.Number()),
+  collection_ids: t.Optional(t.Array(t.Number()))
 });
 
 export type CreateThemePayload = Static<typeof createThemeDto>;
@@ -56,7 +57,8 @@ export const createTheme = new Elysia({
         detailImages,
         fullPreviewImages,
         zip_link,
-        theme_id
+        theme_id,
+        collection_ids
       } = body;
 
       if (theme_id) {
@@ -104,7 +106,8 @@ export const createTheme = new Elysia({
           tags,
           feature_ids,
           zip_link,
-          media: newMedia
+          media: newMedia,
+          collection_ids
         };
 
         return ThemeRepository.updateTheme(theme_id, updateData);
@@ -127,7 +130,8 @@ export const createTheme = new Elysia({
           percentageOfOwnership,
           categories,
           tags,
-          feature_ids
+          feature_ids,
+          collection_ids
         });
         await ThemeRepository.createListingAndSale({
           listing_price: newTheme.selling_price.toNumber(),

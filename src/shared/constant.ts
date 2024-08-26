@@ -17,7 +17,7 @@ export const ENDPOINT = {
     CREATE_FEATURE_TAG: "feature-tag",
     GET_FEATURE_TAGS: "feature-tag/:type_id",
     GET_THEME: "/:theme_id",
-    GET_THEME_BY_USER: "/user/:user_id",
+    GET_THEME_BY_USER: "/themes-by-user",
     GET_ALL_THEME: "/all",
     GET_PURCHASED_THEME: "/purchased",
     CREATE_THEME: "/creating",
@@ -36,6 +36,7 @@ export const ENDPOINT = {
     CREATE_THEME_COLLECTION: "/collections",
     CREATE_COLLECTION_EARNING: "/collection-earnings",
     GET_ALL_COLLECTION: "/collections",
+    GET_ALL_BY_USER: "/collections-by-user",
     GET_A_THEME_COLLECTION: "/collections/:collection_id",
     UPDATE_A_THEME_COLLECTION: "/collections/:collection_id",
     DELETE_A_THEME_COLLECTION: "/collections/:collection_id"
