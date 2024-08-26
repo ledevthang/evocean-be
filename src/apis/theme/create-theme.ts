@@ -96,9 +96,9 @@ export const createTheme = new Elysia({
           status,
           name,
           overview,
-          selling_price,
+          selling_price: solToLamports(selling_price),
           percentageOfOwnership,
-          owner_price,
+          owner_price: solToLamports(owner_price),
           linkPreview,
           categories,
           tags,
@@ -130,9 +130,9 @@ export const createTheme = new Elysia({
           feature_ids
         });
         await ThemeRepository.createListingAndSale({
-          listing_price: solToLamports(newTheme.selling_price.toNumber()),
+          listing_price: newTheme.selling_price.toNumber(),
           theme_id: newTheme.id,
-          sale_price: solToLamports(newTheme.owner_price.toNumber())
+          sale_price: newTheme.owner_price.toNumber()
         });
         return {
           themeId: newTheme.id,
