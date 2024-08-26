@@ -134,6 +134,49 @@ export abstract class ThemeRepository {
     };
   }
 
+  static async findByUserId(userId: number) {
+    const themes = await prisma.theme.findMany({
+      where: {
+        user_id: +userId
+      },
+      include: {
+        themeCategories: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
+        themeTags: {
+          select: {
+            tag: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    return themes.map(theme => {
+      const mapThemeCategories = theme?.themeCategories.map(
+        ({ category }) => category
+      );
+      const mapThemeTags = theme?.themeTags.map(({ tag }) => tag);
+
+      return {
+        ...theme,
+        categories: mapThemeCategories,
+        tags: mapThemeTags
+      };
+    });
+  }
+
   static findPaged({ page, take, author, owner, listing }: GetThemeParams) {
     const filter: Prisma.ThemeWhereInput = {
       status: "APPROVED"

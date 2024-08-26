@@ -17,6 +17,7 @@ export const ENDPOINT = {
     CREATE_FEATURE_TAG: "feature-tag",
     GET_FEATURE_TAGS: "feature-tag/:type_id",
     GET_THEME: "/:theme_id",
+    GET_THEME_BY_USER: "/user/:user_id",
     GET_ALL_THEME: "/all",
     GET_PURCHASED_THEME: "/purchased",
     CREATE_THEME: "/creating",

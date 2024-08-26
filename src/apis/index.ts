@@ -30,6 +30,7 @@ import { getFeatureType } from "./theme/get-feature-type";
 import { getPurchasedTheme } from "./theme/get-purchased-themes";
 import { getAllTags } from "./theme/get-tag";
 import { getTheme } from "./theme/get-theme";
+import { getThemeByUser } from "./theme/get-theme-by-user";
 import { getThemes } from "./theme/get-themes";
 import { listTheme } from "./theme/list-theme";
 import { payment } from "./theme/payment";
@@ -37,8 +38,8 @@ import { updateTheme } from "./theme/update-theme";
 import { uploadFeatureIcon } from "./theme/upload-feature-icon";
 import { uploadTheme } from "./theme/upload-theme";
 import { uploadThemeDetail } from "./theme/upload-theme-details";
-import { me } from "./user/me";
 import { getAll } from "./user/get-users";
+import { me } from "./user/me";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -92,7 +93,8 @@ export const theme = new Elysia({
   .use(getFeatureTags)
   .use(createFeatureType)
   .use(createFeatureTag)
-  .use(uploadFeatureIcon);
+  .use(uploadFeatureIcon)
+  .use(getThemeByUser);
 
 export const moonpay = new Elysia({
   name: "Controller.Moonpay",
