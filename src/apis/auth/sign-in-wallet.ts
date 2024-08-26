@@ -43,11 +43,6 @@ export const signInWallet = new Elysia({
         }
 
         if (!user?.address) {
-          await prisma.user.delete({
-            where: {
-              address
-            }
-          });
           user = await prisma.user.update({
             where: {
               id: user_id

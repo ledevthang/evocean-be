@@ -44,11 +44,22 @@ export const signInGoogle = new Elysia({
           );
 
         if (!user?.google_id && !userByGoogleId?.address) {
-          await prisma.user.delete({
-            where: {
-              id: userByGoogleId?.id
-            }
-          });
+          await prisma.$transaction([
+            prisma.theme.updateMany({
+              where: {
+                user_id: userByGoogleId?.id
+              },
+              data: {
+                user_id: user_id
+              }
+            }),
+            prisma.user.delete({
+              where: {
+                id: userByGoogleId?.id
+              }
+            })
+          ]);
+
           user = await prisma.user.update({
             where: {
               id: user_id

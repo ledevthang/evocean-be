@@ -161,7 +161,7 @@ model Transaction {
   seller   String
   theme_id Int
   kind     TransactionKind
-  theme    Theme           @relation(fields: [theme_id], references: [id])
+  theme    Theme           @relation(fields: [theme_id], references: [id], onDelete: Cascade)
   currency Currency
 
   @@map("transaction")

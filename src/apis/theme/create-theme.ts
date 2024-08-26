@@ -8,6 +8,7 @@ import { ENDPOINT } from "@root/shared/constant";
 import { ThemeMedia } from "@root/types/Themes";
 import { BadRequestError } from "@root/errors/BadRequestError";
 import { UpdateThemeParams } from "./update-theme";
+import { solToLamports } from "@root/utils/sol-to-lamports";
 
 export const createThemeDto = t.Object({
   status: t.Optional(t.Enum(ThemeStatus)),
@@ -120,8 +121,8 @@ export const createTheme = new Elysia({
           ...body,
           media,
           linkPreview,
-          owner_addresses: [claims.id.toString()],
-          author_address: claims.id.toString(),
+          owner_addresses: claims?.address ? [claims?.address.toString()] : [],
+          author_address: claims?.address?.toString(),
           user_id: claims.id,
           percentageOfOwnership,
           categories,
@@ -129,9 +130,9 @@ export const createTheme = new Elysia({
           feature_ids
         });
         await ThemeRepository.createListingAndSale({
-          listing_price: newTheme.selling_price.toNumber(),
+          listing_price: solToLamports(newTheme.selling_price.toNumber()),
           theme_id: newTheme.id,
-          sale_price: newTheme.owner_price.toNumber()
+          sale_price: solToLamports(newTheme.owner_price.toNumber())
         });
         return {
           themeId: newTheme.id,

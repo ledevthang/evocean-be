@@ -7,6 +7,7 @@ import type { UpdateThemeParams } from "@root/apis/theme/update-theme";
 // import type { ListingThemePayload } from "@root/apis/theme/list-theme";
 import { prisma } from "@root/shared/prisma";
 import type { ThemeMedia } from "@root/types/Themes";
+import { solToLamports } from "@root/utils/sol-to-lamports";
 
 // type CreateListingAndSaleParams = Pick<
 //   ListingThemePayload,
@@ -22,8 +23,8 @@ type CreateListingAndSaleParams = {
 type CreateThemeParams = Omit<CreateThemePayload, "media"> & {
   media?: ThemeMedia;
   token_mint?: string;
-  owner_addresses: string[];
-  author_address: string;
+  owner_addresses?: string[];
+  author_address?: string;
   user_id: number;
 };
 
@@ -363,10 +364,10 @@ export abstract class ThemeRepository {
         status: status || "DRAFT",
         name,
         overview,
-        selling_price,
+        selling_price: solToLamports(selling_price),
         percentageOfOwnership,
+        owner_price: solToLamports(owner_price),
         media,
-        owner_price,
         linkPreview,
         zip_link,
         owner_addresses,
