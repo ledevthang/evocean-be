@@ -41,6 +41,7 @@ import { uploadThemeDetail } from "./theme/upload-theme-details";
 import { getAll } from "./user/get-users";
 import { me } from "./user/me";
 import { getCollectionsByUser } from "./theme/collection/get-collection-by-user";
+import { listingTheme } from "./theme/listing-theme";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -70,6 +71,7 @@ export const theme = new Elysia({
   }
 })
   .use(createTheme)
+  .use(listingTheme)
   .use(getTheme)
   .use(getThemes)
   .use(getAllThemes)

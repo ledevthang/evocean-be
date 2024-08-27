@@ -21,6 +21,7 @@ export const ENDPOINT = {
     GET_ALL_THEME: "/all",
     GET_PURCHASED_THEME: "/purchased",
     CREATE_THEME: "/creating",
+    LISTING_THEME: "/listing/:theme_id",
     LIST_THEME: "/listing",
     BUY_THEME: "/buying",
     UPDATE_THEME: "/updating/:theme_id",
