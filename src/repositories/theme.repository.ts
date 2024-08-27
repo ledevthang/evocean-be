@@ -135,11 +135,13 @@ export abstract class ThemeRepository {
     };
   }
 
-  static async findByUserId(userId: number) {
+  static async findByUserId(userId: number, page: number, take: number) {
     const themes = await prisma.theme.findMany({
       where: {
         user_id: +userId
       },
+      skip: (page - 1) * take,
+      take,
       include: {
         themeCategories: {
           select: {

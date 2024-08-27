@@ -127,12 +127,14 @@ export abstract class CollectionRepository {
     ]);
   }
 
-  static getCollectionsByUser(user_id: number) {
+  static getCollectionsByUser(user_id: number, page: number, take: number) {
     return Promise.all([
       prisma.collection.findMany({
         where: {
           created_by: user_id
         },
+        take,
+        skip: (page - 1) * take,
         orderBy: {
           created_at: "desc"
         }

@@ -73,8 +73,6 @@ export const theme = new Elysia({
   .use(getTheme)
   .use(getThemes)
   .use(getAllThemes)
-  .use(getAllCategories)
-  .use(getAllTags)
   .use(updateTheme)
   .use(getPurchasedTheme)
   .use(listTheme)
@@ -84,19 +82,21 @@ export const theme = new Elysia({
   .use(deleteTheme)
   .use(uploadThemeDetail)
   .use(downloadTheme)
-  .use(createThemeCollection)
-  .use(getThemeCollection)
-  .use(updateThemeCollection)
-  .use(deleteThemeCollection)
-  .use(getListCollections)
-  .use(getCollectionsByUser)
   .use(payment)
   .use(getFeatureType)
   .use(getFeatureTags)
   .use(createFeatureType)
   .use(createFeatureTag)
   .use(uploadFeatureIcon)
-  .use(getThemeByUser);
+  .use(getThemeByUser)
+  .use(createThemeCollection)
+  .use(getThemeCollection)
+  .use(updateThemeCollection)
+  .use(deleteThemeCollection)
+  .use(getListCollections)
+  .use(getCollectionsByUser)
+  .use(getAllCategories)
+  .use(getAllTags);
 
 export const moonpay = new Elysia({
   name: "Controller.Moonpay",
