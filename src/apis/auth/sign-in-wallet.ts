@@ -36,13 +36,46 @@ export const signInWallet = new Elysia({
           }
         });
 
-        if (user?.address && user?.address !== address) {
+        const userByAddress = await prisma.user.findUnique({
+          where: {
+            address
+          }
+        });
+
+        if (userByAddress && userByAddress.google_id) {
           throw new BadRequestError(
             `Wallet address already associated with another email`
           );
         }
 
-        if (!user?.address) {
+        if (!userByAddress && !user?.address) {
+          user = await prisma.user.update({
+            where: {
+              id: user_id
+            },
+            data: {
+              address
+            }
+          });
+        }
+
+        if (userByAddress && !userByAddress?.google_id) {
+          await prisma.$transaction([
+            prisma.theme.updateMany({
+              where: {
+                user_id: userByAddress?.id
+              },
+              data: {
+                user_id: user_id
+              }
+            }),
+            prisma.user.delete({
+              where: {
+                id: userByAddress?.id
+              }
+            })
+          ]);
+
           user = await prisma.user.update({
             where: {
               id: user_id
@@ -55,17 +88,17 @@ export const signInWallet = new Elysia({
       }
 
       const payload: Omit<Claims, "exp"> = {
-        id: user.id
+        id: user!.id
       };
 
-      if (user.address) payload.address = user.address;
-      if (user.email) payload.email = user.email;
-      if (user.google_id) payload.google_id = user.google_id;
+      if (user!.address) payload.address = user!.address;
+      if (user!.email) payload.email = user!.email;
+      if (user!.google_id) payload.google_id = user!.google_id;
 
       const [accessToken, refreshToken] = await Promise.all([
         access.sign(payload),
         renew.sign({
-          id: user.id
+          id: user!.id
         })
       ]);
 
