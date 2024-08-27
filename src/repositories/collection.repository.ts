@@ -1,4 +1,6 @@
+import { Prisma } from "@prisma/client";
 import type { CreateThemeCollectionParams } from "@root/apis/theme/collection/create-collection";
+import { FindCollectionByUserParams } from "@root/apis/theme/collection/get-collection-by-user";
 import type { UpdateCollectionParams } from "@root/apis/theme/collection/update-collection";
 import { BadRequestError } from "@root/errors/BadRequestError";
 import { prisma } from "@root/shared/prisma";
@@ -127,17 +129,56 @@ export abstract class CollectionRepository {
     ]);
   }
 
-  static getCollectionsByUser(user_id: number, page: number, take: number) {
+  static getCollectionsByUser({
+    user_id,
+    page,
+    take,
+    search
+  }: FindCollectionByUserParams) {
+    const filter: Prisma.CollectionWhereInput = {
+      created_by: user_id
+    };
+
+    if (search) {
+      filter.name = {
+        contains: search,
+        mode: "insensitive"
+      };
+    }
+
     return Promise.all([
       prisma.collection.findMany({
-        where: {
-          created_by: user_id
+        where: filter,
+        include: {
+          collectionCategories: {
+            select: {
+              category: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          },
+          collectionTags: {
+            select: {
+              tag: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          }
         },
         take,
         skip: (page - 1) * take,
         orderBy: {
           created_at: "desc"
         }
+      }),
+      prisma.collection.count({
+        where: filter
       })
     ]);
   }

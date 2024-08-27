@@ -16,13 +16,13 @@ export const downloadTheme = new Elysia({ name: "Handler.DownloadTheme" }).get(
       throw new InternalServerError("Theme not found");
     }
 
-    if (!theme.owner_addresses.includes(user)) {
+    if (!theme?.owner_addresses?.includes(user)) {
       throw new ForbiddenError("You are not theme's owner");
     }
 
-    const blob = await getBlobFromLink(theme.zip_link);
+    const blob = await getBlobFromLink(theme?.zip_link);
 
-    const filename = theme.name.replace(/\s+/g, "");
+    const filename = theme?.name?.replace(/\s+/g, "");
 
     set.headers["content-type"] = "application/octet-stream";
 
