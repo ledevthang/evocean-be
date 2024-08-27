@@ -7,6 +7,7 @@ import { authPlugin } from "@root/plugins/auth.plugin";
 import { ThemeRepository } from "@root/repositories/theme.repository";
 import { ENDPOINT } from "@root/shared/constant";
 import { ThemeMedia } from "@root/types/Themes";
+import { solToLamports } from "@root/utils/sol-to-lamports";
 
 const updateThemeDto = t.Object({
   status: t.Optional(t.Enum(ThemeStatus)),
@@ -98,9 +99,9 @@ export const updateTheme = new Elysia().use(authPlugin).put(
       status,
       name,
       overview,
-      selling_price,
+      selling_price: solToLamports(selling_price),
       percentageOfOwnership,
-      owner_price,
+      owner_price: solToLamports(owner_price),
       linkPreview,
       categories,
       tags,

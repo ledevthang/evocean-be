@@ -8,11 +8,13 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  address   String? @unique @db.VarChar
-  google_id String? @unique
-  email     String? @unique @db.VarChar
-
+  id                 Int                  @id @default(autoincrement())
+  address            String?              @unique @db.VarChar
+  google_id          String?              @unique
+  email              String?              @unique @db.VarChar
+  name               String?
+  description        String?
+  avatar_url         String?
   themes             Theme[]
   Collection         Collection[]
   collectionEarnings CollectionEarnings[]
