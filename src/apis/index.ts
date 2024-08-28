@@ -42,6 +42,7 @@ import { getAll } from "./user/get-users";
 import { me } from "./user/me";
 import { getCollectionsByUser } from "./theme/collection/get-collection-by-user";
 import { listingTheme } from "./theme/listing-theme";
+import { updateUser } from "./user/update-user";
 
 export const auth = new Elysia({
   name: "Controller.Auth",
@@ -61,7 +62,8 @@ export const user = new Elysia({
   }
 })
   .use(me)
-  .use(getAll);
+  .use(getAll)
+  .use(updateUser);
 
 export const theme = new Elysia({
   name: "Controller.Theme",
