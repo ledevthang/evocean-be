@@ -15,14 +15,13 @@ export const signInWallet = new Elysia({
     async ({ body, access, renew }) => {
       const { address, user_id } = body;
 
-      let user;
+      let user = await prisma.user.findUnique({
+        where: {
+          address
+        }
+      });
 
       if (!user_id) {
-        user = await prisma.user.findUnique({
-          where: {
-            address
-          }
-        });
         if (!user)
           user = await prisma.user.create({
             data: {
@@ -36,13 +35,37 @@ export const signInWallet = new Elysia({
           }
         });
 
-        if (user?.address && user?.address !== address) {
+        const userByAddress = await prisma.user.findUnique({
+          where: {
+            address
+          }
+        });
+
+        if (userByAddress?.google_id) {
           throw new BadRequestError(
-            `Wallet address already associated with another email`
+            `Email already associated with another wallet address`
           );
         }
 
         if (!user?.address) {
+          if (userByAddress) {
+            await prisma.$transaction([
+              prisma.theme.updateMany({
+                where: {
+                  user_id: userByAddress?.id
+                },
+                data: {
+                  user_id: user_id
+                }
+              }),
+              prisma.user.delete({
+                where: {
+                  id: userByAddress?.id
+                }
+              })
+            ]);
+          }
+
           user = await prisma.user.update({
             where: {
               id: user_id
