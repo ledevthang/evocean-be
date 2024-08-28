@@ -41,7 +41,7 @@ export const signInWallet = new Elysia({
           }
         });
 
-        if (userByAddress?.google_id) {
+        if (userByAddress?.google_id && user?.id !== userByAddress.id) {
           throw new BadRequestError(
             `Email already associated with another wallet address`
           );
