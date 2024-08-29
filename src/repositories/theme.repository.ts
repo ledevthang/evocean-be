@@ -37,7 +37,9 @@ type BuyThemeParams = {
   currency: Currency;
 };
 
-type BuyLicenseParams = BuyThemeParams;
+type BuyLicenseParams = BuyThemeParams & {
+  buyer_id: number;
+};
 
 type CreateFeatureTypeParams = {
   name: string;
@@ -306,7 +308,7 @@ export abstract class ThemeRepository {
             kind: "buy",
             price,
             tx_id,
-            currency
+            currency: currency
           }
         }
       }
@@ -319,7 +321,8 @@ export abstract class ThemeRepository {
     theme_id,
     price,
     seller,
-    currency
+    currency,
+    buyer_id
   }: BuyLicenseParams) {
     return prisma.theme.update({
       where: {
@@ -328,6 +331,7 @@ export abstract class ThemeRepository {
       data: {
         author_address: buyer,
         owned_at: new Date(),
+        user_id: buyer_id,
         transactions: {
           create: {
             buyer,
@@ -530,7 +534,10 @@ export abstract class ThemeRepository {
       where: {
         id: theme_id
       },
-      data: data
+      data: {
+        ...data,
+        status: theme.status === "APPROVED" ? theme.status : data.status
+      }
     });
   }
 

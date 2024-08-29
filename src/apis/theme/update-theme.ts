@@ -96,7 +96,7 @@ export const updateTheme = new Elysia().use(authPlugin).put(
     };
 
     const updateData: UpdateThemeParams = {
-      status,
+      status: themeData.status === "APPROVED" ? themeData.status : status,
       name,
       overview,
       selling_price: solToLamports(selling_price),
