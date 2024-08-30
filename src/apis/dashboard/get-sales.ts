@@ -1,5 +1,4 @@
 import Elysia from "elysia";
-
 import { authPlugin } from "@root/plugins/auth.plugin";
 import { TransactionRepository } from "@root/repositories/transaction.repository";
 import { ENDPOINT } from "@root/shared/constant";
@@ -19,28 +18,24 @@ export const getSales = new Elysia({}).use(authPlugin).get(
     const { page, take } = query;
     const { id } = claims;
 
-    const response: GetSalesParams[] = [];
-
     const [txs, total] = await TransactionRepository.getTxsBySeller({
       page,
       take,
       user_id: id
     });
 
-    for (const tx of txs) {
-      response.push({
-        date: new Date(tx.date),
-        status: "Paid",
-        product_name: tx.theme.name,
-        price: tx.price.toNumber(),
-        earn: tx.price.toNumber() * (1 - 0.0625)
-      });
-    }
+    const res = txs.map(tx => ({
+      date: new Date(tx.date),
+      status: "Paid",
+      product_name: tx.theme.name,
+      price: tx.price.toNumber(),
+      earn: tx.price.toNumber() * (1 - 0.0625)
+    }));
 
     return {
       total,
       page,
-      data: response
+      data: res
     };
   },
   {
