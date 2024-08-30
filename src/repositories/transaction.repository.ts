@@ -165,7 +165,9 @@ export abstract class TransactionRepository {
     const filter: Prisma.TransactionWhereInput = {};
 
     if (user_id) {
-      filter.buyer = user_id.toString();
+      filter.theme = {
+        user_id: user_id
+      };
     }
 
     return Promise.all([
