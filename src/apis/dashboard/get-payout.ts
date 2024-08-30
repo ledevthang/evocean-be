@@ -22,7 +22,7 @@ const getTxByBuyerParams = t.Composite([
   })
 ]);
 
-export type GetTxByBuyerParams = Static<typeof getTxByBuyerParams>;
+export type GetTxByBuyerParams = Static<typeof getTxByBuyerParams> & {};
 
 export const getPayout = new Elysia({
   name: "Handler.GetPayout"
